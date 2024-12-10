@@ -70,6 +70,8 @@ const loadMissingPokemon = async (toLoad, getVarieties: boolean = true) => {
                 });
             }
 
+            pokemonData["last_load_dts"] = Date.now();
+
             loadedPokemon.push(pokemonData);
         })
     );
@@ -99,9 +101,15 @@ const loadData = async () => {
         return;
     }
 
+    const load_start_time = Date.now();
+
     console.log("Checking data to update.");
     let toLoad = fetchedPokemon.filter((x) => !storedPokemon.includes(x.name));
 
+
+    // TODO: Should probably do a pokemon at a time and save it right after
+    // - loadMissingPokemon() will already get variations (raichu and A. raichu) 
+    // - this will allow me to check the db, use the id and last_load_dts, then only get if last_load_dts > load_start_time
     const loadedPokemon = await loadMissingPokemon(toLoad);
 
     // TODO: There will be a point in the loading where I start pulling down pokemon forms that are already loaded
