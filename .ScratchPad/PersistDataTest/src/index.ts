@@ -36,6 +36,7 @@ const loadMissingPokemon = async (toLoad, getVarieties: boolean = true) => {
                     pokemonData["has_forms"] = false;
                     pokemonData["male_sprite_url"] = data.sprites.front_default;
                     pokemonData["female_sprite_url"] = data.sprites.front_female;
+                    pokemonData["img_path"] = `./imgs/dex_imgs/${data.id}`;
 
                     if (data.forms.length > 1) {
                         pokemonData["has_forms"] = true;
@@ -49,6 +50,7 @@ const loadMissingPokemon = async (toLoad, getVarieties: boolean = true) => {
             await fetch(pokemonData["species_url"], { method: "GET" })
                 .then((res) => res.json())
                 .then((data) => {
+                    pokemonData['dex_no'] = data.order;
                     pokemonData["has_gender_differences"] = data.has_gender_differences;
                     pokemonData["habitat"] = data.habitat.name;
                     pokemonData["generation"] = data.generation.name;
@@ -56,6 +58,10 @@ const loadMissingPokemon = async (toLoad, getVarieties: boolean = true) => {
 
                     if (data.varieties.length > 1) {
                         data.varieties.forEach((v) => {
+                            if (pokemonData["name"] == v.pokemon["name"]) {
+                                pokemonData['is_default'] = v["is_default"];
+                            }
+                            
                             if (!(v["is_default"] || v.pokemon["name"].includes("totem")) && getVarieties ) {
                                 getRecurve.push(v.pokemon);
                             }
@@ -76,6 +82,7 @@ const loadMissingPokemon = async (toLoad, getVarieties: boolean = true) => {
         })
     );
 
+    console.log(loadedPokemon)
     return loadedPokemon;
 };
 
@@ -110,12 +117,13 @@ const loadData = async () => {
     // TODO: Should probably do a pokemon at a time and save it right after
     // - loadMissingPokemon() will already get variations (raichu and A. raichu) 
     // - this will allow me to check the db, use the id and last_load_dts, then only get if last_load_dts > load_start_time
+
     const loadedPokemon = await loadMissingPokemon(toLoad);
 
     // TODO: There will be a point in the loading where I start pulling down pokemon forms that are already loaded
     // - I'll get alolan raichu in the first 151 and again when I get to 10100.
     // - Figure out what to do... maybe a last modified date? Skip it if the last_mod is the same as current load time?
-    console.log(loadedPokemon);
+    // console.log(loadedPokemon);
 };
 
 loadData();
