@@ -55,11 +55,17 @@ export const fetchPkmnSpecData = async (url: string, name: string, getVarieties:
         pokemonSpeciesData["evo_chain_url"] = data.evolution_chain.url;
 
         data.varieties.forEach((v) => {
+            console.log(v)
+            
             if (name == v.pokemon["name"]) {
                 pokemonSpeciesData['is_default'] = v["is_default"];
             }
             
-            if (!(v["is_default"] || v.pokemon["name"].includes("totem")) && getVarieties ) {
+            // TODO: varietyExclusions should be part of configuration
+            const varietyExclusions = ['totem', 'starter']
+            const excluded = varietyExclusions.some(subStr => v.pokemon["name"].includes(subStr))
+
+            if (!(v["is_default"] || excluded) && getVarieties ) {
                 getRecurve.push(v.pokemon);
             }
         });

@@ -26,6 +26,12 @@ export const checkLastUpdated = (pokemonName: string) => {
     ).all()[0];
 }
 
+export const checkMinLastUpdated = () => {
+    return dbContext.prepare(
+        `SELECT min(last_modified_dts) FROM pokemon;`
+    ).all()[0]['min(last_modified_dts)'];
+}
+
 export const mergeAllData = (pkmnData: PkmnData) => {
     upsertPokemonData(pkmnData);
     upsertDexData(pkmnData)
