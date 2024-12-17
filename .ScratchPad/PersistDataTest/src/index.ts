@@ -6,13 +6,11 @@ import { fetchPkmnData, fetchPkmnListBatch, fetchPkmnSpecData } from "./services
 const forceUpdate = true;
 
 const getPokeAPIData = async () => {
-    const limit = 25;
+    const limit = 1;
     return await fetchPkmnListBatch(limit);
 };
 
 const loadMissingPokemon = async (toLoad, loadStartTime, staleByDate, getVarieties: boolean = true) => {
-    // TODO: Compare these dates an exit early
-
     await Promise.all(
         toLoad.map(async (p) => {
 

@@ -54,9 +54,17 @@ export const fetchPkmnSpecData = async (url: string, name: string, getVarieties:
         pokemonSpeciesData["generation"] = data.generation.name;
         pokemonSpeciesData["evo_chain_url"] = data.evolution_chain.url;
 
+        const flvr = data.flavor_text_entries.reduce(txt => 
+                {
+                    if (txt.language.name == 'en') {
+                        return "pppoopoo"
+                    }
+                }
+        )
+
+        console.log(flvr)
+
         data.varieties.forEach((v) => {
-            console.log(v)
-            
             if (name == v.pokemon["name"]) {
                 pokemonSpeciesData['is_default'] = v["is_default"];
             }
