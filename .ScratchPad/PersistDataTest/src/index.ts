@@ -27,6 +27,9 @@ const loadMissingPokemon = async (toLoad, loadStartTime, staleByDate, getVarieti
                 await loadMissingPokemon(getRecurve, loadStartTime, staleByDate, false);
             }
 
+            // TODO: store this in pkmnData
+            console.log(pokemonSpeciesData)
+
             const pkmnData: PkmnData = {
                 id: pokemonData['id'],
                 dex_no: pokemonSpeciesData['dex_no'],

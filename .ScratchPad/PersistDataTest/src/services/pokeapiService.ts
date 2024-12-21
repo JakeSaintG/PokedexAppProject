@@ -54,15 +54,16 @@ export const fetchPkmnSpecData = async (url: string, name: string, getVarieties:
         pokemonSpeciesData["generation"] = data.generation.name;
         pokemonSpeciesData["evo_chain_url"] = data.evolution_chain.url;
 
-        const flvr = data.flavor_text_entries.reduce(txt => 
-                {
-                    if (txt.language.name == 'en') {
-                        return "pppoopoo"
-                    }
-                }
-        )
+        const flavorTexts = data.flavor_text_entries.reduce((acc, txt) => {
+            if (txt.language.name == 'en') {
+                const text = txt.flavor_text.replace(/\n|\f/g, ' ');
+                if(!acc.includes(text)) acc.push(text);
+            }
 
-        console.log(flvr)
+            return acc;
+        }, [] )
+
+        pokemonSpeciesData["flavor_texts"] = flavorTexts;
 
         data.varieties.forEach((v) => {
             if (name == v.pokemon["name"]) {
