@@ -6,13 +6,23 @@ let dbContext: sqlite.Database;
 
 const FILE_LOCATION = './data.db';
 
-export const initData = () => {
+export const initData = (dataSource: string) => {
     if (!fs.existsSync(FILE_LOCATION)) {
         console.log('File not found.')
-        setDbContext();
+        setDbContext(dataSource);
         createDatabase();
     } else {
-        setDbContext();
+        setDbContext(dataSource);
+    }
+};
+
+const setDbContext = (dataSource: string) => {
+    console.log('Setting context');
+
+    if (dataSource === 'sqlite') {
+        dbContext = new sqlite(FILE_LOCATION);
+    } else if (dataSource === 'postgres') {
+        throw 'postgres support not yet implemented.'
     }
 };
 
@@ -144,11 +154,6 @@ export const upsertDexData = (pkmnData: PkmnData) => {
 //             contactReq.message
 //         ]);
 }
-
-const setDbContext = () => {
-    console.log('Setting context')
-    dbContext = new sqlite(FILE_LOCATION);
-};
 
 const createDatabase = () => {
     console.log('Creating tables')
