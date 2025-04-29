@@ -12,73 +12,80 @@ export const fetchPkmnListBatch = async (limit: number) => {
             )
         );
 
-    return pkmn
-}
+    return pkmn;
+};
 
 export const fetchPkmnData = async (url: string) => {
     let pokemonData = {};
 
     await fetch(url, { method: "GET" })
-    .then((res) => res.json())
-    .then((data) => {
-        pokemonData["id"] = data.id;
-        pokemonData["name"] = data.name;
-        pokemonData["species_url"] = data.species.url;
-        pokemonData["has_forms"] = false;
-        pokemonData["male_sprite_url"] = data.sprites.front_default;
-        pokemonData["female_sprite_url"] = data.sprites.front_female;
-        pokemonData["img_path"] = `./imgs/dex_imgs/${data.id}`;
+        .then((res) => res.json())
+        .then((data) => {
+            pokemonData["id"] = data.id;
+            pokemonData["name"] = data.name;
+            pokemonData["species_url"] = data.species.url;
+            pokemonData["has_forms"] = false;
+            pokemonData["male_sprite_url"] = data.sprites.front_default;
+            pokemonData["female_sprite_url"] = data.sprites.front_female;
+            pokemonData["img_path"] = `./imgs/dex_imgs/${data.id}`;
 
-        if (data.forms.length > 1) {
-            pokemonData["has_forms"] = true;
-        }
+            if (data.forms.length > 1) {
+                pokemonData["has_forms"] = true;
+            }
 
-        data.types.forEach((t) => {
-            pokemonData[`type_${t.slot}`] = t.type.name;
+            data.types.forEach((t) => {
+                pokemonData[`type_${t.slot}`] = t.type.name;
+            });
         });
-    });
 
     return pokemonData;
-}
+};
 
-export const fetchPkmnSpecData = async (url: string, name: string, getVarieties: boolean = true): Promise<[{},any[]]> => {
+export const fetchPkmnSpecData = async (
+    url: string,
+    name: string,
+    getVarieties: boolean = true
+): Promise<[{}, any[]]> => {
     let pokemonSpeciesData = {};
     let getRecurve = [];
 
     await fetch(url, { method: "GET" })
-    .then((res) => res.json())
-    .then((data) => {
-        pokemonSpeciesData['dex_no'] = data.order;
-        pokemonSpeciesData["has_gender_differences"] = data.has_gender_differences;
-        pokemonSpeciesData["habitat"] = data.habitat.name;
-        pokemonSpeciesData["generation"] = data.generation.name;
-        pokemonSpeciesData["evo_chain_url"] = data.evolution_chain.url;
+        .then((res) => res.json())
+        .then((data) => {
+            pokemonSpeciesData["dex_no"] = data.order;
+            pokemonSpeciesData["has_gender_differences"] =
+                data.has_gender_differences;
+            pokemonSpeciesData["habitat"] = data.habitat.name;
+            pokemonSpeciesData["generation"] = data.generation.name;
+            pokemonSpeciesData["evo_chain_url"] = data.evolution_chain.url;
 
-        const flavorTexts = data.flavor_text_entries.reduce((acc, txt) => {
-            if (txt.language.name == 'en') {
-                const text = txt.flavor_text.replace(/\n|\f/g, ' ');
-                if(!acc.includes(text)) acc.push(text);
-            }
+            const flavorTexts = data.flavor_text_entries.reduce((acc, txt) => {
+                if (txt.language.name == "en") {
+                    const text = txt.flavor_text.replace(/\n|\f/g, " ");
+                    if (!acc.includes(text)) acc.push(text);
+                }
 
-            return acc;
-        }, [] )
+                return acc;
+            }, []);
 
-        pokemonSpeciesData["flavor_texts"] = flavorTexts;
+            pokemonSpeciesData["flavor_texts"] = flavorTexts;
 
-        data.varieties.forEach((v) => {
-            if (name == v.pokemon["name"]) {
-                pokemonSpeciesData['is_default'] = v["is_default"];
-            }
-            
-            // TODO: varietyExclusions should be part of configuration
-            const varietyExclusions = ['totem', 'starter']
-            const excluded = varietyExclusions.some(subStr => v.pokemon["name"].includes(subStr))
+            data.varieties.forEach((v) => {
+                if (name == v.pokemon["name"]) {
+                    pokemonSpeciesData["is_default"] = v["is_default"];
+                }
 
-            if (!(v["is_default"] || excluded) && getVarieties ) {
-                getRecurve.push(v.pokemon);
-            }
+                // TODO: varietyExclusions should be part of configuration
+                const varietyExclusions = ["totem", "starter"];
+                const excluded = varietyExclusions.some((subStr) =>
+                    v.pokemon["name"].includes(subStr)
+                );
+
+                if (!(v["is_default"] || excluded) && getVarieties) {
+                    getRecurve.push(v.pokemon);
+                }
+            });
         });
-    });
 
     return [pokemonSpeciesData, getRecurve];
-}
+};
