@@ -6,6 +6,7 @@ import { Env } from './env';
 const getPokeAPIData = async () => {
     const limit = 1;
     const offset = 0;
+
     return await fetchPkmnListBatch(limit, offset);
 };
 
@@ -18,20 +19,21 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVariet
                 return;
             }
 
-            const baseData = {
-                url: p.url,
-                last_modified_dts: new Date().toISOString(),
-            };
-
             const pokemonData = await fetchPkmnData(p.url);
-            const [pkmnSpeciesData, getRecurve] = await fetchPkmnSpeciesData(
+
+            // WIP ============================================================================
+            // TODO: Don't do this if I'm in this function recursively
+            // I shouldn't be doing this again if I already know the species data from an outside call 
+            // and I'm just getting the /pokemon/{id} data for the form/variety.
+            const [pkmnSpeciesData, varieties] = await fetchPkmnSpeciesData(
                 pokemonData["species_url"],
                 pokemonData["name"]
             );
 
-            if (getRecurve.length > 0 && getVarieties) {
-                await loadMissingPokemon( getRecurve, loadStartTime, staleByDate, false );
+            if (varieties.length > 0 && getVarieties) {
+                await loadMissingPokemon( varieties, loadStartTime, staleByDate, false );
             }
+            // WIP ============================================================================
 
             // TODO: store this in pkmnData
             console.log(pkmnSpeciesData);
@@ -54,8 +56,8 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVariet
                 generation: pkmnSpeciesData["generation"],
                 evo_chain_url: pkmnSpeciesData["evo_chain_url"],
                 
-                url: baseData["url"],
-                last_modified_dts: baseData["last_modified_dts"],
+                url: p.url,
+                last_modified_dts: new Date().toISOString()
             };
 
             mergeAllData(pkmnData);

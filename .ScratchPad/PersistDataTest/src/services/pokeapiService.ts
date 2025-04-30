@@ -1,9 +1,12 @@
-export const fetchPkmnListBatch = async (limit: number) => {
+export const fetchPkmnListBatch = async (limit: number, offset: number) => {
     let pkmn = [];
 
-    await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=0`, {
-        method: "GET",
-    })
+    await fetch(
+        `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`,
+        {
+            method: "GET",
+        }
+    )
         .then((res) => res.json())
         .then((data) => (pkmn = data.results))
         .catch(() =>
@@ -41,7 +44,7 @@ export const fetchPkmnData = async (url: string) => {
     return pokemonData;
 };
 
-export const fetchPkmnSpecData = async (
+export const fetchPkmnSpeciesData = async (
     url: string,
     name: string,
     getVarieties: boolean = true
@@ -88,4 +91,9 @@ export const fetchPkmnSpecData = async (
         });
 
     return [pokemonSpeciesData, getRecurve];
+};
+
+// TODO: Implement
+export const pokeApiPing = () => {
+    return true;
 };
