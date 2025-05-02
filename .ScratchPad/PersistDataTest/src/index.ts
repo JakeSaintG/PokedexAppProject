@@ -88,7 +88,7 @@ const staleByDate = new Date(
 ).toISOString();
 
 // Will be configurable later after POC
-const forceUpdate = true;
+const forceUpdate = Env.FORCE_UPDATE;
 
 if (pokeApiPing()) {
     loadData(Env.DATA_SOURCE, staleByDate, forceUpdate);
