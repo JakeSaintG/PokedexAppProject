@@ -13,7 +13,9 @@ const getPokeAPIData = async () => {
 const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVarieties: boolean = true ) => {
     await Promise.all(
         toLoad.map(async (p) => {
-            const entryStale = !(checkLastUpdated(p.name) == undefined) && checkLastUpdated(p.name)["last_modified_dts"] > staleByDate;
+            const lastUpdated = checkLastUpdated(p.name);
+            
+            const entryStale = !(lastUpdated == undefined) && lastUpdated["last_modified_dts"] > staleByDate;
             
             if (entryStale && !forceUpdate) {
                 return;
@@ -65,12 +67,13 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVariet
     );
 };
 
-const loadData = async (dateSource: string, staleByDate: string, forceUpdate: boolean) => {
+const loadData = async (dataSource: string, staleByDate: string, forceUpdate: boolean) => {
     const loadStartTime = new Date().toISOString();
 
-    initData(dateSource);
+    initData(dataSource);
 
-    const dbStale = !(checkMinLastUpdated() == undefined) && checkMinLastUpdated() > staleByDate;
+    const minLastUpdated = checkMinLastUpdated();
+    const dbStale = !(minLastUpdated == undefined) && minLastUpdated > staleByDate;
 
     if (dbStale && !forceUpdate) {
         console.log("No data update needed.");
@@ -87,7 +90,6 @@ const staleByDate = new Date(
     new Date().getTime() - 7 * 24 * 60 * 60 * 1000
 ).toISOString();
 
-// Will be configurable later after POC
 const forceUpdate = Env.FORCE_UPDATE;
 
 if (pokeApiPing()) {

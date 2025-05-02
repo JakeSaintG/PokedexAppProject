@@ -3,9 +3,7 @@ export const fetchPkmnListBatch = async (limit: number, offset: number) => {
 
     await fetch(
         `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`,
-        {
-            method: "GET",
-        }
+        { method: "GET" }
     )
         .then((res) => res.json())
         .then((data) => (pkmn = data.results))
