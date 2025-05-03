@@ -137,7 +137,7 @@ const upsertPokemonData = (pkmnData: PkmnData) => {
             last_modified_dts: pkmnData.last_modified_dts
         });
     } catch (error) {
-        console.error(`Failed to UPSERT ${pkmnData.name}`)
+        console.error(`Failed to UPSERT ${pkmnData.name}: ${error}`)
     }
 }
 

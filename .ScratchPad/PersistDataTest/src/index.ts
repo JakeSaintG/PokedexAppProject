@@ -4,13 +4,13 @@ import { fetchPkmnData, fetchPkmnListBatch, fetchPkmnSpeciesData, pokeApiPing } 
 import { Env } from './env';
 
 const getPokeAPIData = async () => {
-    const limit = 1;
+    const limit = 151;
     const offset = 0;
 
     return await fetchPkmnListBatch(limit, offset);
 };
 
-const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVarieties: boolean = true ) => {
+const loadMissingPokemon = async ( toLoad, loadStartTime: string, staleByDate: string, getVarieties: boolean = true ) => {
     await Promise.all(
         toLoad.map(async (p) => {
             const entryStale = !(checkLastUpdated(p.name) == undefined) && checkLastUpdated(p.name)["last_modified_dts"] > staleByDate;
@@ -34,9 +34,6 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVariet
                 await loadMissingPokemon( varieties, loadStartTime, staleByDate, false );
             }
             // WIP ============================================================================
-
-            // TODO: store this in pkmnData
-            console.log(pkmnSpeciesData);
 
             const pkmnData: PkmnData = {
                 id: pokemonData["id"],
@@ -65,10 +62,10 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVariet
     );
 };
 
-const loadData = async (dateSource: string, staleByDate: string, forceUpdate: boolean) => {
+const loadData = async (dataSource: string, staleByDate: string, forceUpdate: boolean) => {
     const loadStartTime = new Date().toISOString();
 
-    initData(dateSource);
+    initData(dataSource);
 
     const dbStale = !(checkMinLastUpdated() == undefined) && checkMinLastUpdated() > staleByDate;
 

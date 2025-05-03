@@ -55,9 +55,11 @@ export const fetchPkmnSpeciesData = async (
     await fetch(url, { method: "GET" })
         .then((res) => res.json())
         .then((data) => {
-            pokemonSpeciesData["dex_no"] = data.order;
-            pokemonSpeciesData["has_gender_differences"] =
-                data.has_gender_differences;
+            
+            const national_dex = data.pokedex_numbers.find(e => e.pokedex.name === 'national');
+            
+            pokemonSpeciesData["dex_no"] = national_dex.entry_number;
+            pokemonSpeciesData["has_gender_differences"] = data.has_gender_differences;
             pokemonSpeciesData["habitat"] = data.habitat.name;
             pokemonSpeciesData["generation"] = data.generation.name;
             pokemonSpeciesData["evo_chain_url"] = data.evolution_chain.url;
