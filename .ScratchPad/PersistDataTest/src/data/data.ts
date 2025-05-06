@@ -3,24 +3,26 @@ import fs from 'fs';
 import { PkmnData } from '../types/pkmnData';
 
 let dbContext: sqlite.Database;
+let configDbContext: sqlite.Database;
 
-const FILE_LOCATION = './data.db';
+const DB_FILE_LOCATION = './data.db';
+const CONFIG_DB_FILE_LOCATION = './config.db';
 
 export const initData = (dataSource: string) => {
-    if (!fs.existsSync(FILE_LOCATION)) {
-        console.log('File not found.')
+    if (!fs.existsSync(DB_FILE_LOCATION)) {
         setDbContext(dataSource);
-        createDatabase();
+        createPokemonDatabase();
+        createConfigDatabase();
     } else {
         setDbContext(dataSource);
     }
 };
 
 const setDbContext = (dataSource: string) => {
-    console.log('Setting context');
-
+    console.log('Preparing databases...');
     if (dataSource === 'sqlite') {
-        dbContext = new sqlite(FILE_LOCATION);
+        dbContext = new sqlite(DB_FILE_LOCATION);
+        configDbContext = new sqlite(CONFIG_DB_FILE_LOCATION);
     } else if (dataSource === 'postgres') {
         throw 'postgres support not yet implemented.'
     }
@@ -155,8 +157,7 @@ export const upsertDexData = (pkmnData: PkmnData) => {
 //         ]);
 }
 
-const createDatabase = () => {
-    console.log('Creating tables')
+const createPokemonDatabase = () => {
     dbContext
         .prepare(
             `
@@ -195,3 +196,18 @@ const createDatabase = () => {
         )
         .run();
 };
+
+const createConfigDatabase = () => {
+    dbContext
+    .prepare(
+        `
+        CREATE TABLE IF NOT EXISTS supported_generations (
+            id INT PRIMARY KEY NOT NULL
+            ,generation_name STRING NOT NULL
+            ,start_dex_no STRING NOT NULL
+            ,end_dex_no STRING NOT NULL
+        )
+        `
+    )
+    .run();
+}
