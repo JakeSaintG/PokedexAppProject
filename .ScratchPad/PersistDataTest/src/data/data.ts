@@ -1,6 +1,7 @@
 import sqlite from 'better-sqlite3';
 import fs from 'fs';
 import { PkmnData } from '../types/pkmnData';
+import { ConfigurationData } from '../types/configurationData';
 
 let dbContext: sqlite.Database;
 let configDbContext: sqlite.Database;
@@ -9,10 +10,10 @@ const DB_FILE_LOCATION = './data.db';
 const CONFIG_DB_FILE_LOCATION = './config.db';
 
 export const initData = (dataSource: string) => {
-    if (!fs.existsSync(DB_FILE_LOCATION)) {
+    if (!fs.existsSync(DB_FILE_LOCATION) || !fs.existsSync(CONFIG_DB_FILE_LOCATION)) {
         setDbContext(dataSource);
-        createPokemonDatabase();
-        createConfigDatabase();
+        createPokemonTablesIfNotExist();
+        createConfigTablesIfNotExist();
     } else {
         setDbContext(dataSource);
     }
@@ -58,8 +59,8 @@ const upsertPokemonData = (pkmnData: PkmnData) => {
     if (pkmnData.has_forms) convertedHasForms = 1
     if (pkmnData.has_gender_differences) convertedHasGenderDifferences = 1
 
-    const insert = 
-        `INSERT INTO pokemon (
+    const insert =  `
+    INSERT INTO pokemon (
         id
         ,dex_no
         ,name
@@ -98,7 +99,8 @@ const upsertPokemonData = (pkmnData: PkmnData) => {
         ,:last_modified_dts
     )
         ON CONFLICT(id) 
-        DO UPDATE SET id = :id
+        DO UPDATE SET 
+            id = :id
             ,dex_no = :dex_no
             ,name = :name
             ,is_default = :is_default
@@ -114,30 +116,31 @@ const upsertPokemonData = (pkmnData: PkmnData) => {
             ,habitat = :habitat
             ,generation = :generation
             ,evo_chain_url = :evo_chain_url
-            ,last_modified_dts = :last_modified_dts`;
+            ,last_modified_dts = :last_modified_dts
+    `;
 
     try {
         dbContext
-        .prepare(insert)
-        .run({
-            id: pkmnData.id,
-            dex_no: pkmnData.dex_no,
-            name: pkmnData.name,
-            is_default: convertedIsDefault,
-            type_1: pkmnData.type_1,
-            type_2: pkmnData.type_2,
-            img_path: pkmnData.img_path,
-            url: pkmnData.url,
-            species_url: pkmnData.species_url,
-            has_forms: convertedHasForms,
-            male_sprite_url: pkmnData.male_sprite_url,
-            female_sprite_url: pkmnData.male_sprite_url,
-            has_gender_differences: convertedHasGenderDifferences,
-            habitat: pkmnData.habitat,
-            generation: pkmnData.generation,
-            evo_chain_url: pkmnData.evo_chain_url,
-            last_modified_dts: pkmnData.last_modified_dts
-        });
+            .prepare(insert)
+            .run({
+                id: pkmnData.id,
+                dex_no: pkmnData.dex_no,
+                name: pkmnData.name,
+                is_default: convertedIsDefault,
+                type_1: pkmnData.type_1,
+                type_2: pkmnData.type_2,
+                img_path: pkmnData.img_path,
+                url: pkmnData.url,
+                species_url: pkmnData.species_url,
+                has_forms: convertedHasForms,
+                male_sprite_url: pkmnData.male_sprite_url,
+                female_sprite_url: pkmnData.male_sprite_url,
+                has_gender_differences: convertedHasGenderDifferences,
+                habitat: pkmnData.habitat,
+                generation: pkmnData.generation,
+                evo_chain_url: pkmnData.evo_chain_url,
+                last_modified_dts: pkmnData.last_modified_dts
+            });
     } catch (error) {
         console.error(`Failed to UPSERT ${pkmnData.name}`)
     }
@@ -157,7 +160,7 @@ export const upsertDexData = (pkmnData: PkmnData) => {
 //         ]);
 }
 
-const createPokemonDatabase = () => {
+const createPokemonTablesIfNotExist = () => {
     dbContext
         .prepare(
             `
@@ -188,26 +191,74 @@ const createPokemonDatabase = () => {
         .prepare(
             `
             CREATE TABLE IF NOT EXISTS pokedex_entries (
-                id INT PRIMARY KEY NOT NULL,
-                gen STRING NOT NULL,
-                entry STRING NOT NULL
+                id INT PRIMARY KEY NOT NULL
+                ,gen STRING NOT NULL
+                ,entry STRING NOT NULL
+                ,last_modified_dts STRING NOT NULL
             )
             `
         )
         .run();
+
+    console.log('Pokemon specific tables created');
 };
 
-const createConfigDatabase = () => {
-    dbContext
-    .prepare(
-        `
-        CREATE TABLE IF NOT EXISTS supported_generations (
-            id INT PRIMARY KEY NOT NULL
-            ,generation_name STRING NOT NULL
-            ,start_dex_no STRING NOT NULL
-            ,end_dex_no STRING NOT NULL
+const createConfigTablesIfNotExist = () => {
+    configDbContext
+        .prepare(
+            `
+            CREATE TABLE IF NOT EXISTS supported_generations (
+                id INT PRIMARY KEY NOT NULL
+                ,generation_name STRING NOT NULL
+                ,start_dex_no INT NOT NULL
+                ,end_dex_no INT NOT NULL
+                ,last_modified_dts STRING NOT NULL
+            )
+            `
         )
-        `
-    )
-    .run();
+        .run();
+
+    console.log('configuration tables created');
+}
+
+export const upsertConfigurationData = (configData: ConfigurationData[]) => {
+    const insert =  `
+        INSERT INTO supported_generations (
+            id
+            ,generation_name
+            ,start_dex_no
+            ,end_dex_no
+            ,last_modified_dts
+        ) 
+        VALUES (
+            :id
+            ,:generation_name
+            ,:start_dex_no
+            ,:end_dex_no
+            ,:last_modified_dts
+        )
+            ON CONFLICT(id) 
+            DO UPDATE SET 
+                id = :id
+                ,generation_name = :generation_name
+                ,start_dex_no = :start_dex_no
+                ,end_dex_no = :end_dex_no
+                ,last_modified_dts = :last_modified_dts
+    `;
+
+    configData.forEach((c: ConfigurationData) => {
+        configDbContext
+            .prepare(insert)
+            .run({
+                id: c.id,
+                generation_name: c.generation_name,
+                start_dex_no: c.start_dex_no,
+                end_dex_no: c.end_dex_no,
+                last_modified_dts: c.last_modified_dts
+            });
+        try {
+        } catch (error) {
+            console.error(`Failed to UPSERT config data for ${c.generation_name}`)
+        }
+    })
 }
