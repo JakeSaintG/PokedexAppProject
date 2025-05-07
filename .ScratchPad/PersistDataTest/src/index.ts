@@ -1,9 +1,9 @@
-import { initData, getStoredPokemon, mergeAllData, checkLastUpdated, checkMinLastUpdated } from "./data/data";
+import { initData, getStoredPokemon, mergeAllData, checkLastUpdated, checkMinLastUpdated, upsertConfigurationData } from "./data/data";
 import { PkmnData } from "./types/pkmnData";
 import { fetchPkmnData, fetchPkmnToLoad, fetchPkmnSpeciesData, pokeApiPing } from "./services/pokeApiService";
 import { Env } from './env';
 
-const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVarieties: boolean = true ) => {
+const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, forceUpdate, getVarieties: boolean = true ) => {
     await Promise.all(
         toLoad.map(async (p) => {
             const lastUpdated = checkLastUpdated(p.name);
@@ -60,11 +60,10 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVariet
     );
 };
 
-const loadData = async (dataSource: string, staleByDate: string, forceUpdate: boolean) => {
+const loadData = async (staleByDate: string, forceUpdate: boolean) => {
     const loadStartTime = new Date().toISOString();
 
-    initData(dataSource);
-
+    // Check if overall data is stale
     const minLastUpdated = checkMinLastUpdated();
     const dbStale = !(minLastUpdated == undefined) && minLastUpdated > staleByDate;
 
@@ -81,18 +80,30 @@ const loadData = async (dataSource: string, staleByDate: string, forceUpdate: bo
     const offset = 0;
     const fetchedPokemon = await fetchPkmnToLoad(limit, offset);
 
-    await loadMissingPokemon(fetchedPokemon, loadStartTime, staleByDate);
-
+    await loadMissingPokemon(fetchedPokemon, loadStartTime, staleByDate, forceUpdate);
     console.log('done')
 };
+
+
+
+
+initData(Env.DATA_SOURCE);
+
+// TODO: Temporary; later simulate getting this from a "call home" API response.
+const tempConfigData = [{
+    id: 1,
+    generation_name: 'generation1',
+    start_dex_no: 1,
+    end_dex_no: 1,
+    last_modified_dts: new Date().toISOString()
+}]
+upsertConfigurationData(tempConfigData)
 
 // Just a week for now. Will be configurable after poc
 const staleByDate = new Date(
     new Date().getTime() - 7 * 24 * 60 * 60 * 1000
 ).toISOString();
 
-const forceUpdate = Env.FORCE_UPDATE;
-
 if (pokeApiPing()) {
-    loadData(Env.DATA_SOURCE, staleByDate, forceUpdate);
+    loadData( staleByDate, Env.FORCE_UPDATE);
 }
