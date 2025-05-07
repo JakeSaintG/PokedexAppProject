@@ -2,6 +2,7 @@ import { initData, getStoredPokemon, mergeAllData, checkLastUpdated, checkMinLas
 import { PkmnData } from "./types/pkmnData";
 import { fetchPkmnData, fetchPkmnToLoad, fetchPkmnSpeciesData, pokeApiPing } from "./services/pokeApiService";
 import { Env } from './env';
+import { updateNeeded } from "./services/appService";
 
 const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, forceUpdate, getVarieties: boolean = true ) => {
     await Promise.all(
@@ -63,14 +64,7 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, forceUpda
 const loadData = async (staleByDate: string, forceUpdate: boolean) => {
     const loadStartTime = new Date().toISOString();
 
-    // Check if overall data is stale
-    const minLastUpdated = checkMinLastUpdated();
-    const dbStale = !(minLastUpdated == undefined) && minLastUpdated > staleByDate;
-
-    if (dbStale && !forceUpdate) {
-        console.log("No data update needed.");
-        return;
-    }
+    if (updateNeeded(forceUpdate, staleByDate)) return;
 
     // TODO: implement getting by generation
     // - When empty, load gen 1

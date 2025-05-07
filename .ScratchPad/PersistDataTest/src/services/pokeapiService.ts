@@ -1,6 +1,6 @@
 import { Variety } from "../types/varieties";
 
-export const fetchPkmnListBatch = async (limit: number, offset: number) => {
+export const fetchPkmnToLoad = async (limit: number, offset: number) => {
     let pkmn = [];
 
     await fetch(
