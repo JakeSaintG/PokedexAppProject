@@ -1,14 +1,7 @@
 import { initData, getStoredPokemon, mergeAllData, checkLastUpdated, checkMinLastUpdated } from "./data/data";
 import { PkmnData } from "./types/pkmnData";
-import { fetchPkmnData, fetchPkmnListBatch, fetchPkmnSpeciesData, pokeApiPing } from "./services/pokeApiService";
+import { fetchPkmnData, fetchPkmnToLoad, fetchPkmnSpeciesData, pokeApiPing } from "./services/pokeApiService";
 import { Env } from './env';
-
-const getPokeAPIData = async () => {
-    const limit = 1;
-    const offset = 0;
-
-    return await fetchPkmnListBatch(limit, offset);
-};
 
 const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVarieties: boolean = true ) => {
     await Promise.all(
@@ -38,7 +31,7 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, getVariet
             // WIP ============================================================================
 
             // TODO: store this in pkmnData
-            console.log(pkmnSpeciesData);
+            // console.log(pkmnSpeciesData);
 
             const pkmnData: PkmnData = {
                 id: pokemonData["id"],
@@ -80,9 +73,17 @@ const loadData = async (dataSource: string, staleByDate: string, forceUpdate: bo
         return;
     }
 
-    const fetchedPokemon = await getPokeAPIData();
+    // TODO: implement getting by generation
+    // - When empty, load gen 1
+    // - Allow user to trigger all other gen fetching (using limit and offset)
+
+    const limit = 1;
+    const offset = 0;
+    const fetchedPokemon = await fetchPkmnToLoad(limit, offset);
 
     await loadMissingPokemon(fetchedPokemon, loadStartTime, staleByDate);
+
+    console.log('done')
 };
 
 // Just a week for now. Will be configurable after poc
