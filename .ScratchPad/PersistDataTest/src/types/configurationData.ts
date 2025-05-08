@@ -1,7 +1,8 @@
 export interface ConfigurationData {
     id: number, 
     generation_name: string,
-    start_dex_no: number, 
-    end_dex_no: number,
+    description: string,
+    starting_dex_no: number, 
+    count: number,
     last_modified_dts: string
 }

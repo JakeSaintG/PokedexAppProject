@@ -35,7 +35,13 @@ export const getStoredPokemon = async (): Promise<unknown[]> => {
 
 export const checkLastUpdated = (pokemonName: string) => {
     return dbContext.prepare(
-        `SELECT name, last_modified_dts FROM pokemon WHERE name = '${pokemonName}';`
+        `
+            SELECT 
+                name,
+                last_modified_dts 
+            FROM pokemon
+            WHERE name = '${pokemonName}';
+        `
     ).all()[0];
 }
 
@@ -210,8 +216,9 @@ const createConfigTablesIfNotExist = () => {
             CREATE TABLE IF NOT EXISTS supported_generations (
                 id INT PRIMARY KEY NOT NULL
                 ,generation_name STRING NOT NULL
-                ,start_dex_no INT NOT NULL
-                ,end_dex_no INT NOT NULL
+                ,description STRING NOT NULL
+                ,starting_dex_no INT NOT NULL
+                ,count INT NOT NULL
                 ,last_modified_dts STRING NOT NULL
             )
             `
@@ -226,23 +233,25 @@ export const upsertConfigurationData = (configData: ConfigurationData[]) => {
         INSERT INTO supported_generations (
             id
             ,generation_name
-            ,start_dex_no
-            ,end_dex_no
+            ,description
+            ,starting_dex_no
+            ,count
             ,last_modified_dts
         ) 
         VALUES (
             :id
             ,:generation_name
-            ,:start_dex_no
-            ,:end_dex_no
+            ,:description
+            ,:starting_dex_no
+            ,:count
             ,:last_modified_dts
         )
             ON CONFLICT(id) 
             DO UPDATE SET 
                 id = :id
                 ,generation_name = :generation_name
-                ,start_dex_no = :start_dex_no
-                ,end_dex_no = :end_dex_no
+                ,starting_dex_no = :starting_dex_no
+                ,count = :count
                 ,last_modified_dts = :last_modified_dts
     `;
 
@@ -252,8 +261,9 @@ export const upsertConfigurationData = (configData: ConfigurationData[]) => {
             .run({
                 id: c.id,
                 generation_name: c.generation_name,
-                start_dex_no: c.start_dex_no,
-                end_dex_no: c.end_dex_no,
+                description: c.description,
+                starting_dex_no: c.starting_dex_no,
+                count: c.count,
                 last_modified_dts: c.last_modified_dts
             });
         try {
@@ -261,4 +271,10 @@ export const upsertConfigurationData = (configData: ConfigurationData[]) => {
             console.error(`Failed to UPSERT config data for ${c.generation_name}`)
         }
     })
+}
+
+export const getConfigData = () => {
+    return configDbContext.prepare(
+        `SELECT * FROM supported_generations;`
+    ).all();
 }

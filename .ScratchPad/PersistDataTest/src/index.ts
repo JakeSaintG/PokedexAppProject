@@ -1,12 +1,13 @@
-import { initData, getStoredPokemon, mergeAllData, checkLastUpdated, checkMinLastUpdated, upsertConfigurationData } from "./data/data";
+import { initData, mergeAllData, checkLastUpdated } from "./data/data";
 import { PkmnData } from "./types/pkmnData";
 import { fetchPkmnData, fetchPkmnToLoad, fetchPkmnSpeciesData, pokeApiPing } from "./services/pokeApiService";
 import { Env } from './env';
-import { updateNeeded } from "./services/appService";
+import { getSupportedGenerations, setConfigurationData, updateNeeded } from "./services/appService";
+import { Pokemon } from "./types/pokemon";
 
-const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, forceUpdate, getVarieties: boolean = true ) => {
+const loadMissingPokemon = async ( toLoad: Pokemon[], loadStartTime: string, staleByDate: string, forceUpdate: boolean, getVarieties: boolean = true ) => {
     await Promise.all(
-        toLoad.map(async (p) => {
+        toLoad.map(async (p: Pokemon) => {
             const lastUpdated = checkLastUpdated(p.name);
             
             const entryStale = !(lastUpdated == undefined) && lastUpdated["last_modified_dts"] > staleByDate;
@@ -27,7 +28,7 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, forceUpda
             );
 
             if (varieties.length > 0 && getVarieties) {
-                await loadMissingPokemon( varieties, loadStartTime, staleByDate, false );
+                await loadMissingPokemon( varieties, loadStartTime, staleByDate, forceUpdate, false );
             }
             // WIP ============================================================================
 
@@ -63,35 +64,28 @@ const loadMissingPokemon = async ( toLoad, loadStartTime, staleByDate, forceUpda
 
 const loadData = async (staleByDate: string, forceUpdate: boolean) => {
     const loadStartTime = new Date().toISOString();
-
-    if (updateNeeded(forceUpdate, staleByDate)) return;
+    
+    if (!updateNeeded(forceUpdate, staleByDate)) return;
 
     // TODO: implement getting by generation
     // - When empty, load gen 1
     // - Allow user to trigger all other gen fetching (using limit and offset)
 
-    const limit = 1;
-    const offset = 0;
-    const fetchedPokemon = await fetchPkmnToLoad(limit, offset);
+    const supportedGenerations = getSupportedGenerations();
 
-    await loadMissingPokemon(fetchedPokemon, loadStartTime, staleByDate, forceUpdate);
-    console.log('done')
+    supportedGenerations.forEach( async (gen) => {
+        const fetchedPokemon = await fetchPkmnToLoad(gen.count, (gen.start_dex_no - 1));
+        await loadMissingPokemon(fetchedPokemon, loadStartTime, staleByDate, forceUpdate);
+    })
 };
+
 
 
 
 
 initData(Env.DATA_SOURCE);
 
-// TODO: Temporary; later simulate getting this from a "call home" API response.
-const tempConfigData = [{
-    id: 1,
-    generation_name: 'generation1',
-    start_dex_no: 1,
-    end_dex_no: 1,
-    last_modified_dts: new Date().toISOString()
-}]
-upsertConfigurationData(tempConfigData)
+setConfigurationData();
 
 // Just a week for now. Will be configurable after poc
 const staleByDate = new Date(
@@ -99,5 +93,5 @@ const staleByDate = new Date(
 ).toISOString();
 
 if (pokeApiPing()) {
-    loadData( staleByDate, Env.FORCE_UPDATE);
+    loadData( staleByDate, Env.FORCE_UPDATE );
 }
