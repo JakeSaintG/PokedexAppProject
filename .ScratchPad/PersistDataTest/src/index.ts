@@ -32,9 +32,6 @@ const loadMissingPokemon = async ( toLoad: Pokemon[], loadStartTime: string, sta
             }
             // WIP ============================================================================
 
-            // TODO: store this in pkmnData
-            // console.log(pkmnSpeciesData);
-
             const pkmnData: PkmnData = {
                 id: pokemonData["id"],
                 name: pokemonData["name"],

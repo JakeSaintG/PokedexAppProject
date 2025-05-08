@@ -17,6 +17,7 @@ export const updateNeeded = (forceUpdate: boolean, staleByDate: string): boolean
 
 export const setConfigurationData = () => {
     // Pretend API call to a "home" server that holds app config data
+    // (): result => {} 
 
     const result = [
         {
