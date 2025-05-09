@@ -71,6 +71,8 @@ export const fetchPkmnSpeciesData = async ( url: string, name: string, getVariet
 
             pokemonSpeciesData["flavor_texts"] = flavorTexts;
 
+            // TODO: I'm looping in a loop (forEach & some())
+            // I'm already in an outer loop... I need to optimize this.
             data.varieties.forEach((variety: Variety) => {
                 if (name == variety.pokemon["name"]) {
                     pokemonSpeciesData["is_default"] = variety["is_default"];
@@ -85,8 +87,11 @@ export const fetchPkmnSpeciesData = async ( url: string, name: string, getVariet
                 if (!(variety["is_default"] || excluded) && getVarieties) {
                     getRecurve.push(variety.pokemon);
                 }
+
+                console.log(`${name} - ${pokemonSpeciesData['is_default']} - ${variety["is_default"]}`)
             });
         });
+
 
     return [pokemonSpeciesData, getRecurve];
 };
