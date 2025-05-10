@@ -76,7 +76,7 @@ export const fetchPkmnSpeciesData = async ( url: string, name: string, getVariet
                     pokemonSpeciesData["is_default"] = variety["is_default"];
                 }
 
-                // TODO: varietyExclusions should be part of configuration
+                // TODO: varietyExclusions should probably be its own table in config
                 const varietyExclusions = ["totem", "starter"];
                 const excluded = varietyExclusions.some((subStr) =>
                     variety.pokemon["name"].includes(subStr)

@@ -84,6 +84,7 @@ initData(Env.DATA_SOURCE);
 
 setConfigurationData();
 
+// TODO: Implement this by generation in the config table
 // Just a week for now. Will be configurable after poc
 const staleByDate = new Date(
     new Date().getTime() - 7 * 24 * 60 * 60 * 1000
