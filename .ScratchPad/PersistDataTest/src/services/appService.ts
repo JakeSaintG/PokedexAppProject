@@ -17,7 +17,7 @@ export const updateNeeded = (forceUpdate: boolean, staleByDate: string): boolean
 
 export const setConfigurationData = () => {
     // Pretend API call to a "home" server that holds app config data
-    // (): result => {} 
+    // getConfigurationData = (): result => {} 
 
     const result = [
         {
@@ -25,17 +25,17 @@ export const setConfigurationData = () => {
             generation_name: 'generation1',
             description: 'Red, Green, Blue, and Yellow.',
             starting_dex_no: 1,
-            count: 9, //151
+            count: 3, //151
             last_modified_dts: '2025-05-07T22:01:16.292Z' // new Date().toISOString()
         }
-        ,{
-            id: 2,
-            generation_name: 'generation2',
-            description: 'Gold, Silver, and Crystal.',
-            starting_dex_no: 152,
-            count: 9, // 100
-            last_modified_dts: '2025-05-07T22:01:16.292Z' // new Date().toISOString()
-        }
+        // ,{
+        //     id: 2,
+        //     generation_name: 'generation2',
+        //     description: 'Gold, Silver, and Crystal.',
+        //     starting_dex_no: 152,
+        //     count: 9, // 100
+        //     last_modified_dts: '2025-05-07T22:01:16.292Z' // new Date().toISOString()
+        // }
     ]
     
     upsertConfigurationData(result)

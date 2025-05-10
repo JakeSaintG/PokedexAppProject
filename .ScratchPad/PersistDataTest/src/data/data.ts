@@ -153,23 +153,42 @@ const upsertPokemonData = (pkmnData: PkmnData) => {
 }
 
 export const upsertDexData = (pkmnData: PkmnData) => {
-//     const insert = 'INSERT INTO contacts (contact_id, name, email, pieces_of_interest, message) VALUES (?,?,?,?,?)';
-
-//     dbContext
-//         .prepare(insert)
-//         .run([
-//             contactReq.id,
-//             contactReq.name,
-//             contactReq.email,
-//             piecesOfInterest,
-//             contactReq.message
-//         ]);
+    dbContext
+        .prepare(`
+            INSERT INTO pokedex_entries (
+                id
+                ,gen
+                ,entry
+                ,last_modified_dts
+            ) 
+            VALUES (
+                :id
+                ,:gen
+                ,:entry
+                ,:last_modified_dts
+            )
+            ON CONFLICT(id) 
+            DO UPDATE SET 
+                id = :id
+                ,gen = :gen
+                ,entry = :entry
+                ,last_modified_dts = :last_modified_dts
+        `)
+        .run([
+            pkmnData.id,
+            pkmnData.generation,
+            // pkmnData.entry, 
+            /*
+            TODO: I should probably save the version:
+            {version: 'blue', text: 'foobar'}
+            */
+            pkmnData.last_modified_dts
+        ]);
 }
 
 const createPokemonTablesIfNotExist = () => {
     dbContext
-        .prepare(
-            `
+        .prepare(`
             CREATE TABLE IF NOT EXISTS pokemon (
                 id INT PRIMARY KEY NOT NULL
                 ,dex_no INT NOT NULL
@@ -189,21 +208,18 @@ const createPokemonTablesIfNotExist = () => {
                 ,evo_chain_url STRING NOT NULL
                 ,last_modified_dts STRING NOT NULL
             )
-            `
-        )
+        `)
         .run();
 
     dbContext
-        .prepare(
-            `
+        .prepare(`
             CREATE TABLE IF NOT EXISTS pokedex_entries (
                 id INT PRIMARY KEY NOT NULL
                 ,gen STRING NOT NULL
                 ,entry STRING NOT NULL
                 ,last_modified_dts STRING NOT NULL
             )
-            `
-        )
+        `)
         .run();
 
     console.log('Pokemon specific tables created');
@@ -211,8 +227,7 @@ const createPokemonTablesIfNotExist = () => {
 
 const createConfigTablesIfNotExist = () => {
     configDbContext
-        .prepare(
-            `
+        .prepare(`
             CREATE TABLE IF NOT EXISTS supported_generations (
                 id INT PRIMARY KEY NOT NULL
                 ,generation_name STRING NOT NULL
@@ -221,8 +236,7 @@ const createConfigTablesIfNotExist = () => {
                 ,count INT NOT NULL
                 ,last_modified_dts STRING NOT NULL
             )
-            `
-        )
+        `)
         .run();
 
     console.log('configuration tables created');
@@ -246,13 +260,13 @@ export const upsertConfigurationData = (configData: ConfigurationData[]) => {
             ,:count
             ,:last_modified_dts
         )
-            ON CONFLICT(id) 
-            DO UPDATE SET 
-                id = :id
-                ,generation_name = :generation_name
-                ,starting_dex_no = :starting_dex_no
-                ,count = :count
-                ,last_modified_dts = :last_modified_dts
+        ON CONFLICT(id) 
+        DO UPDATE SET 
+            id = :id
+            ,generation_name = :generation_name
+            ,starting_dex_no = :starting_dex_no
+            ,count = :count
+            ,last_modified_dts = :last_modified_dts
     `;
 
     configData.forEach((c: ConfigurationData) => {
