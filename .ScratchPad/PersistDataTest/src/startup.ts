@@ -1,6 +1,8 @@
 import { initConfigDb } from "./data/configurationData";
 import { initPokemonDb } from "./data/pokemonData";
 import { updateConfiguration } from "./services/configurationRepository";
+import { pokeApiPing } from "./services/pokeApiService";
+import { loadPokemonData } from "./services/pokemonRepository";
 import { ConfigurationData } from "./types/configurationData";
 
 // Just a week for now
@@ -47,4 +49,8 @@ export const runStartUp = async (dataSource: string, forceUpdate: boolean) => {
 
     const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
     updateConfiguration(configurationData);
+
+    if (pokeApiPing()) {
+        loadPokemonData( forceUpdate );
+    }
 };
