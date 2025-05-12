@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import fs from 'fs';
-import { PkmnData } from '../types/pkmnData';
+import { PokemonData } from '../types/pokemonData';
 
 let dbContext: sqlite.Database;
 
@@ -89,12 +89,12 @@ export const checkAllPokemonMinLastUpdated = () => {
     `).all()[0]['min(last_modified_dts)'];
 }
 
-export const mergeAllData = (pkmnData: PkmnData) => {
+export const mergeAllData = (pkmnData: PokemonData) => {
     upsertPokemonData(pkmnData);
     upsertDexData(pkmnData)
 }
 
-const upsertPokemonData = (pkmnData: PkmnData) => {
+const upsertPokemonData = (pkmnData: PokemonData) => {
     let convertedIsDefault = 0
     let convertedHasForms = 0
     let convertedHasGenderDifferences = 0
@@ -190,7 +190,7 @@ const upsertPokemonData = (pkmnData: PkmnData) => {
     }
 }
 
-const upsertDexData = (pkmnData: PkmnData) => {
+const upsertDexData = (pkmnData: PokemonData) => {
     return;
     
     dbContext

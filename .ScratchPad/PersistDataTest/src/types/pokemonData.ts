@@ -1,4 +1,4 @@
-export interface PkmnData {
+export interface PokemonData {
     id: number, 
     dex_no: number, 
     name: string,
