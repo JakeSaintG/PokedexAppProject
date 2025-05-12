@@ -1,4 +1,8 @@
 export interface ConfigurationData {
+    supported_generations: SupportedGeneration[]
+}
+
+export interface SupportedGeneration {
     id: number, 
     generation_name: string,
     description: string,
