@@ -1,5 +1,6 @@
 import sqlite from 'better-sqlite3';
 import { SupportedGeneration } from '../types/configurationData';
+import { DateData } from '../types/dateData';
 
 let dbContext: sqlite.Database;
 
@@ -28,7 +29,9 @@ const createConfigTablesIfNotExist = () => {
                 ,description STRING NOT NULL
                 ,starting_dex_no INT NOT NULL
                 ,count INT NOT NULL
+                ,stale_by_dts STRING NOT NULL
                 ,last_modified_dts STRING NOT NULL
+                ,source_last_modified_dts STRING NOT NULL
             )
         `)
         .run();
@@ -45,7 +48,7 @@ const createConfigTablesIfNotExist = () => {
         .run();
 }
 
-export const upsertConfigurationData = (configData: SupportedGeneration[]) => {
+export const upsertConfigurationData = (configData: SupportedGeneration) => {
     const insert =  `
         INSERT INTO supported_generations (
             id
@@ -53,7 +56,9 @@ export const upsertConfigurationData = (configData: SupportedGeneration[]) => {
             ,description
             ,starting_dex_no
             ,count
+            ,stale_by_dts
             ,last_modified_dts
+            ,source_last_modified_dts
         ) 
         VALUES (
             :id
@@ -61,7 +66,9 @@ export const upsertConfigurationData = (configData: SupportedGeneration[]) => {
             ,:description
             ,:starting_dex_no
             ,:count
+            ,:stale_by_dts
             ,:last_modified_dts
+            ,:source_last_modified_dts
         )
         ON CONFLICT(id) 
         DO UPDATE SET 
@@ -69,29 +76,74 @@ export const upsertConfigurationData = (configData: SupportedGeneration[]) => {
             ,generation_name = :generation_name
             ,starting_dex_no = :starting_dex_no
             ,count = :count
+            ,stale_by_dts = stale_by_dts
             ,last_modified_dts = :last_modified_dts
-    `;
+            ,source_last_modified_dts = :source_last_modified_dts
+            `;
 
-    configData.forEach((c: SupportedGeneration) => {
-        dbContext
-            .prepare(insert)
-            .run({
-                id: c.id,
-                generation_name: c.generation_name,
-                description: c.description,
-                starting_dex_no: c.starting_dex_no,
-                count: c.count,
-                last_modified_dts: c.last_modified_dts
-            });
-        try {
-        } catch (error) {
-            console.error(`Failed to UPSERT config data for ${c.generation_name}`)
-        }
-    })
+    dbContext
+        .prepare(insert)
+        .run({
+            id: configData.id,
+            generation_name: configData.generation_name,
+            description: configData.description,
+            starting_dex_no: configData.starting_dex_no,
+            count: configData.count,
+            stale_by_dts: configData.stale_by_dts,
+            source_last_modified_dts: configData.last_modified_dts,
+            last_modified_dts: new Date().toISOString()
+        });
+    try {
+    } catch (error) {
+        console.error(`Failed to UPSERT config data for ${configData.generation_name}`)
+    }
 }
 
 export const getConfigData = () => {
     return dbContext.prepare(
         `SELECT * FROM supported_generations;`
     ).all();
+}
+
+export const getGenerationUpdateData = (gen_id: number): DateData | undefined => {
+    let genLastUpdatedData: DateData = {
+        last_modified_dts: '',
+        source_last_modified_dts: '',
+        stale_by_dts: ''
+    };
+
+    const genDateData = dbContext.prepare(
+        `SELECT 
+            last_modified_dts
+            ,source_last_modified_dts
+            ,stale_by_dts
+        FROM supported_generations
+        WHERE id = ${gen_id}
+        LIMIT 1;`
+    ).all()[0];
+
+    if (
+        typeof genDateData === 'object' 
+        && genDateData !== null 
+        && (
+            'last_modified_dts' in genDateData
+            && typeof genDateData['last_modified_dts'] === 'string'
+        )
+        && (
+            'source_last_modified_dts' in genDateData
+            && typeof genDateData['source_last_modified_dts'] === 'string'
+        )
+        && (
+            'stale_by_dts' in genDateData
+            && typeof genDateData['stale_by_dts'] === 'string'
+        )
+    ) {
+        genLastUpdatedData.last_modified_dts = genDateData.last_modified_dts
+        genLastUpdatedData.source_last_modified_dts = genDateData.source_last_modified_dts
+        genLastUpdatedData.stale_by_dts = genDateData.stale_by_dts
+        
+        return genLastUpdatedData;
+    } else {
+        return undefined;
+    }
 }

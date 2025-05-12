@@ -8,5 +8,6 @@ export interface SupportedGeneration {
     description: string,
     starting_dex_no: number, 
     count: number,
+    stale_by_dts: null | string,
     last_modified_dts: string
 }
