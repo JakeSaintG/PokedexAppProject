@@ -57,29 +57,7 @@ const createPokemonTablesIfNotExist = () => {
             )
         `)
         .run();
-
-    console.log('Pokemon specific tables created');
 };
-
-export const getStoredPokemon = async (): Promise<unknown[]> => {
-    // TODO: refactor to return a type
-    
-    return dbContext.prepare('SELECT name, url FROM pokemon;').all();
-}
-
-export const checkLastPokemonLastUpdated = (pokemonName: string) => {
-    // TODO: refactor to return a type
-    
-    return dbContext.prepare(
-        `
-            SELECT 
-                name,
-                last_modified_dts 
-            FROM pokemon
-            WHERE name = '${pokemonName}';
-        `
-    ).all()[0];
-}
 
 export const mergeAllData = (pkmnData: PokemonData) => {
     upsertPokemonData(pkmnData);

@@ -106,14 +106,6 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
     }
 }
 
-export const getSupportedGenerationsData = () => {
-    // TODO: refactor to return a type
-    
-    return dbContext.prepare(
-        `SELECT * FROM supported_generations;`
-    ).all();
-}
-
 export const getGenerationUpdateData = (gen_id: number): DateData | undefined => {
     let genLastUpdatedData: DateData = {
         last_modified_dts: '',
