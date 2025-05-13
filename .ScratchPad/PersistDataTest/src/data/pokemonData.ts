@@ -8,13 +8,9 @@ const FILE_LOCATION = './pokemon_data.db';
 
 export const initPokemonDb = (dataSource: string) => {
     setDbContext(dataSource);
+    createPokemonTablesIfNotExist();
 
-    if (!fs.existsSync(FILE_LOCATION)) {
-        createPokemonTablesIfNotExist();
-    }
-
-    // Migrate tables if needed
-
+    // migrateTablesIfNeeded()
 }
 
 const setDbContext = (dataSource: string) => {
@@ -66,10 +62,14 @@ const createPokemonTablesIfNotExist = () => {
 };
 
 export const getStoredPokemon = async (): Promise<unknown[]> => {
+    // TODO: refactor to return a type
+    
     return dbContext.prepare('SELECT name, url FROM pokemon;').all();
 }
 
 export const checkLastPokemonLastUpdated = (pokemonName: string) => {
+    // TODO: refactor to return a type
+    
     return dbContext.prepare(
         `
             SELECT 
@@ -79,14 +79,6 @@ export const checkLastPokemonLastUpdated = (pokemonName: string) => {
             WHERE name = '${pokemonName}';
         `
     ).all()[0];
-}
-
-export const checkAllPokemonMinLastUpdated = () => {
-    return dbContext.prepare(`
-        SELECT 
-            min(last_modified_dts) 
-        FROM pokemon;
-    `).all()[0]['min(last_modified_dts)'];
 }
 
 export const mergeAllData = (pkmnData: PokemonData) => {

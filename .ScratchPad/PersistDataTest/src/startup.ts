@@ -24,7 +24,7 @@ const getUpdatedAppConfiguration = async () => {
                 starting_dex_no: 1,
                 count: 3, //151
                 stale_by_dts: placeHolderStaleByDate,
-                last_modified_dts: "2025-05-08T22:01:16.292Z", // new Date().toISOString()
+                last_modified_dts: "2025-05-08T22:03:16.292Z", // new Date().toISOString()
             }
             ,{
                 id: 2,

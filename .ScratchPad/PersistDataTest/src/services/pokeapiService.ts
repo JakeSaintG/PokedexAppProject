@@ -88,7 +88,7 @@ export const fetchPkmnSpeciesData = async ( url: string, name: string, getVariet
                     getRecurve.push(variety.pokemon);
                 }
 
-                console.log(`${name} - ${pokemonSpeciesData['is_default']} - ${variety["is_default"]}`)
+                // console.log(`${name} - ${pokemonSpeciesData['is_default']} - ${variety["is_default"]}`)
             });
         });
 

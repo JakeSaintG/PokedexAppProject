@@ -9,6 +9,8 @@ const FILE_LOCATION = './config.db';
 export const initConfigDb = (dataSource: string) => {
     setDbContext(dataSource);
     createConfigTablesIfNotExist();
+
+    // migrateTablesIfNeeded()
 }
 
 const setDbContext = (dataSource: string) => {
@@ -31,6 +33,7 @@ const createConfigTablesIfNotExist = () => {
                 ,count INT NOT NULL
                 ,stale_by_dts STRING NOT NULL
                 ,last_modified_dts STRING NOT NULL
+                ,local_last_modified_dts NULL
                 ,source_last_modified_dts STRING NOT NULL
             )
         `)
@@ -59,6 +62,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
             ,stale_by_dts
             ,last_modified_dts
             ,source_last_modified_dts
+            ,local_last_modified_dts
         ) 
         VALUES (
             :id
@@ -69,6 +73,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
             ,:stale_by_dts
             ,:last_modified_dts
             ,:source_last_modified_dts
+            ,:local_last_modified_dts
         )
         ON CONFLICT(id) 
         DO UPDATE SET 
@@ -79,6 +84,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
             ,stale_by_dts = stale_by_dts
             ,last_modified_dts = :last_modified_dts
             ,source_last_modified_dts = :source_last_modified_dts
+            ,local_last_modified_dts = :local_last_modified_dts
             `;
 
     dbContext
@@ -91,7 +97,8 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
             count: configData.count,
             stale_by_dts: configData.stale_by_dts,
             source_last_modified_dts: configData.last_modified_dts,
-            last_modified_dts: new Date().toISOString()
+            last_modified_dts: new Date().toISOString(),
+            local_last_modified_dts: ''
         });
     try {
     } catch (error) {
@@ -99,7 +106,9 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
     }
 }
 
-export const getConfigData = () => {
+export const getSupportedGenerationsData = () => {
+    // TODO: refactor to return a type
+    
     return dbContext.prepare(
         `SELECT * FROM supported_generations;`
     ).all();
@@ -146,4 +155,79 @@ export const getGenerationUpdateData = (gen_id: number): DateData | undefined =>
     } else {
         return undefined;
     }
+}
+
+export const getGenerationLastUpdatedLocally = (): DateData[] => {
+    const dateData = dbContext.prepare(
+        `SELECT 
+            id
+            ,last_modified_dts
+            ,local_last_modified_dts
+        FROM supported_generations;`
+    ).all();
+
+    return dateData.map((e) => {
+        let lastLocalUpdatedData: DateData = {
+            generation_id: 0,
+            last_modified_dts: '',
+            local_last_modified_dts: ''
+        };
+        
+        if (
+            typeof e === 'object' 
+            && e !== null 
+            && (
+                'id' in e
+                && typeof e['id'] === 'number'
+            )
+            && (
+                'last_modified_dts' in e
+                && typeof e['last_modified_dts'] === 'string'
+            )
+            && (
+                'local_last_modified_dts' in e
+                && (typeof e['local_last_modified_dts'] === 'string')
+            )
+        ) {
+            
+            lastLocalUpdatedData.generation_id = e.id;
+            lastLocalUpdatedData.last_modified_dts = e.last_modified_dts;
+            lastLocalUpdatedData.local_last_modified_dts = e.local_last_modified_dts;
+    
+            return lastLocalUpdatedData;
+        }
+    });
+}
+
+export const getGenerationCountAndOffset = (id: number): [number, number] | undefined => {
+    const countData = dbContext.prepare(
+        `SELECT 
+            id
+            ,count
+            ,starting_dex_no
+        FROM supported_generations
+        WHERE id = ${id}
+        LIMIT 1;`
+    ).all()[0];
+
+    if (
+        typeof countData === 'object' 
+        && countData !== null 
+        && (
+            'id' in countData
+            && typeof countData['id'] === 'number'
+        )
+        && (
+            'count' in countData
+            && typeof countData['count'] === 'number'
+        )
+        && (
+            'starting_dex_no' in countData
+            && typeof countData['starting_dex_no'] === 'number'
+        )
+    ) {
+        return [countData.count, countData.starting_dex_no]
+    } 
+
+    return undefined;
 }
