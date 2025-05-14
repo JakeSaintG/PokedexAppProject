@@ -2,7 +2,7 @@ import { getGenerationCountAndOffset, getGenerationLastUpdatedLocally } from "..
 import { mergeAllData } from "../data/pokemonData";
 import { Pokemon } from "../types/pokemon";
 import { PokemonData } from "../types/pokemonData";
-import { fetchPkmnData, fetchPkmnSpeciesData, fetchPkmnToLoad } from "./pokeApiService";
+import { fetchPkmnData, fetchPkmnSpeciesData, fetchPkmnToLoad } from "./pokeApiRepository";
 
 
 
@@ -12,8 +12,8 @@ export const loadPokemonData = async (forceUpdate: boolean) => {
 
     // TODO: When empty, load gen 1
     // TODO: Allow user to trigger all other gen fetching (using limit and offset)
-
     generationsLastUpdatedLocally.forEach( async (gen) => {
+
         if(gen.local_last_modified_dts === '' || forceUpdate) {
             console.log(`Gen ${gen.generation_id} identified for update.`);
 

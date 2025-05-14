@@ -19,29 +19,29 @@ export const fetchPkmnToLoad = async (limit: number, offset: number) => {
 };
 
 export const fetchPkmnData = async (url: string) => {
-    let pokemonData = {};
+    let foo = {};
 
     await fetch(url, { method: "GET" })
         .then((res) => res.json())
         .then((data) => {
-            pokemonData["id"] = data.id;
-            pokemonData["name"] = data.name;
-            pokemonData["species_url"] = data.species.url;
-            pokemonData["male_sprite_url"] = data.sprites.front_default;
-            pokemonData["female_sprite_url"] = data.sprites.front_female;
-            pokemonData["img_path"] = `./imgs/dex_imgs/${data.id}`;
-            pokemonData["has_forms"] = false;
+            foo["id"] = data.id;
+            foo["name"] = data.name;
+            foo["species_url"] = data.species.url;
+            foo["male_sprite_url"] = data.sprites.front_default;
+            foo["female_sprite_url"] = data.sprites.front_female;
+            foo["img_path"] = `./imgs/dex_imgs/${data.id}`;
+            foo["has_forms"] = false;
 
             if (data.forms.length > 1) {
-                pokemonData["has_forms"] = true;
+                foo["has_forms"] = true;
             }
 
             data.types.forEach((t) => {
-                pokemonData[`type_${t.slot}`] = t.type.name;
+                foo[`type_${t.slot}`] = t.type.name;
             });
         });
 
-    return pokemonData;
+    return foo;
 };
 
 export const fetchPkmnSpeciesData = async ( url: string, name: string, getVarieties: boolean = true ): Promise<[{}, any[]]> => {
@@ -91,7 +91,6 @@ export const fetchPkmnSpeciesData = async ( url: string, name: string, getVariet
                 // console.log(`${name} - ${pokemonSpeciesData['is_default']} - ${variety["is_default"]}`)
             });
         });
-
 
     return [pokemonSpeciesData, getRecurve];
 };

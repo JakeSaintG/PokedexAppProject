@@ -1,8 +1,8 @@
 import { initConfigDb } from "./data/configurationData";
 import { initPokemonDb } from "./data/pokemonData";
-import { updateConfiguration } from "./services/configurationRepository";
-import { pokeApiPing } from "./services/pokeApiService";
-import { loadPokemonData } from "./services/pokemonRepository";
+import { configApiPing, updateConfiguration } from "./repositories/configurationRepository";
+import { pokeApiPing } from "./repositories/pokeApiRepository";
+import { loadPokemonData } from "./repositories/pokemonRepository";
 import { ConfigurationData } from "./types/configurationData";
 
 // Just a week for now
@@ -45,10 +45,10 @@ export const runStartUp = async (dataSource: string, forceUpdate: boolean) => {
     initConfigDb(dataSource);
     initPokemonDb(dataSource);
 
-    // TODO: Ping "home" server
-
-    const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
-    updateConfiguration(configurationData);
+    if (configApiPing()) {
+        const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
+        updateConfiguration(configurationData);
+    }
 
     if (pokeApiPing()) {
         loadPokemonData( forceUpdate );

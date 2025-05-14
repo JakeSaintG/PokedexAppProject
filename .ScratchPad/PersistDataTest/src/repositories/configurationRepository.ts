@@ -30,3 +30,8 @@ const updateSupportedGenerations = (supported_generations: SupportedGeneration[]
 const getSupportedGenerations = () => {
     
 }
+
+// TODO: Implement
+export const configApiPing = () => {
+    return true;
+};
