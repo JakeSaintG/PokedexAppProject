@@ -1,11 +1,11 @@
-import { getGenerationUpdateData, upsertConfigurationData } from "../data/configurationData";
+import { getGenerationUpdateData, updateLocalLastModifiedDate, upsertConfigurationData } from "../data/configurationData";
 import { ConfigurationData, SupportedGeneration } from "../types/configurationData";
 import { DateData } from "../types/dateData";
 
 export const updateConfiguration = (configuration: ConfigurationData) => {
     updateSupportedGenerations(configuration.supported_generations)
 
-    // Update table_versions table
+    // Update table_versions table;
 }
 
 const updateSupportedGenerations = (supported_generations: SupportedGeneration[]) => {
@@ -27,11 +27,10 @@ const updateSupportedGenerations = (supported_generations: SupportedGeneration[]
     })
 }
 
-const getSupportedGenerations = () => {
-    
+export const updateLocalLastModified = (id: number) => {
+    updateLocalLastModifiedDate(id);
 }
 
-// TODO: Implement
 export const configApiPing = () => {
     return true;
 };

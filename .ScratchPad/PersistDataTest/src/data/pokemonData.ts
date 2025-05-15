@@ -60,15 +60,14 @@ const createPokemonTablesIfNotExist = () => {
 };
 
 export const mergeAllData = (pkmnData: PokemonData) => {
-    upsertPokemonData(pkmnData);
     upsertDexData(pkmnData)
 }
 
-const upsertPokemonData = (pkmnData: PokemonData) => {
+export const upsertPokemonData = (pkmnData: PokemonData) => {
     let convertedIsDefault = 0
     let convertedHasForms = 0
     let convertedHasGenderDifferences = 0
-    
+
     if (pkmnData.is_default) convertedIsDefault = 1
     if (pkmnData.has_forms) convertedHasForms = 1
     if (pkmnData.has_gender_differences) convertedHasGenderDifferences = 1

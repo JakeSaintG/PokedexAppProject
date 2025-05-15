@@ -22,19 +22,19 @@ const getUpdatedAppConfiguration = async () => {
                 generation_name: "generation1",
                 description: "Red, Green, Blue, and Yellow.",
                 starting_dex_no: 1,
-                count: 3, //151
+                count: 12, //151
                 stale_by_dts: placeHolderStaleByDate,
                 last_modified_dts: "2025-05-08T22:03:16.292Z", // new Date().toISOString()
             }
-            ,{
-                id: 2,
-                generation_name: 'generation2',
-                description: 'Gold, Silver, and Crystal.',
-                starting_dex_no: 152,
-                count: 3, // 100
-                stale_by_dts: placeHolderStaleByDate,
-                last_modified_dts: '2025-05-08T22:01:16.292Z' // new Date().toISOString()
-            }
+            // ,{
+            //     id: 2,
+            //     generation_name: 'generation2',
+            //     description: 'Gold, Silver, and Crystal.',
+            //     starting_dex_no: 152,
+            //     count: 3, // 100
+            //     stale_by_dts: placeHolderStaleByDate,
+            //     last_modified_dts: '2025-05-08T22:01:16.292Z' // new Date().toISOString()
+            // }
         ],
     };
 

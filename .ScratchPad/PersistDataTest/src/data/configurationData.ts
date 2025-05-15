@@ -87,20 +87,20 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
             ,local_last_modified_dts = :local_last_modified_dts
             `;
 
-    dbContext
-        .prepare(insert)
-        .run({
-            id: configData.id,
-            generation_name: configData.generation_name,
-            description: configData.description,
-            starting_dex_no: configData.starting_dex_no,
-            count: configData.count,
-            stale_by_dts: configData.stale_by_dts,
-            source_last_modified_dts: configData.last_modified_dts,
-            last_modified_dts: new Date().toISOString(),
-            local_last_modified_dts: ''
-        });
     try {
+        dbContext
+            .prepare(insert)
+            .run({
+                id: configData.id,
+                generation_name: configData.generation_name,
+                description: configData.description,
+                starting_dex_no: configData.starting_dex_no,
+                count: configData.count,
+                stale_by_dts: configData.stale_by_dts,
+                source_last_modified_dts: configData.last_modified_dts,
+                last_modified_dts: new Date().toISOString(),
+                local_last_modified_dts: ''
+            });
     } catch (error) {
         console.error(`Failed to UPSERT config data for ${configData.generation_name}`)
     }
@@ -148,6 +148,19 @@ export const getGenerationUpdateData = (gen_id: number): DateData | undefined =>
         return undefined;
     }
 }
+
+export const updateLocalLastModifiedDate= (id: number) => {
+    const update = `
+        UPDATE supported_generations
+        SET local_last_modified_dts = '${new Date().toISOString()}'
+        WHERE id = ${id};
+    `;
+
+    dbContext
+        .prepare(update)
+        .run();
+}
+
 
 export const getGenerationLastUpdatedLocally = (): DateData[] => {
     const dateData = dbContext.prepare(
