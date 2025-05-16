@@ -1,10 +1,10 @@
+// TODO: Route this through the config repo. This repo shouldn't be talking to the config interface
 import { getGenerationCountAndOffset, getGenerationLastUpdatedLocally } from "../data/configurationData";
-import { mergeAllData } from "../data/pokemonData";
+import { upsertPokemonData } from "../data/pokemonData";
 import { Pokemon } from "../types/pokemon";
 import { PokemonData } from "../types/pokemonData";
+import { updateLocalLastModified } from "./configurationRepository";
 import { fetchPkmnData, fetchPkmnSpeciesData, fetchPkmnToLoad } from "./pokeApiRepository";
-
-
 
 export const loadPokemonData = async (forceUpdate: boolean) => {
     const loadStartTime = new Date().toISOString();
@@ -20,13 +20,23 @@ export const loadPokemonData = async (forceUpdate: boolean) => {
             const [count, offset] = getGenerationCountAndOffset(gen.generation_id);
 
             const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
+            await batchLoadPokemon(fetchedPokemon, loadStartTime);
 
-            await loadMissingPokemon(fetchedPokemon, loadStartTime);
-
-            // update local_last_modified_dts for this generation
+            updateLocalLastModified(gen.generation_id);
         }
     });
 };
+
+const batchLoadPokemon = ( toLoad: Pokemon[], loadStartTime: string) => {
+    console.log(batchArray(toLoad, 5));
+}
+
+const batchArray = (array, batchSize) => {
+    return Array.from(
+        { length: Math.ceil(array.length / batchSize) },
+        (_, index) => array.slice(index * batchSize, (index + 1) * batchSize)   
+    );
+}
 
 const loadMissingPokemon = async ( 
     toLoad: Pokemon[],
@@ -58,7 +68,7 @@ const loadMissingPokemon = async (
                 type_2: pokemonData["type_2"],
                 img_path: pokemonData["img_path"],
                 species_url: pokemonData["species_url"],
-                has_forms: pokemonData["has_forms"],  // TODO: Why did I have this again?
+                has_forms: pokemonData["has_forms"],
                 male_sprite_url: pokemonData["male_sprite_url"],
                 female_sprite_url: pokemonData["female_sprite_url"],
 
@@ -73,7 +83,9 @@ const loadMissingPokemon = async (
                 last_modified_dts: new Date().toISOString()
             };
 
-            mergeAllData(pkmnData);
+            upsertPokemonData(pkmnData);
+
+
         })
     );
 };
