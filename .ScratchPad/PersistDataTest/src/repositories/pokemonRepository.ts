@@ -1,9 +1,11 @@
 // TODO: Route this through the config repo. This repo shouldn't be talking to the config interface
 import { getGenerationCountAndOffset, getGenerationLastUpdatedLocally } from "../data/configurationData";
-import { upsertPokemonData } from "../data/pokemonData";
+import { getPokemonSpeciesToLoad, upsertPokemonBaseData, upsertPokemonData, upsertPokemonSpeciesData } from "../data/pokemonData";
 import { Pokemon } from "../types/pokemon";
+import { Variety } from "../types/varieties";
+import { batchArray } from "../utils/utils";
 import { updateLocalLastModified } from "./configurationRepository";
-import { fetchPkmnData, fetchPkmnSpeciesData, fetchPkmnToLoad } from "./pokeApiRepository";
+import { fetchPokeApiData, fetchPkmnData, fetchPkmnSpeciesData, fetchPkmnToLoad, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
 
 export const loadPokemonData = async (forceUpdate: boolean) => {
     const generationsLastUpdatedLocally = getGenerationLastUpdatedLocally();
@@ -11,7 +13,6 @@ export const loadPokemonData = async (forceUpdate: boolean) => {
     // TODO: When empty, load gen 1
     // TODO: Allow user to trigger all other gen fetching (using limit and offset)
     generationsLastUpdatedLocally.forEach( async (gen) => {
-
         if(gen.local_last_modified_dts === '' || forceUpdate) {
             console.log(`Gen ${gen.generation_id} identified for update.`);
 
@@ -27,20 +28,68 @@ export const loadPokemonData = async (forceUpdate: boolean) => {
 
 // TODO: make batch size configurable
 const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
-    const foo = batchArray(pokemonToLoad, 10)
+    let batchCounter = 1;
     
-    console.log(`batch: ${foo.length}`)
+    batchArray(pokemonToLoad, 10)
+        .forEach( async (pokemonBatch: Pokemon[]) => {
+            console.log(`Starting batch ${batchCounter++}`);
 
-    foo.forEach( async (pokemonBatch: Pokemon[]) => {
-        await loadMissingPokemon(pokemonBatch, (new Date().toISOString()))
-    })
+            // DEPRECATED
+            // loadMissingPokemon(pokemonBatch, (new Date().toISOString()))
+
+            await startLoad(pokemonBatch, (new Date().toISOString()))
+        })
 }
 
-const batchArray = (array: Pokemon[], batchSize: number) => {
-    return Array.from(
-        { length: Math.ceil(array.length / batchSize) },
-        (_, index) => array.slice(index * batchSize, (index + 1) * batchSize)   
-    );
+
+const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
+    await loadBasePokemonData(pokemonToLoad, loadStartTime);
+
+    const pokemonSpeciesToLoad = getPokemonSpeciesToLoad();
+
+    await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
+}
+
+
+const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
+    let varietiesToGet: Variety[] = [];
+    
+    await Promise.all(
+        pokemonToLoad.map(async (p: Pokemon) =>
+            await fetchPokeApiData(p.url)
+        )
+    )
+    .then((downloadedData) => 
+        downloadedData.map((p) => {
+            const parsed = parsePokemonSpeciesData(p);
+            varietiesToGet = parsed[1];
+            return parsed[0];
+        })
+    )
+    .then(parsedData => 
+        parsedData.map((p) => 
+            upsertPokemonSpeciesData(p)
+        )
+    )
+}
+
+const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
+    await Promise.all(
+        pokemonToLoad.map(async (p: Pokemon) => {
+            const fetched = await fetchPokeApiData(p.url)
+            return {data: fetched, url: p.url }
+        })
+    )
+    .then((downloadedData) => 
+        downloadedData.map((p) =>
+            parsePokemonBaseData(p.data, p.url)
+        )
+    )
+    .then(parsedData => 
+        parsedData.map((p) => 
+            upsertPokemonBaseData(p)
+        )
+    )
 }
 
 const loadMissingPokemon = async ( 
@@ -51,8 +100,6 @@ const loadMissingPokemon = async (
 ) => {
     await Promise.all(
         pokemonToLoad.map(async (p: Pokemon) => {
-            console.log(`loading: ${p.name}`)
-            
             let pkmnSpeciesData = pokemonSpeciesData;
             let varieties: Pokemon[] = [];
 
@@ -65,9 +112,9 @@ const loadMissingPokemon = async (
                 );
             }
 
-            // if (varieties.length > 0 && getVarieties) {
-            //     await loadMissingPokemon( varieties, loadStartTime, false, pkmnSpeciesData );
-            // }
+            if (varieties.length > 0 && getVarieties) {
+                await loadMissingPokemon( varieties, loadStartTime, false, pkmnSpeciesData );
+            }
 
             upsertPokemonData({
                 id: pokemonData["id"],
