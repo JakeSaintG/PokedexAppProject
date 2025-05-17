@@ -96,33 +96,6 @@ export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety
     return [specData, varitiesToGet];
 }
 
-// DEPRECATED
-export const fetchPkmnData = async (url: string) => {
-    let foo = {};
-
-    await fetch(url, { method: "GET" })
-        .then((res) => res.json())
-        .then((data) => {
-            foo["id"] = data.id;
-            foo["name"] = data.name;
-            foo["species_url"] = data.species.url;
-            foo["male_sprite_url"] = data.sprites.front_default;
-            foo["female_sprite_url"] = data.sprites.front_female;
-            foo["img_path"] = `./imgs/dex_imgs/${data.id}`;
-            foo["has_forms"] = false;
-
-            if (data.forms.length > 1) {
-                foo["has_forms"] = true;
-            }
-
-            data.types.forEach((t) => {
-                foo[`type_${t.slot}`] = t.type.name;
-            });
-        });
-
-    return foo;
-};
-
 export const fetchPkmnSpeciesData = async ( url: string, name: string, getVarieties: boolean = true ): Promise<[{}, Pokemon[]]> => {
     let pokemonSpeciesData = {};
     let varietiesToGet = [];

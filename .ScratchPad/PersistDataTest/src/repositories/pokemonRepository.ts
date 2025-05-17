@@ -1,11 +1,11 @@
 // TODO: Route this through the config repo. This repo shouldn't be talking to the config interface
 import { getGenerationCountAndOffset, getGenerationLastUpdatedLocally } from "../data/configurationData";
-import { getPokemonSpeciesToLoad, upsertPokemonBaseData, upsertPokemonData, upsertPokemonSpeciesData } from "../data/pokemonData";
+import { getPokemonSpeciesToLoad, upsertPokemonBaseData, upsertPokemonSpeciesData } from "../data/pokemonData";
 import { Pokemon } from "../types/pokemon";
 import { Variety } from "../types/varieties";
 import { batchArray } from "../utils/utils";
 import { updateLocalLastModified } from "./configurationRepository";
-import { fetchPokeApiData, fetchPkmnData, fetchPkmnSpeciesData, fetchPkmnToLoad, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
+import { fetchPokeApiData, fetchPkmnSpeciesData, fetchPkmnToLoad, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
 
 export const loadPokemonData = async (forceUpdate: boolean) => {
     const generationsLastUpdatedLocally = getGenerationLastUpdatedLocally();
@@ -33,10 +33,6 @@ const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
     batchArray(pokemonToLoad, 10)
         .forEach( async (pokemonBatch: Pokemon[]) => {
             console.log(`Starting batch ${batchCounter++}`);
-
-            // DEPRECATED
-            // loadMissingPokemon(pokemonBatch, (new Date().toISOString()))
-
             await startLoad(pokemonBatch, (new Date().toISOString()))
         })
 }
@@ -71,6 +67,8 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
             upsertPokemonSpeciesData(p)
         )
     )
+
+    return varietiesToGet;
 }
 
 const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
@@ -91,52 +89,3 @@ const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: st
         )
     )
 }
-
-const loadMissingPokemon = async ( 
-    pokemonToLoad: Pokemon[],
-    loadStartTime: string,
-    getVarieties: boolean = true,
-    pokemonSpeciesData = undefined
-) => {
-    await Promise.all(
-        pokemonToLoad.map(async (p: Pokemon) => {
-            let pkmnSpeciesData = pokemonSpeciesData;
-            let varieties: Pokemon[] = [];
-
-            const pokemonData = await fetchPkmnData(p.url);
-
-            if (pkmnSpeciesData === undefined) {
-                [pkmnSpeciesData, varieties] = await fetchPkmnSpeciesData(
-                    pokemonData["species_url"],
-                    pokemonData["name"]
-                );
-            }
-
-            if (varieties.length > 0 && getVarieties) {
-                await loadMissingPokemon( varieties, loadStartTime, false, pkmnSpeciesData );
-            }
-
-            upsertPokemonData({
-                id: pokemonData["id"],
-                name: pokemonData["name"],
-                type_1: pokemonData["type_1"],
-                type_2: pokemonData["type_2"],
-                img_path: pokemonData["img_path"],
-                species_url: pokemonData["species_url"],
-                has_forms: pokemonData["has_forms"],
-                male_sprite_url: pokemonData["male_sprite_url"],
-                female_sprite_url: pokemonData["female_sprite_url"],
-
-                dex_no: pkmnSpeciesData["dex_no"],
-                is_default: pkmnSpeciesData["is_default"],
-                has_gender_differences: pkmnSpeciesData["has_gender_differences"],
-                habitat: pkmnSpeciesData["habitat"],
-                generation: pkmnSpeciesData["generation"],
-                evo_chain_url: pkmnSpeciesData["evo_chain_url"],
-
-                url: p.url,
-                last_modified_dts: new Date().toISOString()
-            });
-        })
-    );
-};
