@@ -96,58 +96,6 @@ export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety
     return [specData, varitiesToGet];
 }
 
-export const fetchPkmnSpeciesData = async ( url: string, name: string, getVarieties: boolean = true ): Promise<[{}, Pokemon[]]> => {
-    let pokemonSpeciesData = {};
-    let varietiesToGet = [];
-
-    await fetch(url, { method: "GET" })
-        .then((res) => res.json())
-        .then((data) => {
-            pokemonSpeciesData["dex_no"] = data.pokedex_numbers.find(e => e.pokedex.name === 'national').entry_number;
-            pokemonSpeciesData["has_gender_differences"] = data.has_gender_differences;
-            pokemonSpeciesData["habitat"] = data.habitat.name;
-            pokemonSpeciesData["generation"] = data.generation.name;
-            pokemonSpeciesData["evo_chain_url"] = data.evolution_chain.url;
-
-            // const flavorTexts = data.flavor_text_entries.reduce((acc, txt) => {
-            //     if (txt.language.name == "en") {
-            //         const text = txt.flavor_text.replace(/\n|\f/g, " ");
-            //         if (!acc.includes(text)) acc.push(text);
-            //     }
-
-            //     return acc;
-            // }, []);
-
-            // pokemonSpeciesData["flavor_texts"] = flavorTexts;
-
-            // TODO: I'm looping in a loop (forEach & some())
-            // I'm already in an outer loop... I need to optimize this.
-
-            // console.log(data.varieties)
-
-            // TODO: varietyExclusions should probably be its own table in config
-            const varietyExclusions = ["totem", "starter", "-cap"];
-
-            // data.varieties.forEach((variety: Variety) => {
-            //     if (name !== variety.pokemon["name"]) {
-            //         varietiesToGet.push(variety.pokemon);
-            //     }
-
-            //     const excluded = varietyExclusions.some((subStr) =>
-            //         variety.pokemon["name"].includes(subStr)
-            //     );
-
-            //     if (!(variety["is_default"] || excluded) && getVarieties) {
-                    
-            //     }
-
-            //     console.log(`${name} - ${variety.pokemon["name"]} - ${variety["is_default"]}`)
-            // });
-        });
-
-    return [pokemonSpeciesData, varietiesToGet];
-};
-
 // TODO: Implement
 export const pokeApiPing = () => {
     return true;

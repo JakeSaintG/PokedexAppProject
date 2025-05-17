@@ -5,7 +5,7 @@ import { Pokemon } from "../types/pokemon";
 import { Variety } from "../types/varieties";
 import { batchArray } from "../utils/utils";
 import { updateLocalLastModified } from "./configurationRepository";
-import { fetchPokeApiData, fetchPkmnSpeciesData, fetchPkmnToLoad, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
+import { fetchPokeApiData, fetchPkmnToLoad, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
 
 export const loadPokemonData = async (forceUpdate: boolean) => {
     const generationsLastUpdatedLocally = getGenerationLastUpdatedLocally();
@@ -37,17 +37,18 @@ const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
         })
 }
 
-
 const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
     await loadBasePokemonData(pokemonToLoad, loadStartTime);
-
+    
     const pokemonSpeciesToLoad = getPokemonSpeciesToLoad();
-
-    await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
+    
+    const varietiesLeftToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
+    
+    await loadBasePokemonData(varietiesLeftToGet, loadStartTime);
 }
 
 
-const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
+const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ): Promise<Pokemon[]> => {
     let varietiesToGet: Variety[] = [];
     
     await Promise.all(
@@ -68,7 +69,7 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
         )
     )
 
-    return varietiesToGet;
+    return varietiesToGet.map(v => v.pokemon);
 }
 
 const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
