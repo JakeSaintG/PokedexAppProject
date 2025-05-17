@@ -30,7 +30,7 @@ export const loadPokemonData = async (forceUpdate: boolean) => {
 const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
     let batchCounter = 1;
     
-    batchArray(pokemonToLoad, 10)
+    batchArray(pokemonToLoad, 5)
         .forEach( async (pokemonBatch: Pokemon[]) => {
             console.log(`Starting batch ${batchCounter++}`);
             await startLoad(pokemonBatch, (new Date().toISOString()))
@@ -38,12 +38,15 @@ const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
 }
 
 const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
+    console.log('Loading base data...');
     await loadBasePokemonData(pokemonToLoad, loadStartTime);
     
     const pokemonSpeciesToLoad = getPokemonSpeciesToLoad();
     
+    console.log('Loading species data...');
     const varietiesLeftToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
     
+    console.log('Loading remaining special forms...');
     await loadBasePokemonData(varietiesLeftToGet, loadStartTime);
 }
 
@@ -51,6 +54,7 @@ const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) =>
 const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ): Promise<Pokemon[]> => {
     let varietiesToGet: Variety[] = [];
     
+    // TODO: I wonder if an HTTP factory will help prevent timeouts.......every batch gets its own http connection?
     await Promise.all(
         pokemonToLoad.map(async (p: Pokemon) =>
             await fetchPokeApiData(p.url)
