@@ -30,7 +30,7 @@ export const loadPokemonData = async (forceUpdate: boolean) => {
 const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
     let batchCounter = 1;
     
-    batchArray(pokemonToLoad, 5)
+    batchArray(pokemonToLoad, 3)
         .forEach( async (pokemonBatch: Pokemon[]) => {
             console.log(`Starting batch ${batchCounter++}`);
             await startLoad(pokemonBatch, (new Date().toISOString()))
