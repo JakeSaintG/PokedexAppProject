@@ -38,33 +38,43 @@ const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
 }
 
 const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
-    console.log('Loading base data...');
+    // console.log('Loading base data...');
     await loadBasePokemonData(pokemonToLoad, loadStartTime);
     
     const pokemonSpeciesToLoad = getPokemonSpeciesToLoad();
     
-    console.log('Loading species data...');
+    // console.log('Loading species data...');
     const varietiesLeftToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
     
-    console.log('Loading remaining special forms...');
+    // console.log('Loading remaining special forms...');
+    // console.log(varietiesLeftToGet);
     await loadBasePokemonData(varietiesLeftToGet, loadStartTime);
 }
 
 
 const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ): Promise<Pokemon[]> => {
     let varietiesToGet: Variety[] = [];
-    
+
     // TODO: I wonder if an HTTP factory will help prevent timeouts.......every batch gets its own http connection?
     await Promise.all(
-        pokemonToLoad.map(async (p: Pokemon) =>
-            await fetchPokeApiData(p.url)
+        pokemonToLoad.map(async (p: Pokemon) => {
+            const foo = await fetchPokeApiData(p.url)
+            
+            // if(foo.name === 'charmeleon') {
+            //     console.log(foo.name)
+            // }
+
+            return foo 
+        }
         )
     )
     .then((downloadedData) => 
         downloadedData.map((p) => {
-            const parsed = parsePokemonSpeciesData(p);
-            varietiesToGet = parsed[1];
-            return parsed[0];
+            const [parsedData, varieties] = parsePokemonSpeciesData(p);
+            varietiesToGet.concat(varieties);
+
+            console.log(`${parsedData.name}: ${varietiesToGet.length}`);
+            return parsedData;
         })
     )
     .then(parsedData => 
@@ -73,24 +83,34 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
         )
     )
 
+    // console.log(varietiesToGet)
+
     return varietiesToGet.map(v => v.pokemon);
 }
 
 const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
+    // console.log(pokemonToLoad)
+    
     await Promise.all(
         pokemonToLoad.map(async (p: Pokemon) => {
-            const fetched = await fetchPokeApiData(p.url)
-            return {data: fetched, url: p.url }
+            const fetched = await fetchPokeApiData(p.url);
+            return {data: fetched, url: p.url };
         })
     )
     .then((downloadedData) => 
         downloadedData.map((p) =>
-            parsePokemonBaseData(p.data, p.url)
+
+            {
+                // console.log(p.data.name)
+                return parsePokemonBaseData(p.data, p.url)
+            }
         )
     )
     .then(parsedData => 
-        parsedData.map((p) => 
+        parsedData.map((p) => {
+            // console.log(p.name)
             upsertPokemonBaseData(p)
+        }
         )
     )
 }
