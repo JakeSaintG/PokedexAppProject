@@ -87,14 +87,13 @@ export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety
 
 
     // TODO: varietyExclusions should probably be its own table in config
-    const varietyExclusions = ["totem", "starter", "-cap"];
-
     const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 
-        variety.is_default != true
+        variety.is_default != true 
+            && !variety.pokemon.name.includes('-cap')
+            && !variety.pokemon.name.includes('-starter')
+            && !variety.pokemon.name.includes('-totem')
     );
 
-    // console.log(varietiesToGet)
-    console.log(`${specData.name}: ${varietiesToGet.length}`)
     return [specData, varietiesToGet];
 }
 

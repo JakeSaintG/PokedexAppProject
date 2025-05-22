@@ -30,25 +30,28 @@ export const loadPokemonData = async (forceUpdate: boolean) => {
 const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
     let batchCounter = 1;
     
-    batchArray(pokemonToLoad, 3)
-        .forEach( async (pokemonBatch: Pokemon[]) => {
-            console.log(`Starting batch ${batchCounter++}`);
+    const foo = batchArray(pokemonToLoad, 3)
+
+    // console.log(foo);
+
+    foo.forEach( async (pokemonBatch: Pokemon[]) => {
+            console.log(`\r\nStarting batch ${batchCounter++}: ${pokemonBatch.map((p: Pokemon) => p.name).join(', ')}`);
             await startLoad(pokemonBatch, (new Date().toISOString()))
         })
 }
 
 const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
-    // console.log('Loading base data...');
+    console.log(`Loading base data for: ${pokemonToLoad.map((p: Pokemon) => p.name).join(', ')}`);
     await loadBasePokemonData(pokemonToLoad, loadStartTime);
+    const pokemonSpeciesToLoad = getPokemonSpeciesToLoad(pokemonToLoad);
     
-    const pokemonSpeciesToLoad = getPokemonSpeciesToLoad();
-    
-    // console.log('Loading species data...');
+    console.log(`Loading species data for: ${pokemonSpeciesToLoad.map((p: Pokemon) => p.name).join(', ')}`);
     const varietiesLeftToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
     
-    // console.log('Loading remaining special forms...');
-    // console.log(varietiesLeftToGet);
-    await loadBasePokemonData(varietiesLeftToGet, loadStartTime);
+    if (varietiesLeftToGet.length > 0) {
+        console.log(`Loading remaining special forms: ${varietiesLeftToGet.map((p: Pokemon) => p.name).join(', ')} `);
+        await loadBasePokemonData(varietiesLeftToGet, loadStartTime);
+    }
 }
 
 
@@ -61,7 +64,7 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
             const foo = await fetchPokeApiData(p.url)
             
             // if(foo.name === 'charmeleon') {
-            //     console.log(foo.name)
+                // console.log(foo.name)
             // }
 
             return foo 
@@ -71,9 +74,7 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
     .then((downloadedData) => 
         downloadedData.map((p) => {
             const [parsedData, varieties] = parsePokemonSpeciesData(p);
-            varietiesToGet.concat(varieties);
-
-            console.log(`${parsedData.name}: ${varietiesToGet.length}`);
+            varietiesToGet = varietiesToGet.concat(varieties);
             return parsedData;
         })
     )
@@ -89,7 +90,7 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
 }
 
 const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
-    // console.log(pokemonToLoad)
+    // console.log(pokemonToLoad);
     
     await Promise.all(
         pokemonToLoad.map(async (p: Pokemon) => {

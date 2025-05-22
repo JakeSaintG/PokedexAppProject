@@ -240,14 +240,15 @@ const upsertDexData = (pkmnData: PokemonData) => {
         ]);
 }
 
-export const getPokemonSpeciesToLoad = () => {
+export const getPokemonSpeciesToLoad = (pokemonToGet: Pokemon[]) => {
     let pokemonSpeciesToLoad: Pokemon[] = [];
 
     const stmt = `
         SELECT 
             name
             ,species_url
-        FROM pokemon_base_data;
+        FROM pokemon_base_data
+        WHERE name IN (${pokemonToGet.map((p: Pokemon) => `'${p.name}'`).join(', ')});
     `;
 
     const pokemonSpeciesList = dbContext
