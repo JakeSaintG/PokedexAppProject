@@ -9,7 +9,6 @@ const FILE_LOCATION = './config.db';
 export const initConfigDb = (dataSource: string) => {
     setDbContext(dataSource);
     createConfigTablesIfNotExist();
-
     // migrateTablesIfNeeded()
 }
 

@@ -30,11 +30,8 @@ export const loadPokemonData = async (forceUpdate: boolean) => {
 const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
     let batchCounter = 1;
     
-    const foo = batchArray(pokemonToLoad, 3)
-
-    // console.log(foo);
-
-    foo.forEach( async (pokemonBatch: Pokemon[]) => {
+    batchArray(pokemonToLoad, 3)
+        .forEach( async (pokemonBatch: Pokemon[]) => {
             console.log(`\r\nStarting batch ${batchCounter++}: ${pokemonBatch.map((p: Pokemon) => p.name).join(', ')}`);
             await startLoad(pokemonBatch, (new Date().toISOString()))
         })
@@ -60,15 +57,8 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
 
     // TODO: I wonder if an HTTP factory will help prevent timeouts.......every batch gets its own http connection?
     await Promise.all(
-        pokemonToLoad.map(async (p: Pokemon) => {
-            const foo = await fetchPokeApiData(p.url)
-            
-            // if(foo.name === 'charmeleon') {
-                // console.log(foo.name)
-            // }
-
-            return foo 
-        }
+        pokemonToLoad.map(async (p: Pokemon) => 
+            await fetchPokeApiData(p.url)
         )
     )
     .then((downloadedData) => 
@@ -84,14 +74,10 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
         )
     )
 
-    // console.log(varietiesToGet)
-
     return varietiesToGet.map(v => v.pokemon);
 }
 
 const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
-    // console.log(pokemonToLoad);
-    
     await Promise.all(
         pokemonToLoad.map(async (p: Pokemon) => {
             const fetched = await fetchPokeApiData(p.url);
@@ -100,18 +86,12 @@ const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: st
     )
     .then((downloadedData) => 
         downloadedData.map((p) =>
-
-            {
-                // console.log(p.data.name)
-                return parsePokemonBaseData(p.data, p.url)
-            }
+            parsePokemonBaseData(p.data, p.url)
         )
     )
     .then(parsedData => 
-        parsedData.map((p) => {
-            // console.log(p.name)
+        parsedData.map((p) => 
             upsertPokemonBaseData(p)
-        }
         )
     )
 }
