@@ -2,6 +2,7 @@ import sqlite from 'better-sqlite3';
 import fs from 'fs';
 import { PokemonBaseData, PokemonData, PokemonSpeciesData } from '../types/pokemonData';
 import { Pokemon } from '../types/pokemon';
+import { PokedexData } from '../types/pokedexData';
 
 let dbContext: sqlite.Database;
 
@@ -63,18 +64,19 @@ const createPokemonTablesIfNotExist = () => {
         .prepare(`
             CREATE TABLE IF NOT EXISTS pokedex_entries (
                 id INT PRIMARY KEY NOT NULL
-                ,gen STRING NOT NULL
-                ,entry STRING NOT NULL
+                ,pokemon_id INT PRIMARY KEY NOT NULL
+                ,generation STRING NOT NULL
+                ,text_entry STRING NOT NULL
+                ,language STRING NOT NULL
+                ,version_name STRING NOT NULL
+                ,version_url STRING NOT NULL
                 ,last_modified_dts STRING NOT NULL
             )
         `)
         .run();
 };
 
-export const mergeAllData = (pkmnData: PokemonData) => {
-    upsertDexData(pkmnData)
-}
-
+// TODO: Do bulk insert instead of onesie-twosie
 export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
     let convertedHasForms = 0;
     if (pkmnData.has_forms) convertedHasForms = 1;
@@ -204,39 +206,49 @@ export const upsertPokemonSpeciesData = (pkmnSpecData: PokemonSpeciesData) => {
     }
 }
 
-const upsertDexData = (pkmnData: PokemonData) => {
-    return;
-    
+export const upsertDexData = (pDexData: PokedexData) => {
     dbContext
         .prepare(`
             INSERT INTO pokedex_entries (
                 id
-                ,gen
-                ,entry
+                ,pokemon_id
+                ,generation
+                ,text_entry
+                ,language
+                ,version_name
+                ,version_url
                 ,last_modified_dts
             ) 
             VALUES (
                 :id
-                ,:gen
-                ,:entry
+                ,:pokemon_id
+                ,:generation
+                ,:text_entry
+                ,:language
+                ,:version_name
+                ,:version_url
                 ,:last_modified_dts
             )
             ON CONFLICT(id) 
             DO UPDATE SET 
                 id = :id
-                ,gen = :gen
-                ,entry = :entry
+                ,pokemon_id = :pokemon_id
+                ,generation = :generation
+                ,text_entry = :text_entry
+                ,language = :language
+                ,version_name = :version_name
+                ,version_url = :version_url
                 ,last_modified_dts = :last_modified_dts
         `)
         .run([
-            pkmnData.id,
-            pkmnData.generation,
-            // pkmnData.entry, 
-            /*
-            TODO: I should probably save the version:
-            {version: 'blue', text: 'foobar'}
-            */
-            pkmnData.last_modified_dts
+            pDexData.id,
+            pDexData.pokemon_id,
+            pDexData.generation,
+            pDexData.text_entry,
+            pDexData.language,
+            pDexData.version_name,
+            pDexData.version_url,
+            pDexData.last_modified_dts
         ]);
 }
 

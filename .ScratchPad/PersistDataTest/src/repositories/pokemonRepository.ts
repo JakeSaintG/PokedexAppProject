@@ -43,6 +43,8 @@ const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) =>
     const pokemonSpeciesToLoad = getPokemonSpeciesToLoad(pokemonToLoad);
     
     console.log(`Loading species data for: ${pokemonSpeciesToLoad.map((p: Pokemon) => p.name).join(', ')}`);
+
+    // TODO: Return the flavortext stuff as well and hand that to a parsing function that hands that to a DB save function
     const varietiesLeftToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
     
     if (varietiesLeftToGet.length > 0) {
