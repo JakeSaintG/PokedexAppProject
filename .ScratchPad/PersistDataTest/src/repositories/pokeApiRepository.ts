@@ -1,3 +1,4 @@
+import { FlavorTextEntry } from "../types/flavorText";
 import { Pokemon } from "../types/pokemon";
 import { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
 import { Variety } from "../types/varieties";
@@ -73,18 +74,15 @@ export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety
         last_modified_dts: ''
     }
 
-    // TODO: handle flavor texts
-    // const flavorTexts = data.flavor_text_entries.reduce((acc, txt) => {
-    //     if (txt.language.name == "en") {
-    //         const text = txt.flavor_text.replace(/\n|\f/g, " ");
-    //         if (!acc.includes(text)) acc.push(text);
-    //     }
 
-    //     return acc;
-    // }, []);
-
-    // pokemonSpeciesData["flavor_texts"] = flavorTexts;
-
+    // TODO: assign to specData.flavorTexts (will require some refactoring)
+    const flavorTexts: FlavorTextEntry[] = data.flavor_text_entries.map( (flavorTxt: FlavorTextEntry) => {
+        return {
+            language: flavorTxt.language,
+            version: flavorTxt.version,
+            flavor_text: flavorTxt.flavor_text.replace(/\n|\f/g, " ")
+        }
+    })
 
     // TODO: varietyExclusions should probably be its own table in config
     const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 

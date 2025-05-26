@@ -64,7 +64,7 @@ const createPokemonTablesIfNotExist = () => {
         .prepare(`
             CREATE TABLE IF NOT EXISTS pokedex_entries (
                 id INT PRIMARY KEY NOT NULL
-                ,pokemon_id INT PRIMARY KEY NOT NULL
+                ,pokemon_id INT NOT NULL
                 ,generation STRING NOT NULL
                 ,text_entry STRING NOT NULL
                 ,language STRING NOT NULL
