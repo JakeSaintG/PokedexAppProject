@@ -151,63 +151,53 @@ export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
     }
 }
 
+// TODO: Do bulk insert instead of onesie-twosie
 export const upsertPokedexData = (pkmnSpecData: PokemonSpeciesData) => {
+    pkmnSpecData.flavor_texts.forEach(t => {
+        // TODO: English only for now; more to come later!
+        // Trying to keep DB size down for now.
+        if (t.language.name !== 'en') return;
+        
+        const cmd = `
+            INSERT INTO pokedex_entries (
+                id
+                ,pokemon_id
+                ,generation
+                ,text_entry
+                ,language
+                ,version_name
+                ,version_url
+                ,last_modified_dts
+            ) 
+            VALUES (
+                :id
+                ,:pokemon_id
+                ,:generation
+                ,:text_entry
+                ,:language
+                ,:version_name
+                ,:version_url
+                ,:last_modified_dts
+            )
+        `;
 
-    const foo: PokedexData[] = pkmnSpecData.flavor_texts.map(t => {
-        return {
-            id: pkmnSpecData.id,
-            pokemon_id: 'placeholder',
-            generation: pkmnSpecData.generation,
-            text_entry: t.flavor_text,
-            language: t.language.name,
-            version_name: t.version.name,
-            version_url: t.version.url,
-            last_modified_dts: new Date().toISOString(),
+        try {
+            dbContext
+            .prepare(cmd)
+            .run({
+                id: pkmnSpecData.id,
+                pokemon_id: 'placeholder',
+                generation: pkmnSpecData.generation,
+                text_entry: t.flavor_text,
+                language: t.language.name,
+                version_name: t.version.name,
+                version_url: t.version.url,
+                last_modified_dts: new Date().toISOString(),
+            });
+        } catch (error) {
+            console.error(`Failed to UPSERT dex data for ${pkmnSpecData.id}: ${error}`);
         }
     })
-
-    const cmd = `
-        INSERT INTO pokedex_entries (
-            id
-            ,pokemon_id
-            ,generation
-            ,text_entry
-            ,language
-            ,version_name
-            ,version_url
-            ,last_modified_dts
-        ) 
-        VALUES (
-            :id
-            ,:pokemon_id
-            ,:generation
-            ,:text_entry
-            ,:language
-            ,:version_name
-            ,:version_url
-            ,:last_modified_dts
-        )
-        ON CONFLICT(id) 
-        DO UPDATE SET 
-            id = :id
-            ,pokemon_id = :pokemon_id
-            ,generation = :generation
-            ,text_entry = :text_entry
-            ,language = :language
-            ,version_name = :version_name
-            ,version_url = :version_url
-            ,last_modified_dts = :last_modified_dts
-    `;
-
-    try {
-        dbContext
-        .prepare(cmd)
-        .run(foo);
-    } catch (error) {
-        // console.log(cmd);
-        console.error(`Failed to UPSERT dex data for ${pkmnSpecData.id}: ${error}`);
-    }
-
 }
 
 export const upsertPokemonSpeciesData = (pkmnSpecData: PokemonSpeciesData) => {
