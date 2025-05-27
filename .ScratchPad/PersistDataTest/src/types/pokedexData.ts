@@ -1,5 +1,5 @@
 export interface PokedexData {
-    id: string,
+    id: number,
     pokemon_id: string,
     generation: string,
     text_entry: string,

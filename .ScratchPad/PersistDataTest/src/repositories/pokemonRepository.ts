@@ -1,6 +1,6 @@
 // TODO: Route this through the config repo. This repo shouldn't be talking to the config interface
 import { getGenerationCountAndOffset, getGenerationLastUpdatedLocally } from "../data/configurationData";
-import { getPokemonSpeciesToLoad, upsertPokemonBaseData, upsertPokemonSpeciesData } from "../data/pokemonData";
+import { getPokemonSpeciesToLoad, upsertPokedexData, upsertPokemonBaseData, upsertPokemonSpeciesData } from "../data/pokemonData";
 import { Pokemon } from "../types/pokemon";
 import { Variety } from "../types/varieties";
 import { batchArray } from "../utils/utils";
@@ -71,9 +71,10 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
         })
     )
     .then(parsedData => 
-        parsedData.map((p) => 
-            upsertPokemonSpeciesData(p)
-        )
+        parsedData.map((p) => {
+            upsertPokemonSpeciesData(p);
+            upsertPokedexData(p);
+        })
     )
 
     return varietiesToGet.map(v => v.pokemon);

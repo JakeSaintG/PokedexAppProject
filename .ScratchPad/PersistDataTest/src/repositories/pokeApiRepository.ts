@@ -71,12 +71,11 @@ export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety
         habitat: data.habitat.name,
         generation: data.generation.name,
         evo_chain_url: data.evolution_chain.url,
+        flavor_texts: [],
         last_modified_dts: ''
     }
 
-
-    // TODO: assign to specData.flavorTexts (will require some refactoring)
-    const flavorTexts: FlavorTextEntry[] = data.flavor_text_entries.map( (flavorTxt: FlavorTextEntry) => {
+    specData.flavor_texts = data.flavor_text_entries.map( (flavorTxt: FlavorTextEntry) => {
         return {
             language: flavorTxt.language,
             version: flavorTxt.version,

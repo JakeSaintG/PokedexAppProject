@@ -1,6 +1,6 @@
 import sqlite from 'better-sqlite3';
 import fs from 'fs';
-import { PokemonBaseData, PokemonData, PokemonSpeciesData } from '../types/pokemonData';
+import { PokemonBaseData, PokemonSpeciesData } from '../types/pokemonData';
 import { Pokemon } from '../types/pokemon';
 import { PokedexData } from '../types/pokedexData';
 
@@ -63,7 +63,7 @@ const createPokemonTablesIfNotExist = () => {
     dbContext
         .prepare(`
             CREATE TABLE IF NOT EXISTS pokedex_entries (
-                id INT PRIMARY KEY NOT NULL
+                id INT NOT NULL
                 ,pokemon_id INT NOT NULL
                 ,generation STRING NOT NULL
                 ,text_entry STRING NOT NULL
@@ -151,11 +151,70 @@ export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
     }
 }
 
+export const upsertPokedexData = (pkmnSpecData: PokemonSpeciesData) => {
+
+    const foo: PokedexData[] = pkmnSpecData.flavor_texts.map(t => {
+        return {
+            id: pkmnSpecData.id,
+            pokemon_id: 'placeholder',
+            generation: pkmnSpecData.generation,
+            text_entry: t.flavor_text,
+            language: t.language.name,
+            version_name: t.version.name,
+            version_url: t.version.url,
+            last_modified_dts: new Date().toISOString(),
+        }
+    })
+
+    const cmd = `
+        INSERT INTO pokedex_entries (
+            id
+            ,pokemon_id
+            ,generation
+            ,text_entry
+            ,language
+            ,version_name
+            ,version_url
+            ,last_modified_dts
+        ) 
+        VALUES (
+            :id
+            ,:pokemon_id
+            ,:generation
+            ,:text_entry
+            ,:language
+            ,:version_name
+            ,:version_url
+            ,:last_modified_dts
+        )
+        ON CONFLICT(id) 
+        DO UPDATE SET 
+            id = :id
+            ,pokemon_id = :pokemon_id
+            ,generation = :generation
+            ,text_entry = :text_entry
+            ,language = :language
+            ,version_name = :version_name
+            ,version_url = :version_url
+            ,last_modified_dts = :last_modified_dts
+    `;
+
+    try {
+        dbContext
+        .prepare(cmd)
+        .run(foo);
+    } catch (error) {
+        // console.log(cmd);
+        console.error(`Failed to UPSERT dex data for ${pkmnSpecData.id}: ${error}`);
+    }
+
+}
+
 export const upsertPokemonSpeciesData = (pkmnSpecData: PokemonSpeciesData) => {
     let convertedHasGenderDifferences = 0
     if (pkmnSpecData.has_gender_differences) convertedHasGenderDifferences = 1;
 
-    const insert =  `
+    const cmd =  `
         INSERT INTO pokemon_species_data (
             id
             ,dex_no
@@ -190,7 +249,7 @@ export const upsertPokemonSpeciesData = (pkmnSpecData: PokemonSpeciesData) => {
 
     try {
         dbContext
-            .prepare(insert)
+            .prepare(cmd)
             .run({
                 id: pkmnSpecData.id,
                 dex_no: pkmnSpecData.dex_no,
