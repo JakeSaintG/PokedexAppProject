@@ -53,11 +53,9 @@ const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) =>
     }
 }
 
-
 const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ): Promise<Pokemon[]> => {
     let varietiesToGet: Variety[] = [];
 
-    // TODO: I wonder if an HTTP factory will help prevent timeouts.......every batch gets its own http connection?
     await Promise.all(
         pokemonToLoad.map(async (p: Pokemon) => 
             await fetchPokeApiData(p.url)
@@ -94,6 +92,7 @@ const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: st
     )
     .then(parsedData => 
         parsedData.map((p) => 
+            // TODO: maybe return a list of images to get here?
             upsertPokemonBaseData(p)
         )
     )

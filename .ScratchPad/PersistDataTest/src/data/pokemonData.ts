@@ -1,5 +1,4 @@
 import sqlite from 'better-sqlite3';
-import fs from 'fs';
 import { PokemonBaseData, PokemonSpeciesData } from '../types/pokemonData';
 import { Pokemon } from '../types/pokemon';
 import { PokedexData } from '../types/pokedexData';
