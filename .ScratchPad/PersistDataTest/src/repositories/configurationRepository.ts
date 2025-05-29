@@ -2,6 +2,45 @@ import { getGenerationUpdateData, updateLocalLastModifiedDate, upsertConfigurati
 import { ConfigurationData, SupportedGeneration } from "../types/configurationData";
 import { DateData } from "../types/dateData";
 
+export const configApiPing = () => {
+    return true;
+};
+
+// Call out for new configuration
+export const getUpdatedAppConfiguration = async () => {
+    // Pretend API call to a "home" server that holds app config data
+    // (): result => {}
+    // Just a week for now
+    const placeHolderStaleByDate = new Date(
+        new Date().getTime() + 7 * 24 * 60 * 60 * 1000
+    ).toISOString();
+
+    const simulatedResult = {
+        supported_generations: [
+            {
+                id: 1,
+                generation_name: "generation1",
+                description: "Red, Green, Blue, and Yellow.",
+                starting_dex_no: 1,
+                count: 3, //151
+                stale_by_dts: placeHolderStaleByDate,
+                last_modified_dts: "2025-05-08T22:04:23.244Z", // new Date().toISOString()
+            }
+            // ,{
+            //     id: 2,
+            //     generation_name: 'generation2',
+            //     description: 'Gold, Silver, and Crystal.',
+            //     starting_dex_no: 152,
+            //     count: 3, // 100
+            //     stale_by_dts: placeHolderStaleByDate,
+            //     last_modified_dts: '2025-05-08T22:01:16.292Z' // new Date().toISOString()
+            // }
+        ],
+    };
+
+    return simulatedResult;
+};
+
 export const updateConfiguration = (configuration: ConfigurationData) => {
     updateSupportedGenerations(configuration.supported_generations)
 
@@ -30,7 +69,3 @@ const updateSupportedGenerations = (supported_generations: SupportedGeneration[]
 export const updateLocalLastModified = (id: number) => {
     updateLocalLastModifiedDate(id);
 }
-
-export const configApiPing = () => {
-    return true;
-};
