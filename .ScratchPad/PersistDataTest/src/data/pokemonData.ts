@@ -76,7 +76,56 @@ const createPokemonTablesIfNotExist = () => {
             )
         `)
         .run();
+
+    dbContext
+        .prepare(`
+            CREATE TABLE IF NOT EXISTS image_test (
+                id INT NOT NULL
+                ,name INT NOT NULL
+                ,default_img_data BLOB NOT NULL
+                ,female_img_data BLOB NOT NULL
+            )
+        `)
+        .run();
 };
+
+export const upsertImageTest = async (id: number, name: string, image: File) => {
+    const arrayBuffer = await image.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const stmt = `
+        INSERT INTO pokemon_base_data (
+            id
+            ,name
+            ,default_img_data
+            ,female_img_data
+        ) 
+        VALUES (
+            :id
+            ,:name
+            ,:default_img_data
+            ,:female_img_data
+        )
+            ON CONFLICT(id) 
+            DO UPDATE SET 
+                id = id
+                ,name = name
+                ,default_img_data = :default_img_data
+                ,female_img_data = :female_img_data
+    `
+
+    //try/catch
+    dbContext
+        .prepare(stmt)
+        .run({
+            id,
+            name: name,
+            default_img_data: buffer,
+            female_img_data: buffer,
+        });
+}
+
+
 
 // TODO: Do bulk insert instead of onesie-twosie
 export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {

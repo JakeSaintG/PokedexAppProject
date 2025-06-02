@@ -28,7 +28,6 @@ export const fetchPokeApiData = async (url: string) => {
 }
 
 export const parsePokemonBaseData = (data: any, url: string): PokemonBaseData => {
-    
     let parsedData: PokemonBaseData = {
         id: data.id,
         name: data.name,
