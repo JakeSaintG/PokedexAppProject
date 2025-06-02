@@ -141,7 +141,7 @@ export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
                 is_default: convertedIsDefault,
                 species_url: pkmnData.species_url,
                 male_sprite_url: pkmnData.male_sprite_url,
-                female_sprite_url: pkmnData.male_sprite_url,
+                female_sprite_url: pkmnData.female_sprite_url,
                 img_path: pkmnData.img_path,
                 has_forms: convertedHasForms,
                 type_1: pkmnData.type_1,

@@ -28,14 +28,15 @@ export const fetchPokeApiData = async (url: string) => {
 }
 
 export const parsePokemonBaseData = (data: any, url: string): PokemonBaseData => {
+    
     let parsedData: PokemonBaseData = {
-        id: 0,
-        name: '',
-        species_url: '',
-        is_default: false,
-        male_sprite_url: '',
-        female_sprite_url: '',
-        img_path: '',
+        id: data.id,
+        name: data.name,
+        species_url: data.species.url,
+        is_default: data.is_default,
+        male_sprite_url: data.sprites.front_default,
+        female_sprite_url: data.sprites.front_female,
+        img_path: `./imgs/dex_imgs/${data.id}`,
         type_1: '',
         type_2: null,
         has_forms: false,
@@ -43,14 +44,6 @@ export const parsePokemonBaseData = (data: any, url: string): PokemonBaseData =>
         last_modified_dts: ''
     };
 
-    parsedData.id = data.id;
-    parsedData.name = data.name;
-    parsedData.species_url = data.species.url;
-    parsedData.is_default = data.is_default;
-    parsedData.male_sprite_url = data.sprites.front_default;
-    parsedData.female_sprite_url = data.sprites.front_female;
-    parsedData.img_path = `./imgs/dex_imgs/${data.id}`;
-    
     if (data.forms.length > 1) {
         parsedData.has_forms = true;
     }
