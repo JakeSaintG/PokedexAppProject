@@ -1,11 +1,24 @@
 // TODO: Route this through the config repo. This repo shouldn't be talking to the config interface
 import { getGenerationCountAndOffset, getGenerationLastUpdatedLocally } from "../data/configurationData";
-import { getPokemonSpeciesToLoad, upsertPokedexData, upsertPokemonBaseData, upsertPokemonSpeciesData } from "../data/pokemonData";
+import { 
+    getPokemonSpeciesToLoad,
+    upsertPokemonImage,
+    upsertPokedexData,
+    upsertPokemonBaseData,
+    upsertPokemonSpeciesData 
+} from "../data/pokemonData";
 import { Pokemon } from "../types/pokemon";
+import { PokemonImageData } from "../types/pokemonImageData";
 import { Variety } from "../types/varieties";
 import { batchArray } from "../utils/utils";
 import { updateLocalLastModified } from "./configurationRepository";
-import { fetchPokeApiData, fetchPkmnToLoad, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
+import { 
+    fetchPokeApiData, 
+    fetchPkmnToLoad, 
+    parsePokemonBaseData, 
+    parsePokemonSpeciesData, 
+    fetchPokeApiImage
+} from "./pokeApiRepository";
 
 export const loadPokemonData = async (forceUpdate: boolean) => {
     const generationsLastUpdatedLocally = getGenerationLastUpdatedLocally();
@@ -52,7 +65,6 @@ const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) =>
     }
 
     loadPokemonImages(imagesLeftToGet);
-    console.log(imagesLeftToGet);
 }
 
 const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ): Promise<Pokemon[]> => {
@@ -81,7 +93,7 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
 }
 
 const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
-    let imagesToGet = [];
+    let imagesToGet: PokemonImageData[] = [];
     
     await Promise.all(
         pokemonToLoad.map(async (p: Pokemon) => {
@@ -96,8 +108,8 @@ const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: st
             imagesToGet.push({
                 id: parsedData.id,
                 name: parsedData.name,
-                male_sprite_url: parsedData.male_sprite_url,
-                female_sprite_url: parsedData.female_sprite_url
+                male_sprite: parsedData.male_sprite_url,
+                female_sprite: parsedData.female_sprite_url
             })
 
             return parsedData;
@@ -105,7 +117,6 @@ const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: st
     )
     .then(parsedData => 
         parsedData.map((p) => 
-            // TODO: maybe return a list of images to get here?
             upsertPokemonBaseData(p)
         )
     )
@@ -113,23 +124,18 @@ const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: st
     return imagesToGet;
 }
 
-const loadPokemonImages = async ( loadPokemonImages ) => {
+const loadPokemonImages = async ( loadPokemonImages: PokemonImageData[] ) => {
     await Promise.all(
-        loadPokemonImages.map(async (p) => 
-            console.log('fetch')
-            // await fetchPokeApiData(p.url)
-        )
-    )
-    .then((downloadedData) => 
-    downloadedData.map((p) => 
-        console.log('parse')
-        // parsePokemonBaseData(p.data, p.url)
-        )
+        loadPokemonImages.map(async (p: PokemonImageData) => { 
+            p.male_sprite = await fetchPokeApiImage(p.male_sprite);
+            if (p.female_sprite) p.female_sprite = await fetchPokeApiImage(p.female_sprite);
+            
+            return p;
+        })
     )
     .then(parsedData => 
-        parsedData.map((p) => 
-            console.log('save')
-            // upsertPokemonBaseData(p)
+        parsedData.map((p: PokemonImageData) => 
+            upsertPokemonImage(p)
         )
     )
 }

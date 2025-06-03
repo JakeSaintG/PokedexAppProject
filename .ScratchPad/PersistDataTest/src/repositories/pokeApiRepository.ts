@@ -1,5 +1,4 @@
 import { FlavorTextEntry } from "../types/flavorText";
-import { Pokemon } from "../types/pokemon";
 import { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
 import { Variety } from "../types/varieties";
 
@@ -21,10 +20,14 @@ export const fetchPkmnToLoad = async (limit: number, offset: number) => {
     return pkmn;
 };
 
+export const fetchPokeApiImage = async (url) => {
+    return await fetch(url, { method: "GET" })
+        .then((res) => res.blob())
+}
+
 export const fetchPokeApiData = async (url: string) => {
     return await fetch(url, { method: "GET" })
         .then((res) => res.json())
-        .then((data) => data)
 }
 
 export const parsePokemonBaseData = (data: any, url: string): PokemonBaseData => {

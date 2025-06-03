@@ -2,6 +2,7 @@ import sqlite from 'better-sqlite3';
 import { PokemonBaseData, PokemonSpeciesData } from '../types/pokemonData';
 import { Pokemon } from '../types/pokemon';
 import { PokedexData } from '../types/pokedexData';
+import { PokemonImageData } from '../types/pokemonImageData';
 
 let dbContext: sqlite.Database;
 
@@ -79,22 +80,34 @@ const createPokemonTablesIfNotExist = () => {
 
     dbContext
         .prepare(`
-            CREATE TABLE IF NOT EXISTS image_test (
-                id INT NOT NULL
+            CREATE TABLE IF NOT EXISTS pokemon_images (
+                id INT PRIMARY KEY NOT NULL
                 ,name INT NOT NULL
                 ,default_img_data BLOB NOT NULL
-                ,female_img_data BLOB NOT NULL
+                ,female_img_data BLOB NULL
             )
         `)
         .run();
 };
 
-export const upsertImageTest = async (id: number, name: string, image: File) => {
-    const arrayBuffer = await image.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
+    let defaultImageBuffer = null;
+    let femaleImageBuffer = null;
+
+    if (typeof(pkmnImgData.male_sprite) != 'string') {
+        defaultImageBuffer = Buffer.from(
+            await pkmnImgData.male_sprite.arrayBuffer()
+        );
+    }
+
+    if (typeof(pkmnImgData.female_sprite) != 'string' && pkmnImgData.female_sprite != null) {
+        femaleImageBuffer = Buffer.from(
+            await pkmnImgData.female_sprite.arrayBuffer()
+        );
+    }
 
     const stmt = `
-        INSERT INTO pokemon_base_data (
+        INSERT INTO pokemon_images (
             id
             ,name
             ,default_img_data
@@ -114,18 +127,19 @@ export const upsertImageTest = async (id: number, name: string, image: File) => 
                 ,female_img_data = :female_img_data
     `
 
-    //try/catch
-    dbContext
-        .prepare(stmt)
-        .run({
-            id,
-            name: name,
-            default_img_data: buffer,
-            female_img_data: buffer,
-        });
+    try {        
+        dbContext
+            .prepare(stmt)
+            .run({
+                id: pkmnImgData.id,
+                name: pkmnImgData.name,
+                default_img_data: defaultImageBuffer,
+                female_img_data: femaleImageBuffer,
+            });
+    } catch (error) {
+        console.error(`Failed to UPSERT image data for ${pkmnImgData.name}: ${error}`);
+    }
 }
-
-
 
 // TODO: Do bulk insert instead of onesie-twosie
 export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
