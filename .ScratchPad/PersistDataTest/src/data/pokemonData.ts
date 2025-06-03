@@ -25,9 +25,6 @@ const setDbContext = (dataSource: string) => {
 };
 
 const createPokemonTablesIfNotExist = () => {
-    
-    // TODO: maybe try to store the sprite here?
-    // Likely no need for another table
     dbContext
         .prepare(`
             CREATE TABLE IF NOT EXISTS pokemon_base_data (
