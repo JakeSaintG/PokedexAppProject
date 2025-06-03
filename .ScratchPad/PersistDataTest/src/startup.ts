@@ -41,7 +41,7 @@ const getUpdatedAppConfiguration = async () => {
     return simulatedResult;
 };
 
-export const runStartUp = async (dataSource: string, forceUpdate: boolean) => {
+export const runStartUp = async (dataSource: string, forceUpdate: boolean, batchSize) => {
     initConfigDb(dataSource);
     initPokemonDb(dataSource);
 
@@ -51,6 +51,6 @@ export const runStartUp = async (dataSource: string, forceUpdate: boolean) => {
     }
 
     if (pokeApiPing()) {
-        loadPokemonData( forceUpdate );
+        loadPokemonData( forceUpdate, batchSize );
     }
 };

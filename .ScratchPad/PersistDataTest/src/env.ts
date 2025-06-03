@@ -6,7 +6,7 @@ const DATA_SOURCE: string = (process.env.PORT) || 'sqlite';
 
 const FORCE_UPDATE: boolean = ((process.env.FORCE_UPDATE) || 'false').toLowerCase() == 'true';
 
-const BATCH_SIZE: number = parseInt(process.env.FORCE_UPDATE);
+const BATCH_SIZE: number = parseInt(process.env.BATCH_SIZE);
 
 export const Env = {
     DATA_SOURCE,

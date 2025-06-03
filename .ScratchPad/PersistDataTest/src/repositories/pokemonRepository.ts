@@ -20,7 +20,7 @@ import {
     fetchPokeApiImage
 } from "./pokeApiRepository";
 
-export const loadPokemonData = async (forceUpdate: boolean) => {
+export const loadPokemonData = async (forceUpdate: boolean, batchSize: number) => {
     const generationsLastUpdatedLocally = getGenerationLastUpdatedLocally();
 
     // TODO: When empty, load gen 1
@@ -32,18 +32,17 @@ export const loadPokemonData = async (forceUpdate: boolean) => {
             const [count, offset] = getGenerationCountAndOffset(gen.generation_id);
 
             const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
-            await batchLoadPokemon(fetchedPokemon);
+            await batchLoadPokemon(fetchedPokemon, batchSize);
 
             updateLocalLastModified(gen.generation_id);
         }
     });
 };
 
-// TODO: make batch size configurable
-const batchLoadPokemon = async ( pokemonToLoad: Pokemon[]) => {
+const batchLoadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) => {
     let batchCounter = 1;
-    
-    batchArray(pokemonToLoad, 3)
+
+    batchArray(pokemonToLoad, batchSize)
         .forEach( async (pokemonBatch: Pokemon[]) => {
             console.log(`\r\nStarting batch ${batchCounter++}: ${pokemonBatch.map((p: Pokemon) => p.name).join(', ')}`);
             await startLoad(pokemonBatch, (new Date().toISOString()))
