@@ -2,6 +2,7 @@ import sqlite from 'better-sqlite3';
 import { PokemonBaseData, PokemonSpeciesData } from '../types/pokemonData';
 import { Pokemon } from '../types/pokemon';
 import { PokedexData } from '../types/pokedexData';
+import { PokemonImageData } from '../types/pokemonImageData';
 
 let dbContext: sqlite.Database;
 
@@ -73,7 +74,69 @@ const createPokemonTablesIfNotExist = () => {
             )
         `)
         .run();
+
+    dbContext
+        .prepare(`
+            CREATE TABLE IF NOT EXISTS pokemon_images (
+                id INT PRIMARY KEY NOT NULL
+                ,name INT NOT NULL
+                ,default_img_data BLOB NOT NULL
+                ,female_img_data BLOB NULL
+            )
+        `)
+        .run();
 };
+
+export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
+    let defaultImageBuffer = null;
+    let femaleImageBuffer = null;
+
+    if (typeof(pkmnImgData.male_sprite) != 'string') {
+        defaultImageBuffer = Buffer.from(
+            await pkmnImgData.male_sprite.arrayBuffer()
+        );
+    }
+
+    if (typeof(pkmnImgData.female_sprite) != 'string' && pkmnImgData.female_sprite != null) {
+        femaleImageBuffer = Buffer.from(
+            await pkmnImgData.female_sprite.arrayBuffer()
+        );
+    }
+
+    const stmt = `
+        INSERT INTO pokemon_images (
+            id
+            ,name
+            ,default_img_data
+            ,female_img_data
+        ) 
+        VALUES (
+            :id
+            ,:name
+            ,:default_img_data
+            ,:female_img_data
+        )
+            ON CONFLICT(id) 
+            DO UPDATE SET 
+                id = id
+                ,name = name
+                ,default_img_data = :default_img_data
+                ,female_img_data = :female_img_data
+    `
+
+    try {        
+        dbContext
+            .prepare(stmt)
+            .run({
+                id: pkmnImgData.id,
+                name: pkmnImgData.name,
+                default_img_data: defaultImageBuffer,
+                female_img_data: femaleImageBuffer,
+            });
+    } catch (error) {
+        console.error(`Failed to UPSERT image data for ${pkmnImgData.name}: ${error}`);
+    }
+}
 
 // TODO: Do bulk insert instead of onesie-twosie
 export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
@@ -138,7 +201,7 @@ export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
                 is_default: convertedIsDefault,
                 species_url: pkmnData.species_url,
                 male_sprite_url: pkmnData.male_sprite_url,
-                female_sprite_url: pkmnData.male_sprite_url,
+                female_sprite_url: pkmnData.female_sprite_url,
                 img_path: pkmnData.img_path,
                 has_forms: convertedHasForms,
                 type_1: pkmnData.type_1,
