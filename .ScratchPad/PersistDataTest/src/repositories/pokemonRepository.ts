@@ -1,5 +1,3 @@
-// TODO: Route this through the config repo. This repo shouldn't be talking to the config interface
-import { getGenerationCountAndOffset, getGenerationLastUpdatedLocally } from "../data/configurationData";
 import { 
     getPokemonSpeciesToLoad,
     upsertPokemonImage,
@@ -11,7 +9,10 @@ import { Pokemon } from "../types/pokemon";
 import { PokemonImageData } from "../types/pokemonImageData";
 import { Variety } from "../types/varieties";
 import { batchArray } from "../utils/utils";
-import { updateLocalLastModified } from "./configurationRepository";
+import { updateLocalLastModified,
+    getGenerationCountOffset,
+    getLastLocalGenerationUpdate
+} from "./configurationRepository";
 import { 
     fetchPokeApiData, 
     fetchPkmnToLoad, 
@@ -21,7 +22,7 @@ import {
 } from "./pokeApiRepository";
 
 export const loadPokemonData = async (forceUpdate: boolean, batchSize: number) => {
-    const generationsLastUpdatedLocally = getGenerationLastUpdatedLocally();
+    const generationsLastUpdatedLocally = getLastLocalGenerationUpdate();
 
     // TODO: When empty, load gen 1
     // TODO: Allow user to trigger all other gen fetching (using limit and offset)
@@ -29,7 +30,7 @@ export const loadPokemonData = async (forceUpdate: boolean, batchSize: number) =
         if(gen.local_last_modified_dts === '' || forceUpdate) {
             console.log(`Gen ${gen.generation_id} identified for update.`);
 
-            const [count, offset] = getGenerationCountAndOffset(gen.generation_id);
+            const [count, offset] = getGenerationCountOffset(gen.generation_id);
 
             const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
             await batchLoadPokemon(fetchedPokemon, batchSize);

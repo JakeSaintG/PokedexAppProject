@@ -1,4 +1,10 @@
-import { getGenerationUpdateData, updateLocalLastModifiedDate, upsertConfigurationData } from "../data/configurationData";
+import { 
+    getGenerationUpdateData, 
+    updateLocalLastModifiedDate, 
+    upsertConfigurationData,
+    getGenerationCountAndOffset,
+    getGenerationLastUpdatedLocally 
+} from "../data/configurationData";
 import { ConfigurationData, SupportedGeneration } from "../types/configurationData";
 import { DateData } from "../types/dateData";
 
@@ -8,8 +14,11 @@ export const updateConfiguration = (configuration: ConfigurationData) => {
     // Update table_versions table;
 }
 
+export const getGenerationCountOffset = (id: number): [number, number] | undefined => getGenerationCountAndOffset(id);
+
+export const getLastLocalGenerationUpdate = (): DateData[] => getGenerationLastUpdatedLocally();
+
 const updateSupportedGenerations = (supported_generations: SupportedGeneration[]) => {
-    
     supported_generations.forEach((generation: SupportedGeneration) => {
         const generationDateData: DateData | null  = getGenerationUpdateData(generation.id);
 
