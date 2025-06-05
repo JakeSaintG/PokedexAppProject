@@ -103,7 +103,6 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
         defaultImageBuffer = Buffer.from(
             await pkmnImgData.male_sprite.arrayBuffer()
         );
-
         defaultImageSize = pkmnImgData.male_sprite.size;
     }
     
