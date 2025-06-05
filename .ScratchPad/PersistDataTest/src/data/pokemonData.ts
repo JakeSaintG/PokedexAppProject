@@ -80,8 +80,6 @@ const createPokemonTablesIfNotExist = () => {
             CREATE TABLE IF NOT EXISTS pokemon_images (
                 id INT PRIMARY KEY NOT NULL
                 ,name INT NOT NULL
-                ,default_img_data BLOB NOT NULL
-                ,female_img_data BLOB NULL
                 ,default_img_size INT NOT NULL
                 ,female_img_size INT NULL
                 ,default_img_last_modified INT NOT NULL
@@ -153,11 +151,10 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
                 id: pkmnImgData.id,
                 name: pkmnImgData.name,
 
-
-                default_img_size: "",
-                female_img_size: "",
-                default_img_last_modified: "",
-                female_img_last_modified: "",
+                default_img_size: defaultImageSize,
+                female_img_size: femaleImageSize,
+                default_img_last_modified: new Date().toISOString(),
+                female_img_last_modified: new Date().toISOString(),
 
                 default_img_data: defaultImageBuffer,
                 female_img_data: femaleImageBuffer,
