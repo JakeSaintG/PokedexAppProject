@@ -382,7 +382,7 @@ export const upsertDexData = (pDexData: PokedexData) => {
         ]);
 }
 
-export const getPokemonSpeciesToLoad = (pokemonToGet: Pokemon[]) => {
+export const getPokemonSpeciesToLoad = async (pokemonToGet: Pokemon[]) => {
     let pokemonSpeciesToLoad: Pokemon[] = [];
 
     const stmt = `

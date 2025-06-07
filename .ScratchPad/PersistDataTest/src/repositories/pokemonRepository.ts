@@ -44,30 +44,29 @@ const batchLoadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) =>
     let batchCounter = 1;
 
     batchArray(pokemonToLoad, batchSize)
-        .forEach( async (pokemonBatch: Pokemon[]) => {
+        .forEach(async (pokemonBatch: Pokemon[]) => {
             console.log(`\r\nStarting batch ${batchCounter++}: ${pokemonBatch.map((p: Pokemon) => p.name).join(', ')}`);
             await startLoad(pokemonBatch, (new Date().toISOString()))
         })
 }
 
-const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
+const startLoad  = async ( pokemonToLoad: Pokemon[], loadStartTime: string ) => {
     // TODO: WE TIMING OUT AGAIN!!!!!
-    
-    
-    console.log(`Loading base data for: ${pokemonToLoad.map((p: Pokemon) => p.name).join(', ')}`);
+    console.log(`Loading base data for: ${pokemonToLoad.map((p: Pokemon) => p.name).join(', ')}...`);
     let imagesLeftToGet = await loadBasePokemonData(pokemonToLoad, loadStartTime);
 
-    const pokemonSpeciesToLoad = getPokemonSpeciesToLoad(pokemonToLoad);
+    const pokemonSpeciesToLoad = await getPokemonSpeciesToLoad(pokemonToLoad);
+
     console.log(`Loading species data for: ${pokemonSpeciesToLoad.map((p: Pokemon) => p.name).join(', ')}`);
     const varietiesLeftToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
-    
+
     if (varietiesLeftToGet.length > 0) {
         console.log(`Loading remaining special forms: ${varietiesLeftToGet.map((p: Pokemon) => p.name).join(', ')} `);
         const varietiesImagesLeftToGet = await loadBasePokemonData(varietiesLeftToGet, loadStartTime);
         imagesLeftToGet = imagesLeftToGet.concat( varietiesImagesLeftToGet );
     }
 
-    loadPokemonImages(imagesLeftToGet);
+    await loadPokemonImages(imagesLeftToGet);
 }
 
 const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ): Promise<Pokemon[]> => {
