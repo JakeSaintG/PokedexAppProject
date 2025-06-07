@@ -82,6 +82,12 @@ const createPokemonTablesIfNotExist = () => {
                 ,name INT NOT NULL
                 ,default_img_data BLOB NOT NULL
                 ,female_img_data BLOB NULL
+                ,default_img_size INT NOT NULL
+                ,female_img_size INT NULL
+                ,default_img_last_modified INT NOT NULL
+                ,female_img_last_modified INT NULL
+                ,default_img_data BLOB NOT NULL
+                ,female_img_data BLOB NULL
             )
         `)
         .run();
@@ -90,29 +96,41 @@ const createPokemonTablesIfNotExist = () => {
 export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
     let defaultImageBuffer = null;
     let femaleImageBuffer = null;
+    let defaultImageSize = null;
+    let femaleImageSize = null;
 
     if (typeof(pkmnImgData.male_sprite) != 'string') {
         defaultImageBuffer = Buffer.from(
             await pkmnImgData.male_sprite.arrayBuffer()
         );
+        defaultImageSize = pkmnImgData.male_sprite.size;
     }
-
+    
     if (typeof(pkmnImgData.female_sprite) != 'string' && pkmnImgData.female_sprite != null) {
         femaleImageBuffer = Buffer.from(
             await pkmnImgData.female_sprite.arrayBuffer()
         );
+        femaleImageSize = pkmnImgData.female_sprite.size;
     }
 
     const stmt = `
         INSERT INTO pokemon_images (
             id
             ,name
+            ,default_img_size
+            ,female_img_size
+            ,default_img_last_modified
+            ,female_img_last_modified
             ,default_img_data
             ,female_img_data
         ) 
         VALUES (
             :id
             ,:name
+            ,:default_img_size
+            ,:female_img_size
+            ,:default_img_last_modified
+            ,:female_img_last_modified
             ,:default_img_data
             ,:female_img_data
         )
@@ -120,6 +138,10 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
             DO UPDATE SET 
                 id = id
                 ,name = name
+                ,default_img_size = :default_img_size
+                ,female_img_size = :female_img_size
+                ,default_img_last_modified = :default_img_last_modified
+                ,female_img_last_modified = :female_img_last_modified
                 ,default_img_data = :default_img_data
                 ,female_img_data = :female_img_data
     `
@@ -130,6 +152,13 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
             .run({
                 id: pkmnImgData.id,
                 name: pkmnImgData.name,
+
+
+                default_img_size: "",
+                female_img_size: "",
+                default_img_last_modified: "",
+                female_img_last_modified: "",
+
                 default_img_data: defaultImageBuffer,
                 female_img_data: femaleImageBuffer,
             });
