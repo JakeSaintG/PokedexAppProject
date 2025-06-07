@@ -16,31 +16,32 @@ export const configApiPing = () => {
 export const getUpdatedAppConfiguration = async () => {
     // Pretend API call to a "home" server that holds app config data
     // (): result => {}
-    // Just a week for now
     const placeHolderStaleByDate = new Date(
+        // It's been...one week.
         new Date().getTime() + 7 * 24 * 60 * 60 * 1000
     ).toISOString();
 
     const simulatedResult = {
         supported_generations: [
-            {
-                id: 1,
-                generation_name: "generation1",
-                description: "Red, Green, Blue, and Yellow.",
-                starting_dex_no: 1,
-                count: 3, //151
-                stale_by_dts: placeHolderStaleByDate,
-                last_modified_dts: "2025-05-08T22:04:23.244Z", // new Date().toISOString()
-            }
-            // ,{
-            //     id: 2,
-            //     generation_name: 'generation2',
-            //     description: 'Gold, Silver, and Crystal.',
-            //     starting_dex_no: 152,
-            //     count: 3, // 100
+            // {
+            //     id: 1,
+            //     generation_name: "generation1",
+            //     description: "Red, Green, Blue, and Yellow.",
+            //     starting_dex_no: 1,
+            //     count: 151, //151
             //     stale_by_dts: placeHolderStaleByDate,
-            //     last_modified_dts: '2025-05-08T22:01:16.292Z' // new Date().toISOString()
+            //     last_modified_dts: "2025-05-08T22:04:23.244Z", // new Date().toISOString()
             // }
+            // ,
+            {
+                id: 2,
+                generation_name: 'generation2',
+                description: 'Gold, Silver, and Crystal.',
+                starting_dex_no: 152,
+                count: 100, // 100
+                stale_by_dts: placeHolderStaleByDate,
+                last_modified_dts: '2025-05-08T22:01:16.292Z' // new Date().toISOString()
+            }
         ],
     };
 

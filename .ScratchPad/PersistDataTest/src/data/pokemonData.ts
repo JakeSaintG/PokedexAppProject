@@ -168,7 +168,6 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
     }
 }
 
-// TODO: Do bulk insert instead of onesie-twosie
 export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
     const insert =  `
         INSERT INTO pokemon_base_data (
@@ -237,11 +236,11 @@ export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
     }
 }
 
-// TODO: Do bulk insert instead of onesie-twosie
 export const upsertPokedexData = (pkmnSpecData: PokemonSpeciesData) => {
     pkmnSpecData.flavor_texts.forEach(t => {
-        // TODO: English only for now; more to come later!
-        // Trying to keep DB size down for now.
+        // English only for the time being
+        // This is a learning exercise and keeping it to english will keep scope down.
+        // I'm also trying to keep DB size down for now.
         if (t.language.name !== 'en') return;
         
         const stmt = `
