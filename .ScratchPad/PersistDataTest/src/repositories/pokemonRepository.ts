@@ -51,6 +51,9 @@ const batchLoadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) =>
 }
 
 const startLoad  = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
+    // TODO: WE TIMING OUT AGAIN!!!!!
+    
+    
     console.log(`Loading base data for: ${pokemonToLoad.map((p: Pokemon) => p.name).join(', ')}`);
     let imagesLeftToGet = await loadBasePokemonData(pokemonToLoad, loadStartTime);
 
