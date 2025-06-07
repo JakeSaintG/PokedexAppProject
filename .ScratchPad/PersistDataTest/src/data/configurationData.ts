@@ -19,7 +19,7 @@ const setDbContext = (dataSource: string) => {
     } else if (dataSource === 'postgres') {
         throw 'postgres support not yet implemented.'
     }
-};
+}
 
 const createConfigTablesIfNotExist = () => {
     dbContext
@@ -51,7 +51,7 @@ const createConfigTablesIfNotExist = () => {
 }
 
 export const upsertConfigurationData = (configData: SupportedGeneration) => {
-    const insert =  `
+    const stmt =  `
         INSERT INTO supported_generations (
             id
             ,generation_name
@@ -88,7 +88,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
 
     try {
         dbContext
-            .prepare(insert)
+            .prepare(stmt)
             .run({
                 id: configData.id,
                 generation_name: configData.generation_name,
@@ -106,21 +106,19 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
 }
 
 export const getGenerationUpdateData = (gen_id: number): DateData | undefined => {
-    let genLastUpdatedData: DateData = {
-        last_modified_dts: '',
-        source_last_modified_dts: '',
-        stale_by_dts: ''
-    };
-
-    const genDateData = dbContext.prepare(
-        `SELECT 
+    const stmt = `
+        SELECT 
             last_modified_dts
             ,source_last_modified_dts
             ,stale_by_dts
         FROM supported_generations
         WHERE id = ${gen_id}
-        LIMIT 1;`
-    ).all()[0];
+        LIMIT 1;
+    `
+
+    const genDateData = dbContext
+        .prepare(stmt)
+        .all()[0];
 
     if (
         typeof genDateData === 'object' 
@@ -138,45 +136,42 @@ export const getGenerationUpdateData = (gen_id: number): DateData | undefined =>
             && typeof genDateData['stale_by_dts'] === 'string'
         )
     ) {
-        genLastUpdatedData.last_modified_dts = genDateData.last_modified_dts
-        genLastUpdatedData.source_last_modified_dts = genDateData.source_last_modified_dts
-        genLastUpdatedData.stale_by_dts = genDateData.stale_by_dts
-        
-        return genLastUpdatedData;
+        return {
+            last_modified_dts: genDateData.last_modified_dts,
+            source_last_modified_dts:  genDateData.source_last_modified_dts,
+            stale_by_dts: genDateData.stale_by_dts
+        }
     } else {
         return undefined;
     }
 }
 
 export const updateLocalLastModifiedDate= (id: number) => {
-    const update = `
+    const stmt = `
         UPDATE supported_generations
         SET local_last_modified_dts = '${new Date().toISOString()}'
         WHERE id = ${id};
     `;
 
     dbContext
-        .prepare(update)
+        .prepare(stmt)
         .run();
 }
 
-
 export const getGenerationLastUpdatedLocally = (): DateData[] => {
-    const dateData = dbContext.prepare(
-        `SELECT 
+    const stmt = `
+        SELECT 
             id
             ,last_modified_dts
             ,local_last_modified_dts
-        FROM supported_generations;`
-    ).all();
+        FROM supported_generations;
+    `;
+
+    const dateData = dbContext
+        .prepare(stmt)
+        .all();
 
     return dateData.map((e) => {
-        let lastLocalUpdatedData: DateData = {
-            generation_id: 0,
-            last_modified_dts: '',
-            local_last_modified_dts: ''
-        };
-        
         if (
             typeof e === 'object' 
             && e !== null 
@@ -193,26 +188,29 @@ export const getGenerationLastUpdatedLocally = (): DateData[] => {
                 && (typeof e['local_last_modified_dts'] === 'string')
             )
         ) {
-            
-            lastLocalUpdatedData.generation_id = e.id;
-            lastLocalUpdatedData.last_modified_dts = e.last_modified_dts;
-            lastLocalUpdatedData.local_last_modified_dts = e.local_last_modified_dts;
-    
-            return lastLocalUpdatedData;
+            return {
+                generation_id: e.id,
+                last_modified_dts: e.last_modified_dts,
+                local_last_modified_dts: e.local_last_modified_dts
+            };
         }
     });
 }
 
 export const getGenerationCountAndOffset = (id: number): [number, number] | undefined => {
-    const countData = dbContext.prepare(
-        `SELECT 
+    const stmt = `
+        SELECT 
             id
             ,count
             ,starting_dex_no
         FROM supported_generations
         WHERE id = ${id}
-        LIMIT 1;`
-    ).all()[0];
+        LIMIT 1;
+    `
+    
+    const countData = dbContext
+        .prepare(stmt)
+        .all()[0];
 
     if (
         typeof countData === 'object' 

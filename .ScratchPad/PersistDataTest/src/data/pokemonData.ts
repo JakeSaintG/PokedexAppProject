@@ -25,6 +25,7 @@ const setDbContext = (dataSource: string) => {
 };
 
 const createPokemonTablesIfNotExist = () => {
+    // pokemon_base_data
     dbContext
         .prepare(`
             CREATE TABLE IF NOT EXISTS pokemon_base_data (
@@ -44,6 +45,7 @@ const createPokemonTablesIfNotExist = () => {
         `)
         .run();
 
+    // pokemon_species_data
     dbContext
         .prepare(`
             CREATE TABLE IF NOT EXISTS pokemon_species_data (
@@ -60,11 +62,11 @@ const createPokemonTablesIfNotExist = () => {
         `)
         .run();
 
+    // pokedex_entries
     dbContext
         .prepare(`
             CREATE TABLE IF NOT EXISTS pokedex_entries (
                 id INT NOT NULL
-                ,pokemon_id INT NOT NULL
                 ,generation STRING NOT NULL
                 ,text_entry STRING NOT NULL
                 ,language STRING NOT NULL
@@ -75,6 +77,7 @@ const createPokemonTablesIfNotExist = () => {
         `)
         .run();
 
+    // pokemon_images
     dbContext
         .prepare(`
             CREATE TABLE IF NOT EXISTS pokemon_images (
@@ -96,6 +99,8 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
     let femaleImageBuffer = null;
     let defaultImageSize = null;
     let femaleImageSize = null;
+    const defaultImageLastModifiedDate = new Date().toISOString();
+    let femaleImageLastModifiedDate = null;
 
     if (typeof(pkmnImgData.male_sprite) != 'string') {
         defaultImageBuffer = Buffer.from(
@@ -109,6 +114,7 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
             await pkmnImgData.female_sprite.arrayBuffer()
         );
         femaleImageSize = pkmnImgData.female_sprite.size;
+        femaleImageLastModifiedDate = defaultImageLastModifiedDate;
     }
 
     const stmt = `
@@ -150,12 +156,10 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
             .run({
                 id: pkmnImgData.id,
                 name: pkmnImgData.name,
-
                 default_img_size: defaultImageSize,
                 female_img_size: femaleImageSize,
-                default_img_last_modified: new Date().toISOString(),
-                female_img_last_modified: new Date().toISOString(),
-
+                default_img_last_modified: defaultImageLastModifiedDate,
+                female_img_last_modified: femaleImageLastModifiedDate,
                 default_img_data: defaultImageBuffer,
                 female_img_data: femaleImageBuffer,
             });
@@ -166,12 +170,6 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
 
 // TODO: Do bulk insert instead of onesie-twosie
 export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
-    let convertedHasForms = 0;
-    if (pkmnData.has_forms) convertedHasForms = 1;
-
-    let convertedIsDefault = 0;
-    if (pkmnData.is_default) convertedIsDefault = 1;
-
     const insert =  `
         INSERT INTO pokemon_base_data (
             id
@@ -224,12 +222,12 @@ export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
                 id: pkmnData.id,
                 name: pkmnData.name,
                 url: pkmnData.url,
-                is_default: convertedIsDefault,
+                is_default: pkmnData.is_default ? 0 : 1,
                 species_url: pkmnData.species_url,
                 male_sprite_url: pkmnData.male_sprite_url,
                 female_sprite_url: pkmnData.female_sprite_url,
                 img_path: pkmnData.img_path,
-                has_forms: convertedHasForms,
+                has_forms: pkmnData.has_forms ? 0 : 1,
                 type_1: pkmnData.type_1,
                 type_2: pkmnData.type_2,
                 last_modified_dts: new Date().toISOString()
@@ -246,10 +244,9 @@ export const upsertPokedexData = (pkmnSpecData: PokemonSpeciesData) => {
         // Trying to keep DB size down for now.
         if (t.language.name !== 'en') return;
         
-        const cmd = `
+        const stmt = `
             INSERT INTO pokedex_entries (
                 id
-                ,pokemon_id
                 ,generation
                 ,text_entry
                 ,language
@@ -259,7 +256,6 @@ export const upsertPokedexData = (pkmnSpecData: PokemonSpeciesData) => {
             ) 
             VALUES (
                 :id
-                ,:pokemon_id
                 ,:generation
                 ,:text_entry
                 ,:language
@@ -271,17 +267,16 @@ export const upsertPokedexData = (pkmnSpecData: PokemonSpeciesData) => {
 
         try {
             dbContext
-            .prepare(cmd)
-            .run({
-                id: pkmnSpecData.id,
-                pokemon_id: 'placeholder',
-                generation: pkmnSpecData.generation,
-                text_entry: t.flavor_text,
-                language: t.language.name,
-                version_name: t.version.name,
-                version_url: t.version.url,
-                last_modified_dts: new Date().toISOString(),
-            });
+                .prepare(stmt)
+                .run({
+                    id: pkmnSpecData.id,
+                    generation: pkmnSpecData.generation,
+                    text_entry: t.flavor_text,
+                    language: t.language.name,
+                    version_name: t.version.name,
+                    version_url: t.version.url,
+                    last_modified_dts: new Date().toISOString(),
+                });
         } catch (error) {
             console.error(`Failed to UPSERT dex data for ${pkmnSpecData.id}: ${error}`);
         }
@@ -289,10 +284,7 @@ export const upsertPokedexData = (pkmnSpecData: PokemonSpeciesData) => {
 }
 
 export const upsertPokemonSpeciesData = (pkmnSpecData: PokemonSpeciesData) => {
-    let convertedHasGenderDifferences = 0
-    if (pkmnSpecData.has_gender_differences) convertedHasGenderDifferences = 1;
-
-    const cmd =  `
+    const stmt =  `
         INSERT INTO pokemon_species_data (
             id
             ,dex_no
@@ -327,12 +319,12 @@ export const upsertPokemonSpeciesData = (pkmnSpecData: PokemonSpeciesData) => {
 
     try {
         dbContext
-            .prepare(cmd)
+            .prepare(stmt)
             .run({
                 id: pkmnSpecData.id,
                 dex_no: pkmnSpecData.dex_no,
                 name: pkmnSpecData.name,
-                has_gender_differences: convertedHasGenderDifferences,
+                has_gender_differences: pkmnSpecData.has_gender_differences ? 0 : 1,
                 habitat: pkmnSpecData.habitat,
                 generation: pkmnSpecData.generation,
                 evo_chain_url: pkmnSpecData.evo_chain_url,
@@ -344,39 +336,41 @@ export const upsertPokemonSpeciesData = (pkmnSpecData: PokemonSpeciesData) => {
 }
 
 export const upsertDexData = (pDexData: PokedexData) => {
+    const stmt = `
+        INSERT INTO pokedex_entries (
+            id
+            ,pokemon_id
+            ,generation
+            ,text_entry
+            ,language
+            ,version_name
+            ,version_url
+            ,last_modified_dts
+        ) 
+        VALUES (
+            :id
+            ,:pokemon_id
+            ,:generation
+            ,:text_entry
+            ,:language
+            ,:version_name
+            ,:version_url
+            ,:last_modified_dts
+        )
+        ON CONFLICT(id) 
+        DO UPDATE SET 
+            id = :id
+            ,pokemon_id = :pokemon_id
+            ,generation = :generation
+            ,text_entry = :text_entry
+            ,language = :language
+            ,version_name = :version_name
+            ,version_url = :version_url
+            ,last_modified_dts = :last_modified_dts
+    `;
+    
     dbContext
-        .prepare(`
-            INSERT INTO pokedex_entries (
-                id
-                ,pokemon_id
-                ,generation
-                ,text_entry
-                ,language
-                ,version_name
-                ,version_url
-                ,last_modified_dts
-            ) 
-            VALUES (
-                :id
-                ,:pokemon_id
-                ,:generation
-                ,:text_entry
-                ,:language
-                ,:version_name
-                ,:version_url
-                ,:last_modified_dts
-            )
-            ON CONFLICT(id) 
-            DO UPDATE SET 
-                id = :id
-                ,pokemon_id = :pokemon_id
-                ,generation = :generation
-                ,text_entry = :text_entry
-                ,language = :language
-                ,version_name = :version_name
-                ,version_url = :version_url
-                ,last_modified_dts = :last_modified_dts
-        `)
+        .prepare(stmt)
         .run([
             pDexData.id,
             pDexData.pokemon_id,
