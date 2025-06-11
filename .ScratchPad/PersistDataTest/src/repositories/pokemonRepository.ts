@@ -52,6 +52,10 @@ const batchLoadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) =>
 
 const startLoad  = async ( pokemonToLoad: Pokemon[], loadStartTime: string ) => {
     // TODO: WE TIMING OUT AGAIN!!!!!
+    /*
+        This appears to be happening out of order. I need to refactor it into a .then chain.
+        And/or need to make sure that it does not progress to the next loop (parent) until this one is absolutely done  
+    */
     console.log(`Loading base data for: ${pokemonToLoad.map((p: Pokemon) => p.name).join(', ')}...`);
     let imagesLeftToGet = await loadBasePokemonData(pokemonToLoad, loadStartTime);
 
