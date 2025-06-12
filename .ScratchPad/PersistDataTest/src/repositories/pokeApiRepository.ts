@@ -30,7 +30,7 @@ export const fetchPokeApiData = async (url: string) => {
         .then((res) => res.json())
 }
 
-export const parsePokemonBaseData = (data: any, url: string): PokemonBaseData => {
+export const parsePokemonBaseData = async (data: any, url: string): Promise<PokemonBaseData> => {
     let parsedData: PokemonBaseData = {
         id: data.id,
         name: data.name,

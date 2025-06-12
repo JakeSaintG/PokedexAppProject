@@ -168,7 +168,7 @@ export const upsertPokemonImage = async (pkmnImgData: PokemonImageData) => {
     }
 }
 
-export const upsertPokemonBaseData = (pkmnData: PokemonBaseData) => {
+export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
     const insert =  `
         INSERT INTO pokemon_base_data (
             id
