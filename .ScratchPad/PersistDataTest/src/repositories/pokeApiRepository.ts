@@ -28,9 +28,13 @@ export const fetchPokeApiImage = async (url) => {
 export const fetchPokeApiData = async (url: string) => {
     return await fetch(url, { method: "GET" })
         .then((res) => res.json())
+        .then((json) => {
+            json.url = url
+            return json
+        })
 }
 
-export const parsePokemonBaseData = async (data: any, url: string): Promise<PokemonBaseData> => {
+export const parsePokemonBaseData = async (data: any) : Promise<PokemonBaseData> => {
     let parsedData: PokemonBaseData = {
         id: data.id,
         name: data.name,
@@ -42,7 +46,7 @@ export const parsePokemonBaseData = async (data: any, url: string): Promise<Poke
         type_1: '',
         type_2: null,
         has_forms: false,
-        url: url,
+        url: data.url,
         last_modified_dts: ''
     };
 

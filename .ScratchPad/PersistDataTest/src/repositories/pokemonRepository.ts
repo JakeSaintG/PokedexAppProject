@@ -44,9 +44,9 @@ const batchLoadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) =>
     let batchCounter = 1;
 
     batchArray(pokemonToLoad, batchSize)
-        .forEach(async (pokemonBatch: Pokemon[]) => {
+        .forEach((pokemonBatch: Pokemon[]) => {
             console.log(`\r\nStarting batch ${batchCounter++}: ${pokemonBatch.map((p: Pokemon) => p.name).join(', ')}`);
-            await startLoad(pokemonBatch, (new Date().toISOString()))
+            startLoad(pokemonBatch, (new Date().toISOString()))
         })
 }
 
@@ -59,10 +59,7 @@ const startLoad  = async ( pokemonToLoad: Pokemon[], loadStartTime: string ) => 
     console.log(`Loading base data for: ${pokemonToLoad.map((p: Pokemon) => p.name).join(', ')}...`);
 
     // let imagesLeftToGet = await loadBasePokemonData(pokemonToLoad, loadStartTime);
-    loadBasePokemonData(pokemonToLoad, loadStartTime)
-        .then(e => {
-            console.log(e)
-        });
+    await loadBasePokemonData(pokemonToLoad, loadStartTime)
 
     // const pokemonSpeciesToLoad = await getPokemonSpeciesToLoad(pokemonToLoad);
 
@@ -106,32 +103,24 @@ const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime:
 const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
     let imagesToGet: PokemonImageData[] = [];
     
-    await Promise.all(
+    Promise.all(
         pokemonToLoad.map(async (p: Pokemon) => {
-            console.log('fetching')
-            const fetched = await fetchPokeApiData(p.url);
-            return {data: fetched, url: p.url };
-        })
-    )
-    .then(downloadedData => 
-        downloadedData.map(async (p) => {
-            console.log('parsing')
-            const parsedData = await parsePokemonBaseData(p.data, p.url)
+            console.log(`fetching: ${p.name}`)
+            const fetchedData = await fetchPokeApiData(p.url);
+            
+            console.log(`parsing: ${p.name}`)
+            const parsedData = await parsePokemonBaseData(fetchedData);
             
             imagesToGet.push({
                 id: parsedData.id,
                 name: parsedData.name,
                 male_sprite: parsedData.male_sprite_url,
                 female_sprite: parsedData.female_sprite_url
-            })
-            
-            return parsedData;
+            });
+
+            console.log(`storing: ${p.name}`);
+            await upsertPokemonBaseData(parsedData);
         })
-    )
-    .then(parsedData => 
-        parsedData.map((p) => 
-            upsertPokemonBaseData(p)
-        )
     )
 
     return imagesToGet;

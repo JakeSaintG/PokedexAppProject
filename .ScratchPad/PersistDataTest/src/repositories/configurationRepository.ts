@@ -28,9 +28,9 @@ export const getUpdatedAppConfiguration = async () => {
                 generation_name: "generation1",
                 description: "Red, Green, Blue, and Yellow.",
                 starting_dex_no: 1,
-                count: 151, //151
+                count: 9, //151
                 stale_by_dts: placeHolderStaleByDate,
-                last_modified_dts: "2025-05-08T22:04:23.244Z", // new Date().toISOString()
+                last_modified_dts: "2025-05-08T22:04:23.247Z", // new Date().toISOString()
             }
             // ,
             // {
