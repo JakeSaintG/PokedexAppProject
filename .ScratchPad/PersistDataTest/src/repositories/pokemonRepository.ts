@@ -27,9 +27,12 @@ export const loadPokemonData = async (forceUpdate: boolean, batchSize: number) =
 
     // TODO: When empty, load gen 1
     // TODO: Allow user to trigger all other gen fetching (using limit and offset)
-    generationsLastUpdatedLocally.forEach( async (gen) => {
+
+    for (const gen of generationsLastUpdatedLocally) {
         if(gen.local_last_modified_dts === '' || forceUpdate) {
+            console.log(`===============================================`);
             console.log(`Gen ${gen.generation_id} identified for update.`);
+            console.log(`===============================================`);
 
             const [count, offset] = getGenerationCountOffset(gen.generation_id);
 
@@ -38,7 +41,7 @@ export const loadPokemonData = async (forceUpdate: boolean, batchSize: number) =
 
             updateLocalLastModified(gen.generation_id);
         }
-    });
+    }
 };
 
 const batchLoadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) => {
