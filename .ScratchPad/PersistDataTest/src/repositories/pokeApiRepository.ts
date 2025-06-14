@@ -3,6 +3,7 @@ import { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
 import { Variety } from "../types/varieties";
 
 export const fetchPkmnToLoad = async (limit: number, offset: number) => {
+    // TODO: better error handling
     let pkmn = [];
 
     await fetch(
@@ -21,11 +22,13 @@ export const fetchPkmnToLoad = async (limit: number, offset: number) => {
 };
 
 export const fetchPokeApiImage = async (url) => {
+    // TODO: better error handling
     return await fetch(url, { method: "GET" })
         .then((res) => res.blob())
 }
 
 export const fetchPokeApiData = async (url: string) => {
+    // TODO: better error handling
     return await fetch(url, { method: "GET" })
         .then((res) => res.json())
         .then((json) => {
