@@ -30,7 +30,7 @@ export const getUpdatedAppConfiguration = async () => {
                 starting_dex_no: 1,
                 count: 9, //151
                 stale_by_dts: placeHolderStaleByDate,
-                last_modified_dts: "2025-05-08T22:04:23.247Z", // new Date().toISOString()
+                last_modified_dts: "2025-05-08T22:04:23.249Z", // new Date().toISOString()
             }
             // ,
             // {

@@ -41,103 +41,81 @@ export const loadPokemonData = async (forceUpdate: boolean, batchSize: number) =
 };
 
 const batchLoadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) => {
-    let batchCounter = 1;
-
-    batchArray(pokemonToLoad, batchSize)
-        .forEach((pokemonBatch: Pokemon[]) => {
-            console.log(`\r\nStarting batch ${batchCounter++}: ${pokemonBatch.map((p: Pokemon) => p.name).join(', ')}`);
-            startLoad(pokemonBatch, (new Date().toISOString()))
-        })
+    for (const pkmn of pokemonToLoad) {
+        await startLoad(pkmn, (new Date().toISOString()))
+    }
 }
 
-const startLoad  = async ( pokemonToLoad: Pokemon[], loadStartTime: string ) => {
-    // TODO: WE TIMING OUT AGAIN!!!!!
-    /*
-        This appears to be happening out of order. I need to refactor it into a .then chain.
-        And/or need to make sure that it does not progress to the next loop (parent) until this one is absolutely done  
-    */
-    console.log(`Loading base data for: ${pokemonToLoad.map((p: Pokemon) => p.name).join(', ')}...`);
+const startLoad  = async ( pokemonToLoad: Pokemon, loadStartTime: string ) => {
 
-    // let imagesLeftToGet = await loadBasePokemonData(pokemonToLoad, loadStartTime);
-    await loadBasePokemonData(pokemonToLoad, loadStartTime)
+    console.log(`Loading base data for: ${pokemonToLoad.name}...`);
+    const parsedBaseData = await loadBasePokemonData(pokemonToLoad, loadStartTime);
 
-    // const pokemonSpeciesToLoad = await getPokemonSpeciesToLoad(pokemonToLoad);
+    // TODO: throw out getPokemonSpeciesToLoad function
+    const pokemonSpeciesToLoad: Pokemon = { name: parsedBaseData.name, url: parsedBaseData.species_url };
+
+    const imagesToGet = {
+        id: parsedBaseData.id,
+        name: parsedBaseData.name,
+        male_sprite: parsedBaseData.male_sprite_url,
+        female_sprite: parsedBaseData.female_sprite_url
+    };
 
     // console.log(`Loading species data for: ${pokemonSpeciesToLoad.map((p: Pokemon) => p.name).join(', ')}`);
-    // const varietiesLeftToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
+    const varietiesToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
+    
+    await loadPokemonImages(imagesToGet);
 
-    // if (varietiesLeftToGet.length > 0) {
+    if (varietiesToGet.length > 0) {
     //     console.log(`Loading remaining special forms: ${varietiesLeftToGet.map((p: Pokemon) => p.name).join(', ')} `);
-    //     const varietiesImagesLeftToGet = await loadBasePokemonData(varietiesLeftToGet, loadStartTime);
+
+        varietiesToGet.forEach(async variety => {
+            const varietiesImagesLeftToGet = await loadBasePokemonData(variety, loadStartTime);
+        })
     //     imagesLeftToGet = imagesLeftToGet.concat( varietiesImagesLeftToGet );
-    // }
+    }
 
     // await loadPokemonImages(imagesLeftToGet);
 }
 
-const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ): Promise<Pokemon[]> => {
-    let varietiesToGet: Variety[] = [];
-
-    await Promise.all(
-        pokemonToLoad.map(async (p: Pokemon) => 
-            await fetchPokeApiData(p.url)
-        )
-    )
-    .then((downloadedData) => 
-        downloadedData.map((p) => {
-            const [parsedData, varieties] = parsePokemonSpeciesData(p);
-            varietiesToGet = varietiesToGet.concat(varieties);
-            return parsedData;
-        })
-    )
-    .then(parsedData => 
-        parsedData.map((p) => {
-            upsertPokemonSpeciesData(p);
-            upsertPokedexData(p);
-        })
-    )
-
-    return varietiesToGet.map(v => v.pokemon);
-}
-
-const loadBasePokemonData = async (  pokemonToLoad: Pokemon[], loadStartTime: string ) => {
-    let imagesToGet: PokemonImageData[] = [];
+const loadSpeciesPokemonData = async (  pokemonToLoad: Pokemon, loadStartTime: string ): Promise<Pokemon[]> => {
+    console.log(`fetching species data: ${pokemonToLoad.name}`)
+    const pokemonSpeciesData = await fetchPokeApiData(pokemonToLoad.url)
     
-    Promise.all(
-        pokemonToLoad.map(async (p: Pokemon) => {
-            console.log(`fetching: ${p.name}`)
-            const fetchedData = await fetchPokeApiData(p.url);
-            
-            console.log(`parsing: ${p.name}`)
-            const parsedData = await parsePokemonBaseData(fetchedData);
-            
-            imagesToGet.push({
-                id: parsedData.id,
-                name: parsedData.name,
-                male_sprite: parsedData.male_sprite_url,
-                female_sprite: parsedData.female_sprite_url
-            });
+    console.log(`parsing species data: ${pokemonToLoad.name}`)
+    const [parsedData, varieties] = parsePokemonSpeciesData(pokemonSpeciesData);
 
-            console.log(`storing: ${p.name}`);
-            await upsertPokemonBaseData(parsedData);
-        })
-    )
+    console.log(`storing species data: ${pokemonToLoad.name}`);
+    upsertPokemonSpeciesData(parsedData);
+    upsertPokedexData(parsedData);
 
-    return imagesToGet;
+    return varieties.map(v => v.pokemon);
 }
 
-const loadPokemonImages = async ( loadPokemonImages: PokemonImageData[] ) => {
-    await Promise.all(
-        loadPokemonImages.map(async (p: PokemonImageData) => { 
-            p.male_sprite = await fetchPokeApiImage(p.male_sprite);
-            if (p.female_sprite) p.female_sprite = await fetchPokeApiImage(p.female_sprite);
-            
-            return p;
-        })
-    )
-    .then(parsedData => 
-        parsedData.map((p: PokemonImageData) => 
-            upsertPokemonImage(p)
-        )
-    )
+const loadBasePokemonData = async (  pokemonToLoad: Pokemon, loadStartTime: string ) => {
+
+    console.log(`fetching base data: ${pokemonToLoad.name}`)
+    const fetchedData = await fetchPokeApiData(pokemonToLoad.url);
+    
+    console.log(`parsing base data: ${pokemonToLoad.name}`)
+    const parsedData = await parsePokemonBaseData(fetchedData);
+
+    console.log(`storing base data: ${pokemonToLoad.name}`);
+    await upsertPokemonBaseData(parsedData);
+
+    return parsedData;
+}
+
+const loadPokemonImages = async ( pkmnImgdata: PokemonImageData ) => {
+
+    pkmnImgdata.male_sprite = await fetchPokeApiImage(pkmnImgdata.male_sprite);
+    if (pkmnImgdata.female_sprite) pkmnImgdata.female_sprite = await fetchPokeApiImage(pkmnImgdata.female_sprite);
+
+    console.log(pkmnImgdata)
+
+    // .then(parsedData => 
+    //     parsedData.map((p: PokemonImageData) => 
+    //         upsertPokemonImage(p)
+    //     )
+    // )
 }
