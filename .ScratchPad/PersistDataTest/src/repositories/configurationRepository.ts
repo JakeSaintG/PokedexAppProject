@@ -3,7 +3,8 @@ import {
     updateLocalLastModifiedDate, 
     upsertConfigurationData,
     getGenerationCountAndOffset,
-    getGenerationLastUpdatedLocally 
+    getGenerationLastUpdatedLocally, 
+    setGenerationActive
 } from "../data/configurationData";
 import { ConfigurationData, SupportedGeneration } from "../types/configurationData";
 import { DateData } from "../types/dateData";
@@ -29,19 +30,21 @@ export const getUpdatedAppConfiguration = async () => {
                 description: "Red, Green, Blue, and Yellow.",
                 starting_dex_no: 1,
                 count: 9, //151
+                active: true,
                 stale_by_dts: placeHolderStaleByDate,
-                last_modified_dts: "2025-05-08T22:04:23.249Z", // new Date().toISOString()
+                last_modified_dts: "2025-05-08T22:04:23.251Z", // new Date().toISOString()
             }
-            // ,
-            // {
-            //     id: 2,
-            //     generation_name: 'generation2',
-            //     description: 'Gold, Silver, and Crystal.',
-            //     starting_dex_no: 194, //152,
-            //     count: 1, // 100
-            //     stale_by_dts: placeHolderStaleByDate,
-            //     last_modified_dts: '2025-05-08T22:01:16.294Z' // new Date().toISOString()
-            // }
+            ,
+            {
+                id: 2,
+                generation_name: 'generation2',
+                description: 'Gold, Silver, and Crystal.',
+                starting_dex_no: 152, //152,
+                count: 3, // 100
+                active: null,
+                stale_by_dts: placeHolderStaleByDate,
+                last_modified_dts: '2025-05-08T22:01:16.299Z' // new Date().toISOString()
+            }
         ],
     };
 
@@ -52,11 +55,14 @@ export const updateConfiguration = (configuration: ConfigurationData) => {
     updateSupportedGenerations(configuration.supported_generations)
 
     // Update table_versions table;
+    // do other stuff
 }
 
 export const getGenerationCountOffset = (id: number): [number, number] | undefined => getGenerationCountAndOffset(id);
 
 export const getLastLocalGenerationUpdate = (): DateData[] => getGenerationLastUpdatedLocally();
+
+export const updateGenerationActive = (id: number) => setGenerationActive(id);
 
 const updateSupportedGenerations = (supported_generations: SupportedGeneration[]) => {
     supported_generations.forEach((generation: SupportedGeneration) => {

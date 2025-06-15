@@ -31,6 +31,7 @@ const createConfigTablesIfNotExist = () => {
                 ,starting_dex_no INT NOT NULL
                 ,count INT NOT NULL
                 ,stale_by_dts STRING NOT NULL
+                ,active INT NULL -- boolean
                 ,last_modified_dts STRING NOT NULL
                 ,local_last_modified_dts NULL
                 ,source_last_modified_dts STRING NOT NULL
@@ -51,6 +52,12 @@ const createConfigTablesIfNotExist = () => {
 }
 
 export const upsertConfigurationData = (configData: SupportedGeneration) => {
+    /*
+    Insert configuration data. If configuration data is already there, set it with
+    the exception of "active". Perserve the active value in case a user has that
+    generation active.
+    */ 
+    
     const stmt =  `
         INSERT INTO supported_generations (
             id
@@ -59,6 +66,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
             ,starting_dex_no
             ,count
             ,stale_by_dts
+            ,active
             ,last_modified_dts
             ,source_last_modified_dts
             ,local_last_modified_dts
@@ -70,6 +78,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
             ,:starting_dex_no
             ,:count
             ,:stale_by_dts
+            ,:active
             ,:last_modified_dts
             ,:source_last_modified_dts
             ,:local_last_modified_dts
@@ -80,7 +89,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
             ,generation_name = :generation_name
             ,starting_dex_no = :starting_dex_no
             ,count = :count
-            ,stale_by_dts = stale_by_dts
+            ,stale_by_dts = :stale_by_dts
             ,last_modified_dts = :last_modified_dts
             ,source_last_modified_dts = :source_last_modified_dts
             ,local_last_modified_dts = :local_last_modified_dts
@@ -96,6 +105,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
                 starting_dex_no: configData.starting_dex_no,
                 count: configData.count,
                 stale_by_dts: configData.stale_by_dts,
+                active: configData.active ? 1 : 0,
                 source_last_modified_dts: configData.last_modified_dts,
                 last_modified_dts: new Date().toISOString(),
                 local_last_modified_dts: ''
@@ -111,6 +121,7 @@ export const getGenerationUpdateData = (gen_id: number): DateData | undefined =>
             last_modified_dts
             ,source_last_modified_dts
             ,stale_by_dts
+            ,active
         FROM supported_generations
         WHERE id = ${gen_id}
         LIMIT 1;
@@ -135,18 +146,35 @@ export const getGenerationUpdateData = (gen_id: number): DateData | undefined =>
             'stale_by_dts' in genDateData
             && typeof genDateData['stale_by_dts'] === 'string'
         )
+        && (
+            'active' in genDateData
+            && typeof genDateData['active'] === 'boolean'
+        )
     ) {
         return {
             last_modified_dts: genDateData.last_modified_dts,
             source_last_modified_dts:  genDateData.source_last_modified_dts,
-            stale_by_dts: genDateData.stale_by_dts
+            stale_by_dts: genDateData.stale_by_dts,
+            active: genDateData.active
         }
     } else {
         return undefined;
     }
 }
 
-export const updateLocalLastModifiedDate= (id: number) => {
+export const setGenerationActive = (id: number) => {
+    const stmt = `
+        UPDATE supported_generations
+        SET active = 1
+        WHERE id = ${id};
+    `;
+
+    dbContext
+        .prepare(stmt)
+        .run();
+}
+
+export const updateLocalLastModifiedDate = (id: number) => {
     const stmt = `
         UPDATE supported_generations
         SET local_last_modified_dts = '${new Date().toISOString()}'
@@ -163,6 +191,7 @@ export const getGenerationLastUpdatedLocally = (): DateData[] => {
         SELECT 
             id
             ,last_modified_dts
+            ,active
             ,local_last_modified_dts
         FROM supported_generations;
     `;
@@ -187,10 +216,15 @@ export const getGenerationLastUpdatedLocally = (): DateData[] => {
                 'local_last_modified_dts' in e
                 && (typeof e['local_last_modified_dts'] === 'string')
             )
+            && (
+                'active' in e
+                && typeof e['active'] === 'number'
+            )
         ) {
             return {
                 generation_id: e.id,
                 last_modified_dts: e.last_modified_dts,
+                active: Boolean(e.active),
                 local_last_modified_dts: e.local_last_modified_dts
             };
         }
