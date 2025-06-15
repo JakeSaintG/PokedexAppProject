@@ -221,12 +221,12 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
                 id: pkmnData.id,
                 name: pkmnData.name,
                 url: pkmnData.url,
-                is_default: pkmnData.is_default ? 0 : 1,
+                is_default: pkmnData.is_default ? 1 : 0,
                 species_url: pkmnData.species_url,
                 male_sprite_url: pkmnData.male_sprite_url,
                 female_sprite_url: pkmnData.female_sprite_url,
                 img_path: pkmnData.img_path,
-                has_forms: pkmnData.has_forms ? 0 : 1,
+                has_forms: pkmnData.has_forms ? 1 : 0,
                 type_1: pkmnData.type_1,
                 type_2: pkmnData.type_2,
                 last_modified_dts: new Date().toISOString()
@@ -382,6 +382,7 @@ export const upsertDexData = (pDexData: PokedexData) => {
         ]);
 }
 
+// TODO: refactor this later into a general select when needed
 export const getPokemonSpeciesToLoad = async (pokemonToGet: Pokemon[]) => {
     let pokemonSpeciesToLoad: Pokemon[] = [];
 
