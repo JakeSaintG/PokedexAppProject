@@ -25,26 +25,29 @@ import {
 export const loadPokemonData = async (forceUpdate: boolean, batchSize: number) => {
     const generationsLastUpdatedLocally = getLastLocalGenerationUpdate();
 
-    // TODO: When empty, load gen 1
-    // TODO: Allow user to trigger all other gen fetching (using limit and offset)
-
     for (const gen of generationsLastUpdatedLocally) {
-        if(gen.local_last_modified_dts === '' || forceUpdate) {
+        if((gen.local_last_modified_dts === '' || forceUpdate) && gen.active) {
             console.log(`===============================================`);
             console.log(`Gen ${gen.generation_id} identified for update.`);
             console.log(`===============================================`);
 
-            const [count, offset] = getGenerationCountOffset(gen.generation_id);
-
-            const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
-            await batchLoadPokemon(fetchedPokemon, batchSize);
-
-            updateLocalLastModified(gen.generation_id);
+            try {
+                const [count, offset] = getGenerationCountOffset(gen.generation_id);
+    
+                const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
+                await loadPokemon(fetchedPokemon, batchSize);
+    
+                updateLocalLastModified(gen.generation_id);
+            } catch (error) {
+                console.error(`Error updating ${gen.generation_id} due to: ${error}`)
+            }
         }
     }
 };
 
-const batchLoadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) => {
+const loadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) => {
+    
+    // TODO: I still really want to to try to be loading multiple pokemon at once...
     for (const pkmn of pokemonToLoad) {
         await startLoad(pkmn, (new Date().toISOString()))
     }
@@ -55,7 +58,6 @@ const startLoad  = async ( pokemonToLoad: Pokemon, loadStartTime: string ) => {
     console.log(`Loading base data for: ${pokemonToLoad.name}...`);
     const parsedBaseData = await loadBasePokemonData(pokemonToLoad, loadStartTime);
     
-    // TODO: throw out getPokemonSpeciesToLoad function
     const pokemonSpeciesToLoad: Pokemon = { name: parsedBaseData.name, url: parsedBaseData.species_url };
     
     const imagesToGet = {
