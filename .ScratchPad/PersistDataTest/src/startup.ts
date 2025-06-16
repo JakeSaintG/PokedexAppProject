@@ -1,8 +1,8 @@
 import { initConfigDb } from "./data/configurationData";
 import { initPokemonDb } from "./data/pokemonData";
-import { getUpdatedAppConfiguration, configApiPing, updateConfiguration } from "./repositories/configurationRepository";
+import { getUpdatedAppConfiguration, configApiPing, updateConfiguration, getLastLocalGenerationUpdate } from "./repositories/configurationRepository";
 import { pokeApiPing } from "./repositories/pokeApiRepository";
-import { loadPokemonData } from "./repositories/pokemonRepository";
+import { checkIfUpdatesNeeded, loadPokemonData } from "./repositories/pokemonRepository";
 import { ConfigurationData } from "./types/configurationData";
 
 const initOfflinePlaceholderData = () => {
@@ -16,13 +16,18 @@ export const runStartUp = async (dataSource: string, forceUpdate: boolean, batch
     initConfigDb(dataSource);
     initPokemonDb(dataSource);
 
+    // TODO: error handling
     if (configApiPing()) {
         const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
         updateConfiguration(configurationData);
     }
 
+    const pkmnGenLastUpdatedLocally = getLastLocalGenerationUpdate();
+
+    const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
+
     if (pokeApiPing()) {
-        loadPokemonData( forceUpdate, batchSize );
+        loadPokemonData( pokemonDataToLoad, batchSize );
     }
 
     // Run anything needed in case user is offline

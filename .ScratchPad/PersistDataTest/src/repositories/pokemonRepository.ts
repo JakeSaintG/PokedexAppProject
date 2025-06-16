@@ -5,6 +5,7 @@ import {
     upsertPokemonBaseData,
     upsertPokemonSpeciesData 
 } from "../data/pokemonData";
+import { DateData } from "../types/dateData";
 import { Pokemon } from "../types/pokemon";
 import { PokemonBaseData } from "../types/pokemonData";
 import { PokemonImageData } from "../types/pokemonImageData";
@@ -22,28 +23,32 @@ import {
     fetchPokeApiImage
 } from "./pokeApiRepository";
 
-export const loadPokemonData = async (forceUpdate: boolean, batchSize: number) => {
-    const generationsLastUpdatedLocally = getLastLocalGenerationUpdate();
+export const loadPokemonData = async ( generationToLoad: DateData[], batchSize: number) => {
+    for (const gen of generationToLoad) {
+        console.log(`===============================================`);
+        console.log(`Gen ${gen.generation_id} identified for update.`);
+        console.log(`===============================================`);
 
-    for (const gen of generationsLastUpdatedLocally) {
-        if((gen.local_last_modified_dts === '' || forceUpdate) && gen.active) {
-            console.log(`===============================================`);
-            console.log(`Gen ${gen.generation_id} identified for update.`);
-            console.log(`===============================================`);
+        try {
+            const [count, offset] = getGenerationCountOffset(gen.generation_id);
 
-            try {
-                const [count, offset] = getGenerationCountOffset(gen.generation_id);
-    
-                const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
-                await loadPokemon(fetchedPokemon, batchSize);
-    
-                updateLocalLastModified(gen.generation_id);
-            } catch (error) {
-                console.error(`Error updating ${gen.generation_id} due to: ${error}`)
-            }
+            const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
+            await loadPokemon(fetchedPokemon, batchSize);
+
+            updateLocalLastModified(gen.generation_id);
+        } catch (error) {
+            console.error(`Error updating ${gen.generation_id} due to: ${error}`)
         }
     }
 };
+
+export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean): DateData[] => {
+    return dateData.filter(d => {
+        if((d.local_last_modified_dts === '' || forceUpdate) && d.active) {
+            return d;
+        }
+    })
+}
 
 const loadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) => {
     
