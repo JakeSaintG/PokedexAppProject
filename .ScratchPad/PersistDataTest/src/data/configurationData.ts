@@ -41,11 +41,14 @@ const createConfigTablesIfNotExist = () => {
 
     dbContext
         .prepare(`
-            CREATE TABLE IF NOT EXISTS table_versions (
+            CREATE TABLE IF NOT EXISTS logs (
                 id INT PRIMARY KEY NOT NULL
-                ,table_name STRING NOT NULL
+                ,log_message STRING NOT NULL
+                ,log_level STRING NOT NULL
+                ,verbose INT NULL -- boolean
+                ,retain INT NULL -- boolean
                 ,version STRING NOT NULL
-                ,last_modified_dts STRING NOT NULL
+                ,log_written_dts STRING NOT NULL
             )
         `)
         .run();
