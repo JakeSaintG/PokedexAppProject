@@ -8,8 +8,11 @@ const FORCE_UPDATE: boolean = ((process.env.FORCE_UPDATE) || 'false').toLowerCas
 
 const BATCH_SIZE: number = parseInt(process.env.BATCH_SIZE);
 
+const LOG_RETAIN_DAYS: number = parseInt(process.env.LOG_RETAIN_DAYS);
+
 export const Env = {
     DATA_SOURCE,
     FORCE_UPDATE,
-    BATCH_SIZE
+    BATCH_SIZE,
+    LOG_RETAIN_DAYS
 } as const;
