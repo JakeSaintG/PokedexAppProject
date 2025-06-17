@@ -270,6 +270,7 @@ export const getGenerationCountAndOffset = (id: number): [number, number] | unde
     return undefined;
 }
 
+// TODO: Logging should be in place now. Test it later. 
 export const saveLog = (    
     message: string,
     logLevel: string,
