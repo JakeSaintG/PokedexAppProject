@@ -1,39 +1,54 @@
-let logRetentionDts = ''; 
-let verbosLogging  = false;
+import { cleanUpOldLogs, saveLog } from "../data/configurationData";
 
-export const writeError = (message: string) => {
-    writeLog(message, 'error', false, true);
-}
 
-export const writeInfo = (message: string) => {
+let logRetentionDate: Date;
+let verbosLogging = false;
+
+export const logError = (message: string) => {
+    const logMsg = `${new Date()} - ${message}`;
+    console.error(logMsg);
+    writeLog(logMsg, 'error', false, true);
+};
+
+export const logInfo = (message: string) => {
+    const logMsg = `${new Date()} - ${message}`;
+    console.log(logMsg);
     writeLog(message, 'info', false);
-}
+};
 
-export const writeInfoVerbose = (message: string) => {
-    writeLog(message, 'info', true);
-}
+export const logInfoVerbose = (message: string) => {
+    if (verbosLogging) {
+        const logMsg = `${new Date()} - ${message}`;
+        console.log(logMsg);
+        writeLog(message, 'info', true);
+    }
+};
 
-export const writeInfoHeader = (message: string, logLevel: string, verbose: boolean) => {
+export const logInfoWithAttention = (message: string, logLevel: string, verbose: boolean) => {
+    const logMsg = `${new Date()} - ${message}`;
+    
     console.log('\r\n==================================================');
-    console.log(message);
+    console.log(logMsg);
     console.log('==================================================');
 
     writeLog(message, 'info', false);
-}
+};
 
-export const setLogRetentionDts = (logRetentionTime: string) => {
-    // take an arg like "2 months", "2 days", "2 weeks"
-    // try to parse it 
-    // default to 2 months
-}
+export const setLogRetentionDays = (logRetentionDays: number) => {
+    try {
+        logRetentionDate = new Date(new Date().getTime() - logRetentionDays * 24 * 60 * 60 * 1000);
+    } catch (error) {
+        console.log('Failed to set log retention days. Defaulting to 60 days (2 months).')
+        logRetentionDate = new Date(new Date().getTime() - 60 * 24 * 60 * 60 * 1000);
+    }
+};
 
-const writeLog = async (message: string, logLevel: string, verbose: boolean, retain: boolean = false) => {
-
-    logCleanUp();
-}
-
-const logCleanUp = () => {
-
-    // 
-
-}
+const writeLog = async (
+    message: string,
+    logLevel: string,
+    verbose: boolean,
+    retain: boolean = false
+) => {
+    saveLog(message, logLevel, verbose, retain);
+    cleanUpOldLogs(logRetentionDate);
+};

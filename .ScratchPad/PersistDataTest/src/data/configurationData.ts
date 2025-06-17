@@ -42,12 +42,11 @@ const createConfigTablesIfNotExist = () => {
     dbContext
         .prepare(`
             CREATE TABLE IF NOT EXISTS logs (
-                id INT PRIMARY KEY NOT NULL
+                id INTEGER PRIMARY KEY NOT NULL
                 ,log_message STRING NOT NULL
                 ,log_level STRING NOT NULL
                 ,verbose INT NULL -- boolean
                 ,retain INT NULL -- boolean
-                ,version STRING NOT NULL
                 ,log_written_dts STRING NOT NULL
             )
         `)
@@ -177,7 +176,7 @@ export const setGenerationActive = (id: number) => {
         .run();
 }
 
-export const updateLocalLastModifiedDate = (id: number) => {
+export const setLocalLastModifiedDate = (id: number) => {
     const stmt = `
         UPDATE supported_generations
         SET local_last_modified_dts = '${new Date().toISOString()}'
@@ -270,3 +269,49 @@ export const getGenerationCountAndOffset = (id: number): [number, number] | unde
 
     return undefined;
 }
+
+export const saveLog = (    
+    message: string,
+    logLevel: string,
+    verbose: boolean,
+    retain: boolean = false
+) => {
+    const stmt =  `
+        INSERT INTO supported_generations (
+            log_message
+            ,log_level
+            ,verbose
+            ,retain
+            ,log_written_dts
+        ) 
+        VALUES (
+            :log_message
+            ,:log_level
+            ,:verbose
+            ,:retain
+            ,:log_written_dts
+        )
+    `
+    
+    try {
+        dbContext
+            .prepare(stmt)
+            .run({
+                log_message: message,
+                log_level: logLevel,
+                verbose: verbose,
+                retain: retain,
+                log_written_dts: new Date().toISOString()
+            });
+    } catch (error) {
+        console.error(`Failed to write log message to log table.`)
+    }
+};
+
+export const cleanUpOldLogs = (removeOlderThanDate: Date) => {
+    // delete from where dts > removeOlderThanDate
+    // except errors
+
+    // Then maybe allow a maximum...like...
+    // Delete records if we get over 1,000,000 except errors
+};
