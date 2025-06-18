@@ -278,7 +278,7 @@ export const saveLog = (
     retain: boolean = false
 ) => {
     const stmt =  `
-        INSERT INTO supported_generations (
+        INSERT INTO logs (
             log_message
             ,log_level
             ,verbose
@@ -300,12 +300,12 @@ export const saveLog = (
             .run({
                 log_message: message,
                 log_level: logLevel,
-                verbose: verbose,
-                retain: retain,
+                verbose: verbose ? 1 : 0,
+                retain: retain ? 1 : 0,
                 log_written_dts: new Date().toISOString()
             });
     } catch (error) {
-        console.error(`Failed to write log message to log table.`)
+        console.error(`Failed to write log message to log table: ${error}`)
     }
 };
 

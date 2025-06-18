@@ -5,27 +5,27 @@ let logRetentionDate: Date;
 let verbosLogging = false;
 
 export const logError = (message: string) => {
-    const logMsg = `${new Date()} - ${message}`;
+    const logMsg = `${new Date().toISOString()} - ${message}`;
     console.error(logMsg);
     writeLog(logMsg, 'error', false, true);
 };
 
 export const logInfo = (message: string) => {
-    const logMsg = `${new Date()} - ${message}`;
+    const logMsg = `${new Date().toISOString()} - ${message}`;
     console.log(logMsg);
     writeLog(message, 'info', false);
 };
 
 export const logInfoVerbose = (message: string) => {
     if (verbosLogging) {
-        const logMsg = `${new Date()} - ${message}`;
+        const logMsg = `${new Date().toISOString()} - ${message}`;
         console.log(logMsg);
         writeLog(message, 'info', true);
     }
 };
 
 export const logInfoWithAttention = (message: string, logLevel: string, verbose: boolean) => {
-    const logMsg = `${new Date()} - ${message}`;
+    const logMsg = `${new Date().toISOString()} - ${message}`;
     
     console.log('\r\n==================================================');
     console.log(logMsg);

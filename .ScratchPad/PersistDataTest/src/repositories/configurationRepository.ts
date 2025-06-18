@@ -8,6 +8,7 @@ import {
 } from '../data/configurationData';
 import { ConfigurationData, SupportedGeneration } from '../types/configurationData';
 import { DateData } from '../types/dateData';
+import { logInfo } from './logRepository';
 
 export const configApiPing = () => {
     return true;
@@ -76,7 +77,7 @@ const updateSupportedGenerations = (supported_generations: SupportedGeneration[]
             // Update if the data is considered stale
             Date.now() < Date.parse(generationDateData.last_modified_dts)
         ) {
-            console.log(`Updating configuration data for ${generation.generation_name}`);
+            logInfo(`Updating configuration data for ${generation.generation_name}`);
             upsertConfigurationData(generation);
         }
     });
