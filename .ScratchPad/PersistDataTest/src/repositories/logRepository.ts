@@ -1,6 +1,5 @@
 import { cleanUpOldLogs, saveLog } from "../data/configurationData";
 
-
 let logRetentionDate: Date;
 let verbosLogging = false;
 
@@ -24,7 +23,7 @@ export const logInfoVerbose = (message: string) => {
     }
 };
 
-export const logInfoWithAttention = (message: string, logLevel: string, verbose: boolean) => {
+export const logInfoWithAttention = (message: string) => {
     const logMsg = `${new Date().toISOString()} - ${message}`;
     
     console.log('\r\n==================================================');
