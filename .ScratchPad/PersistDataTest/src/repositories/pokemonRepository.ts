@@ -1,5 +1,4 @@
 import { 
-    getPokemonSpeciesToLoad,
     upsertPokemonImage,
     upsertPokedexData,
     upsertPokemonBaseData,
@@ -7,14 +6,9 @@ import {
 } from "../data/pokemonData";
 import { DateData } from "../types/dateData";
 import { Pokemon } from "../types/pokemon";
-import { PokemonBaseData } from "../types/pokemonData";
 import { PokemonImageData } from "../types/pokemonImageData";
-import { Variety } from "../types/varieties";
-import { batchArray } from "../utils/utils";
-import { updateLocalLastModified,
-    getGenerationCountOffset,
-    getLastLocalGenerationUpdate
-} from "./configurationRepository";
+import { updateLocalLastModified, getGenerationCountOffset } from "./configurationRepository";
+import { logInfoWithAttention } from "./logRepository";
 import { 
     fetchPokeApiData, 
     fetchPkmnToLoad, 
@@ -25,9 +19,7 @@ import {
 
 export const loadPokemonData = async ( generationToLoad: DateData[], batchSize: number) => {
     for (const gen of generationToLoad) {
-        console.log(`===============================================`);
-        console.log(`Gen ${gen.generation_id} identified for update.`);
-        console.log(`===============================================`);
+        logInfoWithAttention(`Gen ${gen.generation_id} identified for update.`);
 
         try {
             const [count, offset] = getGenerationCountOffset(gen.generation_id);
@@ -51,7 +43,6 @@ export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean)
 }
 
 const loadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) => {
-    
     // TODO: I still really want to to try to be loading multiple pokemon at once...
     for (const pkmn of pokemonToLoad) {
         await startLoad(pkmn, (new Date().toISOString()))
