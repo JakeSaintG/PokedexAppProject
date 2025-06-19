@@ -21,7 +21,7 @@ export const logInfoVerbose = (message: string) => {
     if (verboseLogging) {
         const logMsg = `${new Date().toISOString()} - ${message}`;
         console.log(logMsg);
-        writeLog(message, 'info', true);
+        writeLog(message, 'verbose', true);
     }
 };
 
@@ -35,8 +35,6 @@ export const logInfoWithAttention = (message: string) => {
 };
 
 export const setLogRetentionDays = (logRetentionDays: number) => {
-    console.log('beepboop' + 60)
-    
     try {
         logRetentionDate = new Date(new Date().getTime() - logRetentionDays * 24 * 60 * 60 * 1000);
     } catch (error) {
@@ -61,6 +59,6 @@ const writeLog = async (
         verbose: verbose,
         retain: retain
     });
-    
+
     cleanUpOldLogs(logRetentionDate);
 };

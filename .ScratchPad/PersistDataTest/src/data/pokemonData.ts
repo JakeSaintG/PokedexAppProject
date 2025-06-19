@@ -17,12 +17,12 @@ export const initPokemonDb = (dataSource: string) => {
 }
 
 const setDbContext = (dataSource: string) => {
-    logInfo('Preparing Pokemon database...');
     if (dataSource === 'sqlite') {
         dbContext = new sqlite(FILE_LOCATION);
     } else if (dataSource === 'postgres') {
         throw 'postgres support not yet implemented.'
     }
+    logInfo('Prepared Pokemon database.');
 };
 
 const createPokemonTablesIfNotExist = () => {

@@ -8,7 +8,7 @@ import { DateData } from "../types/dateData";
 import { Pokemon } from "../types/pokemon";
 import { PokemonImageData } from "../types/pokemonImageData";
 import { updateLocalLastModified, getGenerationCountOffset } from "./configurationRepository";
-import { logInfoWithAttention } from "./logRepository";
+import { logInfo, logInfoVerbose, logInfoWithAttention } from "./logRepository";
 import { 
     fetchPokeApiData, 
     fetchPkmnToLoad, 
@@ -45,13 +45,14 @@ export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean)
 const loadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) => {
     // TODO: I still really want to to try to be loading multiple pokemon at once...
     for (const pkmn of pokemonToLoad) {
+        logInfo(`Loading data for ${pkmn.name}.`)
         await startLoad(pkmn, (new Date().toISOString()))
     }
 }
 
 const startLoad  = async ( pokemonToLoad: Pokemon, loadStartTime: string ) => {
     // TODO: maybe add some timing...better logging
-    console.log(`Loading base data for: ${pokemonToLoad.name}...`);
+    logInfoVerbose(`Loading base data for: ${pokemonToLoad.name}...`);
     const parsedBaseData = await loadBasePokemonData(pokemonToLoad, loadStartTime);
     
     const pokemonSpeciesToLoad: Pokemon = { name: parsedBaseData.name, url: parsedBaseData.species_url };
@@ -63,14 +64,14 @@ const startLoad  = async ( pokemonToLoad: Pokemon, loadStartTime: string ) => {
         female_sprite: parsedBaseData.female_sprite_url
     };
     
-    console.log(`Loading species data for: ${pokemonToLoad.name}...`);
+    logInfoVerbose(`Loading species data for: ${pokemonToLoad.name}...`);
     const varietiesToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
     
     await loadPokemonImages(imagesToGet);
     
     if (varietiesToGet.length > 0) {
         for (const variety of varietiesToGet) {
-            console.log(`Loading remaining special forms for: ${variety.name}...`);
+            logInfoVerbose(`Loading remaining special forms for: ${variety.name}...`);
             const varietiesImagesLeftToGet = await loadBasePokemonData(variety, loadStartTime);
             
             const imagesToGet = {
@@ -80,21 +81,20 @@ const startLoad  = async ( pokemonToLoad: Pokemon, loadStartTime: string ) => {
                 female_sprite: varietiesImagesLeftToGet.female_sprite_url
             };
             
-            console.log(`Loading remaining special forms image for: ${variety.name}...`);
+            logInfoVerbose(`Loading remaining special forms image for: ${variety.name}...`);
             await loadPokemonImages(imagesToGet);
         }
     }
 }
 
 const loadSpeciesPokemonData = async ( pokemonToLoad: Pokemon, loadStartTime: string ): Promise<Pokemon[]> => {
-    // TODO: verbose logging
-    // console.log(`fetching species data: ${pokemonToLoad.name}`);
+    logInfoVerbose(`fetching species data: ${pokemonToLoad.name}`);
     const pokemonSpeciesData = await fetchPokeApiData(pokemonToLoad.url)
     
-    // console.log(`parsing species data: ${pokemonToLoad.name}`);
+    logInfoVerbose(`parsing species data: ${pokemonToLoad.name}`);
     const [parsedData, varieties] = parsePokemonSpeciesData(pokemonSpeciesData);
 
-    // console.log(`storing species data: ${pokemonToLoad.name}`);
+    logInfoVerbose(`storing species data: ${pokemonToLoad.name}`);
     upsertPokemonSpeciesData(parsedData);
     upsertPokedexData(parsedData);
 
@@ -102,14 +102,13 @@ const loadSpeciesPokemonData = async ( pokemonToLoad: Pokemon, loadStartTime: st
 }
 
 const loadBasePokemonData = async (  pokemonToLoad: Pokemon, loadStartTime: string ) => {
-    // TODO: verbose logging
-    // console.log(`fetching base data: ${pokemonToLoad.name}`)
+    logInfoVerbose(`fetching base data: ${pokemonToLoad.name}`)
     const fetchedData = await fetchPokeApiData(pokemonToLoad.url);
     
-    // console.log(`parsing base data: ${pokemonToLoad.name}`)
+    logInfoVerbose(`parsing base data: ${pokemonToLoad.name}`)
     const parsedData = await parsePokemonBaseData(fetchedData);
 
-    // console.log(`storing base data: ${pokemonToLoad.name}`);
+    logInfoVerbose(`storing base data: ${pokemonToLoad.name}`);
     await upsertPokemonBaseData(parsedData);
 
     return parsedData;
