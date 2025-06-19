@@ -3,6 +3,7 @@ import { PokemonBaseData, PokemonSpeciesData } from '../types/pokemonData';
 import { Pokemon } from '../types/pokemon';
 import { PokedexData } from '../types/pokedexData';
 import { PokemonImageData } from '../types/pokemonImageData';
+import { logInfo } from '../repositories/logRepository';
 
 let dbContext: sqlite.Database;
 
@@ -16,7 +17,7 @@ export const initPokemonDb = (dataSource: string) => {
 }
 
 const setDbContext = (dataSource: string) => {
-    console.log('Preparing Pokemon database...');
+    logInfo('Preparing Pokemon database...');
     if (dataSource === 'sqlite') {
         dbContext = new sqlite(FILE_LOCATION);
     } else if (dataSource === 'postgres') {

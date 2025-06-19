@@ -1,12 +1,14 @@
 import { cleanUpOldLogs, saveLog } from "../data/configurationData";
 
 let logRetentionDate: Date;
-let verbosLogging = false;
+let verboseLogging = false;
 
-export const logError = (message: string) => {
+export const logError = (message: string, fatal: boolean = false) => {
     const logMsg = `${new Date().toISOString()} - ${message}`;
     console.error(logMsg);
     writeLog(logMsg, 'error', false, true);
+
+    if (fatal) throw message;
 };
 
 export const logInfo = (message: string) => {
@@ -16,7 +18,7 @@ export const logInfo = (message: string) => {
 };
 
 export const logInfoVerbose = (message: string) => {
-    if (verbosLogging) {
+    if (verboseLogging) {
         const logMsg = `${new Date().toISOString()} - ${message}`;
         console.log(logMsg);
         writeLog(message, 'info', true);
@@ -25,15 +27,16 @@ export const logInfoVerbose = (message: string) => {
 
 export const logInfoWithAttention = (message: string) => {
     const logMsg = `${new Date().toISOString()} - ${message}`;
-    
-    console.log('\r\n==================================================');
-    console.log(logMsg);
-    console.log('==================================================');
+    const attnTxt = '==================================================';
+
+    console.log(`\r\n${attnTxt}\r\n${logMsg}\r\n${attnTxt}`);
 
     writeLog(message, 'info', false);
 };
 
 export const setLogRetentionDays = (logRetentionDays: number) => {
+    console.log('beepboop' + 60)
+    
     try {
         logRetentionDate = new Date(new Date().getTime() - logRetentionDays * 24 * 60 * 60 * 1000);
     } catch (error) {
@@ -42,12 +45,22 @@ export const setLogRetentionDays = (logRetentionDays: number) => {
     }
 };
 
+export const setVerboseLogging = (isVerbose) => {
+    verboseLogging = isVerbose;
+}
+
 const writeLog = async (
     message: string,
     logLevel: string,
     verbose: boolean,
     retain: boolean = false
 ) => {
-    saveLog(message, logLevel, verbose, retain);
+    saveLog({
+        message: message,
+        logLevel: logLevel,
+        verbose: verbose,
+        retain: retain
+    });
+    
     cleanUpOldLogs(logRetentionDate);
 };

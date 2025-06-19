@@ -1,6 +1,8 @@
 import sqlite from 'better-sqlite3';
 import { SupportedGeneration } from '../types/configurationData';
 import { DateData } from '../types/dateData';
+import { logError, logInfo, setLogRetentionDays } from '../repositories/logRepository';
+import { LogData } from '../types/logData';
 
 let dbContext: sqlite.Database;
 
@@ -9,16 +11,17 @@ const FILE_LOCATION = './config.db';
 export const initConfigDb = (dataSource: string) => {
     setDbContext(dataSource);
     createConfigTablesIfNotExist();
-    // migrateTablesIfNeeded()
+    // migrateTablesIfNeeded();
 }
 
 const setDbContext = (dataSource: string) => {
-    console.log('Preparing configuration database...');
     if (dataSource === 'sqlite') {
         dbContext = new sqlite(FILE_LOCATION);
     } else if (dataSource === 'postgres') {
         throw 'postgres support not yet implemented.'
     }
+
+    logInfo('Prepared configuration database.');
 }
 
 const createConfigTablesIfNotExist = () => {
@@ -56,8 +59,8 @@ const createConfigTablesIfNotExist = () => {
 export const upsertConfigurationData = (configData: SupportedGeneration) => {
     /*
     Insert configuration data. If configuration data is already there, set it with
-    the exception of "active". Perserve the active value in case a user has that
-    generation active.
+    the exception of the "active" field. Perserve the active value in case a user
+    has that generation active.
     */ 
     
     const stmt =  `
@@ -94,30 +97,32 @@ export const upsertConfigurationData = (configData: SupportedGeneration) => {
             ,stale_by_dts = :stale_by_dts
             ,last_modified_dts = :last_modified_dts
             ,source_last_modified_dts = :source_last_modified_dts
-            ,local_last_modified_dts = :local_last_modified_dts
-            `;
+            ,local_last_modified_dts = :local_last_modified_dts;
+    `;
 
     try {
-        dbContext
-            .prepare(stmt)
-            .run({
-                id: configData.id,
-                generation_name: configData.generation_name,
-                description: configData.description,
-                starting_dex_no: configData.starting_dex_no,
-                count: configData.count,
-                stale_by_dts: configData.stale_by_dts,
-                active: configData.active ? 1 : 0,
-                source_last_modified_dts: configData.last_modified_dts,
-                last_modified_dts: new Date().toISOString(),
-                local_last_modified_dts: ''
-            });
+        (dbContext.transaction((configData: SupportedGeneration) => {
+            dbContext
+                .prepare(stmt)
+                .run({
+                    id: configData.id,
+                    generation_name: configData.generation_name,
+                    description: configData.description,
+                    starting_dex_no: configData.starting_dex_no,
+                    count: configData.count,
+                    stale_by_dts: configData.stale_by_dts,
+                    active: configData.active ? 1 : 0,
+                    source_last_modified_dts: configData.last_modified_dts,
+                    last_modified_dts: new Date().toISOString(),
+                    local_last_modified_dts: ''
+                });
+        }))(configData);
     } catch (error) {
-        console.error(`Failed to UPSERT config data for ${configData.generation_name}`)
+        logError(`Failed to UPSERT config data for ${configData.generation_name}. This is a terminating error.\r\n${error.message}`, true);
     }
 }
 
-export const getGenerationUpdateData = (gen_id: number): DateData | undefined => {
+export const getGenerationUpdateData = (id: number): DateData | undefined => {
     const stmt = `
         SELECT 
             last_modified_dts
@@ -125,13 +130,13 @@ export const getGenerationUpdateData = (gen_id: number): DateData | undefined =>
             ,stale_by_dts
             ,active
         FROM supported_generations
-        WHERE id = ${gen_id}
+        WHERE id = :id
         LIMIT 1;
     `
 
     const genDateData = dbContext
         .prepare(stmt)
-        .all()[0];
+        .all({id: id})[0];
 
     if (
         typeof genDateData === 'object' 
@@ -168,24 +173,40 @@ export const setGenerationActive = (id: number) => {
     const stmt = `
         UPDATE supported_generations
         SET active = 1
-        WHERE id = ${id};
+        WHERE id = :id;
     `;
 
-    dbContext
-        .prepare(stmt)
-        .run();
+    try {
+        (dbContext.transaction((id: number) => {
+            dbContext
+                .prepare(stmt)
+                .run({
+                    id: id
+                });
+        }))(id);
+    } catch (error) {
+        logError(`Failed to update supported_generations active field: ${error}`);
+    }
 }
 
 export const setLocalLastModifiedDate = (id: number) => {
     const stmt = `
         UPDATE supported_generations
         SET local_last_modified_dts = '${new Date().toISOString()}'
-        WHERE id = ${id};
+        WHERE id = :id;
     `;
-
-    dbContext
-        .prepare(stmt)
-        .run();
+    
+    try {
+        (dbContext.transaction((id: number) => {
+            dbContext
+                .prepare(stmt)
+                .run({
+                    id: id
+                });
+        }))(id);
+    } catch (error) {
+        logError(`Failed to update supported_generations local_last_modified_dts: ${error}`);
+    }
 }
 
 export const getGenerationLastUpdatedLocally = (): DateData[] => {
@@ -270,13 +291,7 @@ export const getGenerationCountAndOffset = (id: number): [number, number] | unde
     return undefined;
 }
 
-// TODO: Logging should be in place now. Test it later. 
-export const saveLog = (    
-    message: string,
-    logLevel: string,
-    verbose: boolean,
-    retain: boolean = false
-) => {
+export const saveLog = (logData: LogData) => {
     const stmt =  `
         INSERT INTO logs (
             log_message
@@ -293,26 +308,44 @@ export const saveLog = (
             ,:log_written_dts
         )
     `
-    
+
     try {
-        dbContext
-            .prepare(stmt)
-            .run({
-                log_message: message,
-                log_level: logLevel,
-                verbose: verbose ? 1 : 0,
-                retain: retain ? 1 : 0,
-                log_written_dts: new Date().toISOString()
-            });
+        (dbContext.transaction((logData: LogData) => {
+            dbContext
+                .prepare(stmt)
+                .run({
+                    log_message: logData.message,
+                    log_level: logData.logLevel,
+                    verbose: logData.verbose ? 1 : 0,
+                    retain: logData.retain ? 1 : 0,
+                    log_written_dts: new Date().toISOString()
+                });
+        }))(logData);
     } catch (error) {
         console.error(`Failed to write log message to log table: ${error}`)
     }
 };
 
 export const cleanUpOldLogs = (removeOlderThanDate: Date) => {
-    // delete from where dts > removeOlderThanDate
-    // except errors
+    if(!(removeOlderThanDate) || removeOlderThanDate == undefined) {
+        // Somehow, we got in a position where removeOlderThanDate wasn't set or defaulted.
+        removeOlderThanDate = new Date(new Date().getTime() - 60 * 24 * 60 * 60 * 1000);
+    };
+    
+    const stmt =  `
+        DELETE FROM logs 
+        WHERE log_written_dts < :removeOlderThanDate
+        AND retain = 0 OR id > 1000000;
+    `
 
-    // Then maybe allow a maximum...like...
-    // Delete records if we get over 1,000,000 except errors
+    try {
+        (dbContext.transaction((removeOlderThanDate: Date) => {
+            dbContext.prepare(stmt)
+                .run({
+                    removeOlderThanDate: removeOlderThanDate.toISOString()
+                });
+        }))(removeOlderThanDate);
+    } catch (error) {
+        logError(`Failed to delete old logs! ${error}`);
+    }
 };
