@@ -4,9 +4,9 @@
   "description": "Work through a lot of the data storage logic in a more familiar environment before moving on to PGLite in the BaseDex React application.",
   "main": "index.js",
   "scripts": {
-    "test": "npx tsc && jest './build/tests'",
+    "test": "npx tsc && jest './dist/tests'",
     "build": "npx tsc",
-    "start": "node build/src/index.js",
+    "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts --ignore files --ignore docs"
   },
   "author": "JakeSaintG",
@@ -17,7 +17,6 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.1",
     "@types/jest": "^29.5.12",
-    "@types/mocha": "^10.0.1",
     "@types/uuid": "^9.0.8",
     "chai": "^4.3.7",
     "jest": "^29.7.0",
