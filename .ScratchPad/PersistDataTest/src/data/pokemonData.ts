@@ -12,7 +12,6 @@ const FILE_LOCATION = './pokemon_data.db';
 export const initPokemonDb = (dataSource: string) => {
     setDbContext(dataSource);
     createPokemonTablesIfNotExist();
-
     // migrateTablesIfNeeded()
 }
 
