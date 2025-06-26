@@ -43,7 +43,7 @@ export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean)
 }
 
 const loadPokemon = async ( pokemonToLoad: Pokemon[], batchSize: number) => {
-    // TODO: I still really want to to try to be loading multiple pokemon at once...
+    // TODO: I still want to to try to be loading multiple pokemon at once...
     for (const pkmn of pokemonToLoad) {
         logInfo(`Loading data for ${pkmn.name}.`)
         await startLoad(pkmn, (new Date().toISOString()))
