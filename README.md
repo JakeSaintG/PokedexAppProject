@@ -1,10 +1,21 @@
 # Pokédex App Project
 
 ## Goal
-Learn the ins and outs of various app development platforms.
+I want to learn the ins and outs of various app development platforms. From native to multi-platform, I hope to learn enough to work on a few other passion projects!
 
 ## Synopsis
 I'm going to make the same application, a basic PokéDex, multiple times in different languages and frameworks. The goal is that I get a lot of the logic down, transpose a lot of the code, and learn the different intricacies of how the frameworks/languages work.
+
+## Languages
+- React
+  - For framing up what I want the others to look like in a language/framework that I'm more familiar with.
+- React Native
+  - Port a large chunk of the React code over and win!
+- Flutter
+  - Flutter, with the Dart programming language, is something that I have wanted to learn for quite a while!
+- Kotlin
+- Swift
+- .NET MAUI
 
 ## Disclaimer
 This project was made without the use of generative machine learning. The goal is that I learn and having an LLM do it for me isn't super conducive to that.
