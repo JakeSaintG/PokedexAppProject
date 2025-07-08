@@ -1,8 +1,10 @@
 .dex_header {
-    border: solid 1px black;
-
     position: fixed;
     top: 0;
-    width: 100%;
+    left: 0;
+    width: 100vw;
 }
 
+.dex_header > img {
+    width: 100%;
+}
