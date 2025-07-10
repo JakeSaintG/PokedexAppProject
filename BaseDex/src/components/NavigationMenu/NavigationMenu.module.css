@@ -1,0 +1,9 @@
+.nav_menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+    border-top: solid black 1px;
+    height: 60px;
+}
