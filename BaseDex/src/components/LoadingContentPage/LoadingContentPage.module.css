@@ -1,0 +1,12 @@
+.loading_page {
+    background-color: #D9E0DA;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    /* background-color: #DC0A2D; */
+}
+
+
+.loading_page p {
+    margin: auto;
+}

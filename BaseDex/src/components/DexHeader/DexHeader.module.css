@@ -1,0 +1,10 @@
+.dex_header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+}
+
+.dex_header > img {
+    width: 100%;
+}

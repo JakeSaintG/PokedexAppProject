@@ -1,0 +1,12 @@
+.welcome {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    background-color: #DC0A2D;
+}
+
+.welcome div {
+    margin: auto;
+    text-align: center;
+}
+
