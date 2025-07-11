@@ -25,6 +25,13 @@
 
 .nav_img {
     margin: auto;
+    /* TODO: get this color on the svg */
+    /* color: #28AAFD; */
+}
+
+/* TODO: fix the flicker */
+.nav_img:active {
+    filter: invert();
 }
 
 .home_button {
@@ -34,6 +41,9 @@
 }
 
 .home_button img {
-    color: #28AAFD;
-    /* filter: invert(); */
+    filter: invert();
+}
+
+.home_button img:active {
+    filter: none;
 }
