@@ -7,25 +7,38 @@ import gearSolid from "../../assets/gear-solid.svg";
 import grassSolid from "../../assets/grass.svg";
 import userSolid from "../../assets/user-solid.svg";
 import houseSolid from "../../assets/house-solid.svg";
+import { Link } from 'react-router-dom';
 
+// TODO: Indicate on the nav which page is loaded.
+// Passing in a prop for page and parsing it will probably do the trick
 export function NavigationMenu() {
     return (
         <nav className={styles.nav_menu}>
             <ul role="menubar">
                 <li role="menuitem">
-                    <img src={userSolid} alt="user icon for profile" className={styles.nav_img} height='35'/>
+                    <Link className={styles.nav_link} to={'../'}>
+                        <img src={userSolid} alt="user icon for profile" className={styles.nav_img} height='38'/>
+                    </Link>
                 </li>
                 <li role="menuitem">
-                    <img src={grassSolid} alt="grass icon for collecting pokemon" className={styles.nav_img} height='35'/>
+                    <Link className={styles.nav_link} to={'../'}>
+                        <img src={grassSolid} alt="grass icon for collecting pokemon" className={styles.nav_img} height='38'/>
+                    </Link>
                 </li>
                 <li className={styles.home_button} role="menuitem">
-                    <img src={houseSolid} alt="house icon for returning to home page" className={styles.nav_img} height='35'/>
+                    <Link className={styles.nav_link} to={'../'}>
+                        <img src={houseSolid} alt="house icon for returning to home page" className={styles.nav_img} height='38'/>
+                    </Link>
                 </li>
                 <li role="menuitem">
-                    <img src={listUlSolid} alt="list icon for pokedex list view" className={styles.nav_img} height='35'/>
+                    <Link className={styles.nav_link} to={'../'}>
+                        <img src={listUlSolid} alt="list icon for pokedex list view" className={styles.nav_img} height='38'/>
+                    </Link>
                 </li>
                 <li role="menuitem">
-                    <img src={gearSolid} alt="gear icon for settings" className={styles.nav_img} height='35'/>
+                    <Link className={styles.nav_link} to={'../'}>
+                        <img src={gearSolid} alt="gear icon for settings" className={styles.nav_img} height='38'/>
+                    </Link>
                 </li>
             </ul>
         </nav>

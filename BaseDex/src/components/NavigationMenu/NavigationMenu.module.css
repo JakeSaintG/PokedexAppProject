@@ -10,9 +10,9 @@
 
 .nav_menu ul {
     margin: 0;
-    padding: 0 .5rem;
+    padding: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     height: 100%;
 }
 
@@ -20,6 +20,11 @@
     display: flex;
     width: 60px;
     height: 60px;
+    margin: auto;
+}
+
+.nav_link {
+    display: flex;
     margin: auto;
 }
 
