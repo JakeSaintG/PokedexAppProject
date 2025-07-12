@@ -1,0 +1,1 @@
+For now, the assets in the folder are just copy pasted into the various other projects as needed. This may make editing a little bit bothersome. If I need to tweak the dexheader, I need to do so and move it multiple times... For now, until I know how imports work in Flutter, Swift, etc, that's just the way it's gotta be.
