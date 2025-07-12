@@ -3,10 +3,11 @@ import dexHeaderSvg from "../../assets/combined_dexheader.svg";
 
 export function DexHeader( ) {
     return (
-        // TODO: break up the SVG into the header and the lights.
-        // - Allow the header to scale width of the screen
-        // - Keep the lights scaled to the height
-        // - only allow lights to take up a fixed widith
+        // TODO: break up the SVG. split it out into 3 chunks. 
+        // The left most would be from the end to passed the middle after the curve. 
+        // The right most would be basically just the tip of the right end. 
+        // Everything in between should connect the two and would stretch with
+        // different screen sizes.
         <div className={styles.dex_header}>
             <img src={dexHeaderSvg} alt="Pokedex header with lights" />
         </div>
