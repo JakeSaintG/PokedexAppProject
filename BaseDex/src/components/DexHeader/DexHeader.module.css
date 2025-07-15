@@ -4,6 +4,7 @@
     left: 0;
     width: 100vw;
     display: flex;
+    justify-content: space-between;
 }
 
 .dex_left {

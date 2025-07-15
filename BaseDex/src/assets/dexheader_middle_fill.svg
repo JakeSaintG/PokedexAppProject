@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="42.29546mm"
+   width="14.249627mm"
    height="21.955389mm"
-   viewBox="0 0 42.29546 21.95539"
+   viewBox="0 0 14.249627 21.95539"
    version="1.1"
    id="svg1"
    sodipodi:docname="dexheader_middle_fill.svg"
@@ -24,8 +24,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="2.6440517"
-     inkscape:cx="142.01689"
-     inkscape:cy="76.587005"
+     inkscape:cx="-31.958528"
+     inkscape:cy="61.458707"
      inkscape:window-width="1504"
      inkscape:window-height="828"
      inkscape:window-x="0"
@@ -38,7 +38,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-152.16356)">
+     transform="translate(-180.2094)">
     <g
        id="g2"
        inkscape:label="dex_header"
@@ -49,13 +49,13 @@
          transform="matrix(1,0,0,1.120821,0,-0.06424402)">
         <path
            style="display:inline;fill:#1a1a1a;stroke-width:0.593061"
-           d="m 152.46276,20.085462 c 0,0 26.81239,0.0786 26.54391,0 h 15.75155 V 0.53172902 h -42.29546 z"
+           d="m 180.50859,20.085462 c 0,0 10.93739,0.0786 10.66891,0 h 3.58072 V 0.53172902 h -14.24963 z"
            id="path1-35"
            sodipodi:nodetypes="cccccc"
            inkscape:label="dex_top_outline" />
         <path
            style="display:inline;fill:#dc0a2d;fill-opacity:1;stroke-width:0.571027"
-           d="m 152.46276,19.054621 c 0,0 26.00475,0.07377 25.73957,0 h 16.55589 V 1.51689 h -42.29546 z"
+           d="m 180.50859,19.054621 c 0,0 10.12975,0.07377 9.86457,0 h 4.38506 V 1.51689 h -14.24963 z"
            id="path1"
            sodipodi:nodetypes="cccccc"
            inkscape:label="dex_top" />

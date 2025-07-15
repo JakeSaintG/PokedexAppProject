@@ -14,7 +14,7 @@ export function DexHeader( ) {
             {/* TODO: Wrap these three SVGs in a single alt text if possible */}
             {/* Or aria hide them...because they don't really serve a functional purpose */}
             <img src={dexHeaderLeft} className={styles.dex_left} alt="Pokedex header with lights" />
-            <img src={dexHeaderMiddle} className={styles.dex_middle} alt="Pokedex header with lights" />
+            {/* <img src={dexHeaderMiddle} className={styles.dex_middle} alt="Pokedex header with lights" /> */}
             <img src={dexHeaderRight} className={styles.dex_right} alt="Pokedex header with lights" />
         </div>
     );

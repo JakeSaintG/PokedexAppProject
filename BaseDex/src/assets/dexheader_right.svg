@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="57.770248mm"
+   width="21.786921mm"
    height="21.955389mm"
-   viewBox="0 0 57.770249 21.95539"
+   viewBox="0 0 21.786921 21.95539"
    version="1.1"
    id="svg1"
    sodipodi:docname="dexheader_right.svg"
@@ -24,7 +24,7 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="2.6440517"
-     inkscape:cx="79.990871"
+     inkscape:cx="-56.163803"
      inkscape:cy="89.446057"
      inkscape:window-width="1504"
      inkscape:window-height="828"
@@ -38,7 +38,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-152.16356)">
+     transform="translate(-188.14689)">
     <g
        id="g2"
        inkscape:label="dex_header"
@@ -49,13 +49,13 @@
          transform="matrix(1,0,0,1.120821,0,-0.06424402)">
         <path
            style="display:inline;fill:#1a1a1a;stroke-width:0.593061"
-           d="m 152.46276,20.085462 c 0,0 26.81239,0.0786 26.54391,0 h 31.22634 V 0.53172902 h -57.77025 z"
+           d="m 188.44609,20.085462 c 0,0 10.40823,0.0786 10.13975,0 h 11.64717 V 0.53172902 h -21.78692 z"
            id="path1-35"
            sodipodi:nodetypes="cccccc"
            inkscape:label="dex_top_outline" />
         <path
            style="display:inline;fill:#dc0a2d;fill-opacity:1;stroke-width:0.571027"
-           d="m 152.46276,19.054621 c 0,0 26.00475,0.07377 25.73957,0 h 30.84339 V 1.51689 h -56.58296 z"
+           d="m 188.44609,19.054621 c 0,0 9.60059,0.07377 9.33541,0 h 11.26422 V 1.51689 h -20.59963 z"
            id="path1"
            sodipodi:nodetypes="cccccc"
            inkscape:label="dex_top" />
