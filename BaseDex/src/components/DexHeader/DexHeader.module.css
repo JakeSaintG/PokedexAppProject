@@ -3,8 +3,19 @@
     top: 0;
     left: 0;
     width: 100vw;
+    display: flex;
 }
 
-.dex_header > img {
-    width: 100%;
+.dex_left {
+    height: 80px;
+}
+
+.dex_middle,
+.dex_right {
+    height: 45px;
+}
+
+/* Maybe push this back on the z-index and stretch it across the whole width */
+.dex_middle {
+
 }
