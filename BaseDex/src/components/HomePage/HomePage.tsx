@@ -1,15 +1,12 @@
+import styles from './HomePage.module.css';
 import { DexHeader } from "../DexHeader";
 import { NavigationMenu } from "../NavigationMenu";
 
-interface Props extends React.HTMLAttributes<HTMLElement>{
-    value: string
-}
-
-export function HomePage( props: Props ) {
+export function HomePage( ) {
     return (
-        <div>
+        <div className={styles.home}>
             <DexHeader></DexHeader>
-            <p>{props.value}</p>
+            <p>HOME</p>
             <NavigationMenu></NavigationMenu>
         </div>
     );
