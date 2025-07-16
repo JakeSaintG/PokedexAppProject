@@ -9,14 +9,21 @@ import userSolid from "../../assets/user-solid.svg";
 import houseSolid from "../../assets/house-solid.svg";
 import { Link } from 'react-router-dom';
 
-// TODO: Indicate on the nav which page is loaded.
-// Passing in a prop for page and parsing it will probably do the trick
-export function NavigationMenu() {
+interface Props extends React.HTMLAttributes<HTMLElement>{
+    activePage: string
+}
+
+export function NavigationMenu(props: Props) {
+
+    // TODO: Indicate on the nav which page is loaded.
+    // Passing in a prop for page and parsing it will probably do the trick
+    console.log(`navigating to ${props.activePage}`);
+
     return (
         <nav className={styles.nav_menu}>
             <ul role="menubar">
                 <li role="menuitem">
-                    <Link className={styles.nav_link} to={'../'}>
+                    <Link className={styles.nav_link} to={'../profile'}>
                         <img src={userSolid} alt="user icon for profile" className={styles.nav_img} height='38'/>
                     </Link>
                 </li>
@@ -26,7 +33,7 @@ export function NavigationMenu() {
                     </Link>
                 </li>
                 <li className={styles.home_button} role="menuitem">
-                    <Link className={styles.nav_link} to={'../'}>
+                    <Link className={styles.nav_link} to={'../home'}>
                         <img src={houseSolid} alt="house icon for returning to home page" className={styles.nav_img} height='38'/>
                     </Link>
                 </li>

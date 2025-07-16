@@ -6,6 +6,7 @@ import { Welcome } from './components/Welcome';
 import { HomePage } from './components/HomePage';
 import { LoadingContentPage } from './components/LoadingContentPage';
 import App from './App';
+import { ProfilePage } from './components/ProfilePage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -13,9 +14,7 @@ const router = createBrowserRouter(
           <Route index element={<Welcome />} />
           <Route path='/home' element={<HomePage />} />
           <Route path="loading" element={<LoadingContentPage />} />
-
-
-          {/* <Route path="loading" element={<LoadingContentPage />} /> */}
+          <Route path="profile" element={<ProfilePage />} />
       </Route>
   )
 );

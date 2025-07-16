@@ -7,7 +7,7 @@ export function HomePage( ) {
         <div className={styles.home}>
             <DexHeader></DexHeader>
             <p>HOME</p>
-            <NavigationMenu></NavigationMenu>
+            <NavigationMenu activePage='home'></NavigationMenu>
         </div>
     );
 }
