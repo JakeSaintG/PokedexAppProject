@@ -7,6 +7,7 @@ import { HomePage } from './components/HomePage';
 import { LoadingContentPage } from './components/LoadingContentPage';
 import App from './App';
 import { ProfilePage } from './components/ProfilePage';
+import { TallGrassPage } from './components/TallGrassPage/TallGrassPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -15,6 +16,7 @@ const router = createBrowserRouter(
           <Route path='/home' element={<HomePage />} />
           <Route path="loading" element={<LoadingContentPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="tall_grass" element={<TallGrassPage />} />
       </Route>
   )
 );
