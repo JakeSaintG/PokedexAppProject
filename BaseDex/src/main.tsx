@@ -8,6 +8,7 @@ import { LoadingContentPage } from './components/LoadingContentPage';
 import App from './App';
 import { ProfilePage } from './components/ProfilePage';
 import { TallGrassPage } from './components/TallGrassPage/TallGrassPage';
+import { PokedexPage } from './components/PokedexPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,6 +18,7 @@ const router = createBrowserRouter(
           <Route path="loading" element={<LoadingContentPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="tall_grass" element={<TallGrassPage />} />
+          <Route path="pokedex" element={<PokedexPage />} />
       </Route>
   )
 );
