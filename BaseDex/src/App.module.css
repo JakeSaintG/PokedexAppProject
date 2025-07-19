@@ -1,0 +1,11 @@
+.mobile_container {
+    width: 100vw;
+    display: flex;
+    background-color: black;
+}
+
+.app {
+    width: 100%;
+    max-width: var(--max-mobile-width);
+    margin: auto;
+}
