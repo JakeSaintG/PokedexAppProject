@@ -3,8 +3,8 @@
     background-color: #DC0A2D;
     position: fixed;
     bottom: 0;
-    left: 0;
     width: 100%;
+    max-width: var(--max-mobile-width);
     height: 70px;
 }
 

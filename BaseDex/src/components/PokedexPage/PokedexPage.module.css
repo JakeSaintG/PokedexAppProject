@@ -1,3 +1,9 @@
+.pokedex {
+    display: flex;
+    height: 100%;
+}
+
 .pokedex p {
+    margin: auto;
     color: black;
 }

@@ -1,3 +1,9 @@
+.tall_grass {
+    display: flex;
+    height: 100%;
+}
+
 .tall_grass p {
+    margin: auto;
     color: black;
 }

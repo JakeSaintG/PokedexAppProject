@@ -1,3 +1,9 @@
+.profile {
+    display: flex;
+    height: 100%;
+}
+
 .profile p {
+    margin: auto;
     color: black;
 }
