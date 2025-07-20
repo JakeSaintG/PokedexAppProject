@@ -12,6 +12,8 @@ export const initConfigDb = (dataSource: string) => {
     setDbContext(dataSource);
     createConfigTablesIfNotExist();
     // migrateTablesIfNeeded();
+
+    logInfo('Prepared configuration database.');
 }
 
 const setDbContext = (dataSource: string) => {
@@ -21,7 +23,6 @@ const setDbContext = (dataSource: string) => {
         throw 'postgres support not yet implemented.'
     }
 
-    logInfo('Prepared configuration database.');
 }
 
 const createConfigTablesIfNotExist = () => {

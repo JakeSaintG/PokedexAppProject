@@ -13,6 +13,8 @@ export const initPokemonDb = (dataSource: string) => {
     setDbContext(dataSource);
     createPokemonTablesIfNotExist();
     // migrateTablesIfNeeded()
+
+    logInfo('Prepared Pokemon database.');
 }
 
 const setDbContext = (dataSource: string) => {
@@ -21,7 +23,6 @@ const setDbContext = (dataSource: string) => {
     } else if (dataSource === 'postgres') {
         throw 'postgres support not yet implemented.'
     }
-    logInfo('Prepared Pokemon database.');
 };
 
 const createPokemonTablesIfNotExist = () => {
