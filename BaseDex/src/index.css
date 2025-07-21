@@ -1,33 +1,35 @@
 /* TODO: remove some of these defaults */
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 :root {
-  --max-mobile-width: 1080px;
-  
-  font-family: Helvetica, Arial, sans-serif;
-  font-weight: 400;
-  line-height: 1.5;
+    --max-mobile-width: 1080px;
 
-  color: rgba(255, 255, 255);
+    --pokedex-red: #DC0A2D;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+
+    color: rgba(255, 255, 255);
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+    font-size: 3.2em;
+    line-height: 1.1;
 }

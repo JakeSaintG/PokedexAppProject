@@ -1,5 +1,5 @@
 .loading_page {
-    background-color: #DC0A2D;
+    background-color: var(#DC0A2D);
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -28,6 +28,7 @@
     width: 70%;
     height: 70%;
 }
+
 .dex_display_screen p {
     color: white;
     margin: auto;

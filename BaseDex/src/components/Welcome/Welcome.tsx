@@ -7,9 +7,9 @@ export function Welcome() {
     const loadData = () => navigate('loading');
 
     return (
-        <div onClick={loadData} className={styles.welcome}>
+        <div onClick={loadData} className={styles.load}>
             <DexHeader></DexHeader>
-            <div>
+            <div className={styles.welcome}>
                 <h2>PokeDex</h2>
                 <p>Touch to begin!</p>
             </div>

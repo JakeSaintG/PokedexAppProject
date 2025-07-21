@@ -1,11 +1,11 @@
-.welcome {
+.load {
     height: 100vh;
     width: 100%;
     display: flex;
-    background-color: #DC0A2D;
+    background-color: var(--pokedex-red);
 }
 
-.welcome div {
+.welcome {
     margin: auto;
     text-align: center;
 }

@@ -1,6 +1,6 @@
 .nav_menu {
     border-top: solid black 2px;
-    background-color: #DC0A2D;
+    background-color: var(--pokedex-red);
     position: fixed;
     bottom: 0;
     width: 100%;
