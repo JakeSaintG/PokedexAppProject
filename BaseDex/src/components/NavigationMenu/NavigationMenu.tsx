@@ -43,7 +43,7 @@ export function NavigationMenu(props: Props) {
                     </Link>
                 </li>
                 <li role="menuitem">
-                    <Link className={styles.nav_link} to={'../'}>
+                    <Link className={styles.nav_link} to={'../settings'}>
                         <img src={gearSolid} alt="gear icon for settings" className={styles.nav_img} height='38'/>
                     </Link>
                 </li>

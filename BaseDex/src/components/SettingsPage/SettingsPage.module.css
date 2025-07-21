@@ -1,0 +1,9 @@
+.settings {
+    display: flex;
+    height: 100%;
+}
+
+.settings p {
+    margin: auto;
+    color: black;
+}

@@ -2,7 +2,7 @@ import { DexHeader } from '../DexHeader';
 import { useNavigate } from 'react-router-dom';
 import styles from './WelcomePage.module.css';
 
-export function Welcome() {
+export function WelcomePage() {
     const navigate = useNavigate();
     const loadData = () => navigate('loading');
 
