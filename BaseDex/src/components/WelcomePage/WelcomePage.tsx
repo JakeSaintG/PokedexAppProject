@@ -1,6 +1,6 @@
 import { DexHeader } from '../DexHeader';
 import { useNavigate } from 'react-router-dom';
-import styles from './Welcome.module.css';
+import styles from './WelcomePage.module.css';
 
 export function Welcome() {
     const navigate = useNavigate();
