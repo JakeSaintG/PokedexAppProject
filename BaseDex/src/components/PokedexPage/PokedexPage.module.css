@@ -15,19 +15,9 @@
     gap: 1rem;
 }
 
-/* TODO: make own component */
-.dex_previews div {
-    border: solid black 1px;
-    background-color: #00FFFF;
-    color: #008080;
-    font-weight: bolder;
-    height: 80px;
-}
-
 @media only screen and (min-width: 430px) {
     .dex_previews {
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        
     }
 }
 
