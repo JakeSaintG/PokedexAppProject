@@ -1,0 +1,7 @@
+.pokedex_preview {
+    border: solid black 1px;
+    background-color: #00FFFF;
+    color: #008080;
+    font-weight: bolder;
+    height: 80px;
+}

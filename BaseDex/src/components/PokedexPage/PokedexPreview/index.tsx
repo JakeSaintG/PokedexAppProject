@@ -1,0 +1,1 @@
+export { PokedexPreview } from './PokedexPreview';
