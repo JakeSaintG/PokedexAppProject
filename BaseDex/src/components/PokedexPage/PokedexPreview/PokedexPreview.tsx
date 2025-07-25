@@ -1,6 +1,7 @@
 import type { PokedexPreviewData } from '../../../types/pokdexPreviewData';
 import missingNo from '../../../assets/MISSINGNO.webp'
 import styles from './PokedexPreview.module.css';
+import { Link } from 'react-router-dom';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
     previewData: PokedexPreviewData
@@ -8,10 +9,10 @@ interface Props extends React.HTMLAttributes<HTMLElement>{
 
 export function PokedexPreview(props: Props) {
     return (
-        <div className={styles.pokedex_preview}>
+        <Link className={styles.pokedex_preview} to={`/pokedex/entry?id=${props.previewData.id}`}>
             <p>{props.previewData.dex_no} </p>
             <img src={missingNo} alt="placeholder dex image" />
             <p>{props.previewData.name} </p>
-        </div>
+        </Link>
     );
 }

@@ -1,0 +1,9 @@
+.entry {
+    display: flex;
+    height: 100%;
+}
+
+.entry_display {
+    margin: auto;
+    color: black;
+}
