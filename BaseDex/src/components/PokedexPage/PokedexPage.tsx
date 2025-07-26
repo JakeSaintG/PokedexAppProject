@@ -121,34 +121,73 @@ const test_data: PokedexPreviewData[] = [
         "id": 25
     },
     {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
         "name": "bulbasaur",
         "dex_no": 1,
         "id": 1
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
+    },
+    {
+        "name": "pikachu",
+        "dex_no": 25,
+        "id": 25
     }
 ]
 
