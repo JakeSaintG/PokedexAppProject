@@ -1,16 +1,43 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from './LoadingContentPage.module.css';
-import { DexHeader } from '../DexHeader';
+import { useEffect, useState } from "react";
+
+import { usePGlite } from "@electric-sql/pglite-react";
+import { useNavigate } from "react-router-dom";
+import styles from "./LoadingContentPage.module.css";
+import { DexHeader } from "../DexHeader";
+import { initPokemonDb } from "../../postgres/data/pokemonData";
 
 export function LoadingContentPage() {
     const navigate = useNavigate();
+    const dbContext = usePGlite();
 
+    const [loadingText, setLoadingText] = useState(
+        "Initializing PokeDex data storage..."
+    );
+
+    const placeholder = async (f: () => void) => {
+        return new Promise((resolve) => {
+            const timeoutId = setTimeout(() => resolve(f()), 1000);
+            return () => clearTimeout(timeoutId);
+        });
+    };
+
+    // TODO: handle offline issue
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            navigate('../home');
-        }, 1000);
-        return () => clearTimeout(timeoutId);
+        initPokemonDb(dbContext)
+            .then(async () => {
+                // TODO: actually load the data
+                await placeholder(() =>
+                    setLoadingText("Loading PokeDex Data, courtesy of PokeAPI.")
+                );
+            })
+            .then(async () => {
+                await placeholder(() =>
+                    setLoadingText("Done! Welcome to your PokeDex!")
+                );
+            })
+            .then(async () => {
+                await placeholder(() => navigate("../home"));
+            });
     }, []);
 
     return (
@@ -19,7 +46,7 @@ export function LoadingContentPage() {
             <div className={styles.loading_page}>
                 <div className={styles.dex_display_frame}>
                     <div className={styles.dex_display_screen}>
-                        <p>Checking for data to load...</p>
+                        <p>{loadingText}</p>
                     </div>
                 </div>
             </div>

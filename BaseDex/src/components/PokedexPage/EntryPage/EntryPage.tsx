@@ -3,10 +3,10 @@ import { DexHeader } from "../../DexHeader";
 import { NavigationMenu } from "../../NavigationMenu";
 import { Link, useSearchParams } from "react-router-dom";
 
-const test_data: any = {};
+// const test_data: any = {};
 
 export function EntryPage() {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const id = searchParams.get("id")?.split('id=');
 
     return (
