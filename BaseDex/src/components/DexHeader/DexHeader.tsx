@@ -1,5 +1,5 @@
 import styles from './DexHeader.module.css';
-import dexHeaderLeft from "../../assets/dexheader_left.svg";
+import dexHeaderLeft from "../../assets/dexheader/dexheader_left.svg";
 
 export function DexHeader( ) {
     return (

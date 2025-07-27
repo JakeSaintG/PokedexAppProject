@@ -2,11 +2,11 @@ import styles from './NavigationMenu.module.css';
 
 // svgs below are courtesy of font awesome (free)
 // downloading the svgs directly is likely safer and decreases the number of packages needed
-import listUlSolid from "../../assets/list-ul-solid.svg";
-import gearSolid from "../../assets/gear-solid.svg";
-import grassSolid from "../../assets/grass.svg";
-import userSolid from "../../assets/user-solid.svg";
-import houseSolid from "../../assets/house-solid.svg";
+import listUlSolid from "../../assets/icons/list-ul-solid.svg";
+import gearSolid from "../../assets/icons/gear-solid.svg";
+import grassSolid from "../../assets/icons/grass.svg";
+import userSolid from "../../assets/icons/user-solid.svg";
+import houseSolid from "../../assets/icons/house-solid.svg";
 import { Link } from 'react-router-dom';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
