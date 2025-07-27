@@ -6,6 +6,16 @@
 }
 
 .welcome {
+    display: grid;
+    margin: auto;
+
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: 
+        '. centerDecal dex_triangle'
+        '. instructions dex_triangle';
+}
+
+.welcome div {
     display: flex;
     flex-direction: column;
     margin: auto;
@@ -13,9 +23,28 @@
     width: 50%;
     max-width: 450px;
     min-width: 275px;
+    grid-area: centerDecal;
+}
+
+.font_image {
+    margin-bottom: .5rem;
+}
+
+.react_logo {
+    width: 60%;
+    margin: 4rem auto;
 }
 
 .welcome p {
     font-size: large;
     font-weight: bolder;
+    grid-area: instructions;
+    text-align: center;
+    margin: 0;
+}
+
+.dex_triangle {
+    width: 60px;
+    margin: auto 1rem auto auto;
+    grid-area: dex_triangle;
 }
