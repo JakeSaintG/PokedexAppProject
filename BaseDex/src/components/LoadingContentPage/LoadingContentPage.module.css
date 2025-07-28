@@ -1,6 +1,5 @@
 .loading_page {
-    background-color: var(#DC0A2D);
-    width: 100vw;
+    background-color: var(--pokedex-red);
     height: 100vh;
     display: flex;
 }
@@ -9,27 +8,84 @@
 .dex_display_frame {
     background-color: #D9E0DA;
     border: solid black 2px;
+    border-radius: 8px;
+    border-bottom-left-radius: 30px;
     display: flex;
+    flex-direction: column;
     margin: auto;
     
     /* TODO: This needs to be tweaked for multiple display sizes */
-    max-width: 300px;
+    max-width: 375px;
+    min-width: 275px;
     max-height: 300px;
-    
     width: 70%;
     height: 30%;
+}
+
+.top_decoration {
+    margin: 0 auto;
+    position: relative;
+    height: 40px;
+    width: 65px;
+}
+
+.top_decoration::before,
+.top_decoration::after {
+    position: absolute;
+    border-radius: 50%;
+    content: ' ';
+    height: 8px;
+    width: 8px;
+    bottom: 12px;
+    background-color: var(--pokedex-red);
+    border: solid black 2px;
+}
+
+.top_decoration::before {
+    right: 0;
+}
+
+.top_decoration::after {
+    left: 0;
+}
+
+.bottom_decoration {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    height: 40px;
+}
+
+.bottom_decoration::before {
+    background-color: var(--pokedex-red);
+    position: absolute;
+    border-radius: 50%;
+    content: ' ';
+    height: 12px;
+    width: 12px;
+    left: 3rem;
+    top: 14px;
+    border: solid black 2px;
+}
+
+.speaker {
+    height: 40px;
+    margin-right: 40px;
 }
 
 .dex_display_screen {
     background-color: #232323;
     border: solid black 2px;
+    border-radius: 8px;
     display: flex;
-    margin: auto;
+    margin: 0 auto;
     width: 70%;
     height: 70%;
 }
 
 .dex_display_screen p {
     color: white;
+    font-weight: bold;
+    text-align: center;
     margin: auto;
 }
