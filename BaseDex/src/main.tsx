@@ -24,7 +24,6 @@ const router = createBrowserRouter(
           <Route path="tall_grass" element={<TallGrassPage />} />
 
           <Route path="pokedex" element={<PokedexPage />} />
-
           <Route path="pokedex/entry" element={<EntryPage />} />
 
           <Route path="settings" element={<SettingsPage />} />
