@@ -23,13 +23,17 @@ export function LoadingContentPage() {
         });
     };
 
-    // TODO: handle offline issue
+    // TODO: handle offline by having preloaded fakemon data if first load
+    // If data has previously been loaded, notify the user that they are offline and
+    // that they can load data, if needed by going to settings or by closing and reopening
+    // the app once online.
     useEffect(() => {
         initPokemonDb(dbContext)
             .then(async () => {
                 // TODO: actually load the data
                 await placeholder(() =>
                     setLoadingText("Loading PokeDex Data, courtesy of PokeAPI.")
+                    // setLoadingText("User is offline, ensuring usable state.")
                 );
             })
             .then(async () => {

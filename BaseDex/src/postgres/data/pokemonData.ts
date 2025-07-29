@@ -70,7 +70,7 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
 
     // pokemon_images
     //TODO: I used a BLOB in sqlite and a BYTEA here (byte array)
-    // Make sure this still works
+    // Make sure this still works on read/write
     await dbContext
         .exec(`
             CREATE TABLE IF NOT EXISTS pokemon_images (

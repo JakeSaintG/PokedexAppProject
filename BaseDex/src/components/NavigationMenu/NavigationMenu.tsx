@@ -14,7 +14,6 @@ interface Props extends React.HTMLAttributes<HTMLElement>{
 }
 
 export function NavigationMenu(props: Props) {
-
     // TODO: Indicate on the nav which page is loaded.
     // Passing in a prop for page and parsing it will probably do the trick
     console.log(`navigating to ${props.activePage}`);

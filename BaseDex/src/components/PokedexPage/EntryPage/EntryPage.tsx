@@ -24,7 +24,7 @@ export function EntryPage() {
                     back
                 </Link>
             </div>
-            {/* TODO: a back button instead */}
+            {/* TODO: back button instead */}
             <NavigationMenu activePage='entry'></NavigationMenu>
         </div>
     );

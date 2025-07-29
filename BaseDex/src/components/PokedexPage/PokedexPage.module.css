@@ -24,6 +24,5 @@
     .dex_previews {
         /* TODO: probably not 5 column */
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    
     }
 }
