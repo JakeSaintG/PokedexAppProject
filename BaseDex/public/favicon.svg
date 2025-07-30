@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="30.59593mm"
+   height="30.59593mm"
+   viewBox="0 0 30.595931 30.595931"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.9185769"
+     inkscape:cx="106.58942"
+     inkscape:cy="104.76515"
+     inkscape:window-width="1512"
+     inkscape:window-height="945"
+     inkscape:window-x="0"
+     inkscape:window-y="37"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs1" />
+  <g
+     id="g12"
+     inkscape:label="main_blue_light"
+     transform="matrix(1.7997606,0,0,1.7997606,-71.655855,-101.67603)">
+    <g
+       id="g10"
+       transform="translate(17.839103,2.7691974)"
+       inkscape:label="main_rim">
+      <circle
+         style="fill:#1a1a1a;stroke-width:0.159397"
+         id="path1-3-2-1-8-4"
+         cx="30.475"
+         cy="62.224998"
+         r="8.5"
+         inkscape:label="main_black_rim" />
+      <circle
+         style="display:inline;fill:#ffffff;stroke-width:0.154708"
+         id="path1-3-2-1-8-4-6"
+         cx="30.475"
+         cy="62.224998"
+         r="8.25"
+         inkscape:label="white_rim" />
+    </g>
+    <g
+       id="g11"
+       style="display:inline"
+       inkscape:label="blue_light">
+      <ellipse
+         style="fill:#00ffff;stroke-width:0.140174"
+         id="path1-3-2-1-8"
+         cx="48.264103"
+         cy="64.978142"
+         rx="7.4499998"
+         ry="7.5" />
+      <path
+         id="path1-3-3"
+         style="display:inline;fill:#008080;stroke-width:0.14052"
+         d="m 50.846421,57.962965 a 7.4868006,7.4999998 0 0 1 0.715195,3.164812 7.4868006,7.4999998 0 0 1 -7.486894,7.500096 7.4868006,7.4999998 0 0 1 -2.520321,-0.454016 7.4868006,7.4999998 0 0 0 6.772806,4.336393 7.4868006,7.4999998 0 0 0 7.486897,-7.500096 7.4868006,7.4999998 0 0 0 -4.967683,-7.047189 z" />
+    </g>
+  </g>
+</svg>
