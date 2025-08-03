@@ -11,7 +11,7 @@ export const initPokemonDb = async (dbContext: PGliteWithLive) => {
 }
 
 const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
-    console.log('Creating tables...')
+    console.log('Creating Pokémon tables...');
 
     // pokemon_base_data
     await dbContext
