@@ -46,3 +46,19 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
             console.log('logs table created')
         );
 }
+
+// export const upsertConfigurationData 
+
+// export const getGenerationUpdateData 
+
+// export const setGenerationActive
+
+// export const setLocalLastModifiedDate 
+
+// export const getGenerationLastUpdatedLocally
+
+// export const getGenerationCountAndOffset
+
+// export const saveLog
+
+// export const cleanUpOldLogs

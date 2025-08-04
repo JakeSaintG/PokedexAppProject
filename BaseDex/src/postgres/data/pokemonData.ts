@@ -87,3 +87,17 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
             console.log('pokemon_images table created')
         );
 };
+
+// const createPokemonTablesIfNotExist = ()
+
+// export const upsertPokemonImage 
+
+// export const upsertPokemonBaseData
+
+// export const upsertPokedexData 
+
+// export const upsertPokemonSpeciesData
+
+// export const upsertDexData
+
+// export const getPokemonSpeciesToLoad 
