@@ -18,15 +18,15 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         .exec(`
             CREATE TABLE IF NOT EXISTS supported_generations (
                 id INT PRIMARY KEY NOT NULL
-                ,generation_name STRING NOT NULL
-                ,description STRING NOT NULL
+                ,generation_name TEXT NOT NULL
+                ,description TEXT NOT NULL
                 ,starting_dex_no INT NOT NULL
                 ,count INT NOT NULL
-                ,stale_by_dts STRING NOT NULL
-                ,active INT NULL -- boolean
-                ,last_modified_dts STRING NOT NULL
-                ,local_last_modified_dts NULL
-                ,source_last_modified_dts STRING NOT NULL
+                ,stale_by_dts TEXT NOT NULL
+                ,active BOOLEAN NULL
+                ,last_modified_dts TEXT NOT NULL
+                ,local_last_modified_dts TEXT NULL
+                ,source_last_modified_dts TEXT NOT NULL
             )
         `).then ( () => 
             console.log('supported_generations table created')
@@ -36,16 +36,20 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         .exec(`
             CREATE TABLE IF NOT EXISTS logs (
                 id INTEGER PRIMARY KEY NOT NULL
-                ,log_message STRING NOT NULL
-                ,log_level STRING NOT NULL
-                ,verbose INT NULL -- boolean
-                ,retain INT NULL -- boolean
-                ,log_written_dts STRING NOT NULL
+                ,log_message TEXT NOT NULL
+                ,log_level TEXT NOT NULL
+                ,verbose_logging BOOLEAN NULL
+                ,retain BOOLEAN NULL
+                ,log_written_dts TEXT NOT NULL
             )
         `).then ( () => 
             console.log('logs table created')
         );
 }
+
+/*
+    NOTE! Booleans above will need some rework to not be INTs in the below logic
+*/ 
 
 // export const upsertConfigurationData 
 

@@ -21,11 +21,11 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
                 ,name TEXT NOT NULL
                 ,url TEXT NOT NULL
                 ,species_url TEXT NOT NULL
-                ,is_default INT NOT NULL --INT used as BIT
+                ,is_default BOOLEAN NOT NULL
                 ,type_1 TEXT NOT NULL
                 ,type_2 TEXT NULL
                 ,img_path TEXT NOT NULL
-                ,has_forms INT NOT NULL --INT used as BIT
+                ,has_forms BOOLEAN NOT NULL
                 ,male_sprite_url TEXT NOT NULL
                 ,female_sprite_url TEXT NULL
                 ,last_modified_dts TEXT NOT NULL
@@ -41,9 +41,9 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
                 id INT PRIMARY KEY NOT NULL
                 ,dex_no INT NOT NULL
                 ,name TEXT NOT NULL
-                ,is_default INT NULL --INT used as BIT
+                ,is_default BOOLEAN NULL
                 ,habitat TEXT NOT NULL
-                ,has_gender_differences INT NULL --INT used as BIT
+                ,has_gender_differences BOOLEAN NULL
                 ,generation TEXT NOT NULL
                 ,evo_chain_url TEXT NOT NULL
                 ,last_modified_dts TEXT NOT NULL
@@ -87,6 +87,10 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
             console.log('pokemon_images table created')
         );
 };
+
+/*
+    NOTE! Booleans above will need some rework to not be INTs in the below logic
+*/ 
 
 // const createPokemonTablesIfNotExist = ()
 
