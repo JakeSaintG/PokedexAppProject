@@ -3,27 +3,21 @@
     width: 100%;
     display: flex;
     background-color: var(--pokedex-red);
+    position: relative;
 }
 
 .welcome {
-    display: grid;
     margin: auto;
-
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas: 
-        '. centerDecal dex_triangle'
-        '. instructions dex_triangle';
+    text-align: center;
+    width: 50%;
+    max-width: 425px;
+    min-width: 275px;
 }
 
 .welcome div {
     display: flex;
     flex-direction: column;
     margin: auto;
-    text-align: center;
-    width: 50%;
-    max-width: 450px;
-    min-width: 275px;
-    grid-area: centerDecal;
 }
 
 .font_image {
@@ -38,7 +32,6 @@
 .welcome p {
     font-size: large;
     font-weight: bolder;
-    grid-area: instructions;
     text-align: center;
     margin: 0;
 }
@@ -46,5 +39,14 @@
 .dex_triangle {
     width: 60px;
     margin: auto 1rem auto auto;
-    grid-area: dex_triangle;
+    position: absolute;
+    right: 1px;
+    top: 50%;
+    display: none;
+}
+
+@media only screen and (min-width: 285px) {
+    .dex_triangle {
+        display: flex;
+    }
 }
