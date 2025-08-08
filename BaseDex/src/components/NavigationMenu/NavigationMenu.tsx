@@ -8,6 +8,7 @@ import grassSolid from "../../assets/icons/grass.svg";
 import userSolid from "../../assets/icons/user-solid.svg";
 import houseSolid from "../../assets/icons/house-solid.svg";
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
     activePage: string
@@ -16,33 +17,41 @@ interface Props extends React.HTMLAttributes<HTMLElement>{
 export function NavigationMenu(props: Props) {
     // TODO: Indicate on the nav which page is loaded.
     // Passing in a prop for page and parsing it will probably do the trick
-    console.log(`navigating to ${props.activePage}`);
+    
+    const [activeLink, setActiveLink] = useState(`home`);
+    
+    useEffect(() => {
+        setActiveLink(props.activePage)
+    }, [])
+
+    //TODO: WIP
+    const showActiveNavLink = (active: string) => activeLink == active ? styles.active : styles.inactive;
 
     return (
         <nav className={styles.nav_menu}>
             <ul role="menubar">
                 <li role="menuitem">
-                    <Link className={styles.nav_link} to={'../profile'}>
+                    <Link className={`${styles.nav_link} ${showActiveNavLink('profile')}`} to={'../profile'}>
                         <img src={userSolid} alt="user icon for profile" className={styles.nav_img} height='38'/>
                     </Link>
                 </li>
                 <li role="menuitem">
-                    <Link className={styles.nav_link} to={'../tall_grass'}>
+                    <Link className={`${styles.nav_link} ${showActiveNavLink('tall_grass')}`} to={'../tall_grass'}>
                         <img src={grassSolid} alt="grass icon for collecting pokemon" className={styles.nav_img} height='38'/>
                     </Link>
                 </li>
                 <li className={styles.home_button} role="menuitem">
-                    <Link className={styles.nav_link} to={'../home'}>
+                    <Link className={`${styles.nav_link} ${showActiveNavLink('home')}`} to={'../home'}>
                         <img src={houseSolid} alt="house icon for returning to home page" className={styles.nav_img} height='38'/>
                     </Link>
                 </li>
                 <li role="menuitem">
-                    <Link className={styles.nav_link} to={'../pokedex'}>
+                    <Link className={`${styles.nav_link} ${showActiveNavLink('pokedex')}`} to={'../pokedex'}>
                         <img src={listUlSolid} alt="list icon for pokedex list view" className={styles.nav_img} height='38'/>
                     </Link>
                 </li>
                 <li role="menuitem">
-                    <Link className={styles.nav_link} to={'../settings'}>
+                    <Link className={`${styles.nav_link} ${showActiveNavLink('settings')}`} to={'../settings'}>
                         <img src={gearSolid} alt="gear icon for settings" className={styles.nav_img} height='38'/>
                     </Link>
                 </li>

@@ -192,12 +192,14 @@ const test_data: PokedexPreviewData[] = [
 ]
 
 export function PokedexPage( ) {
+    let key = 0;
+    
     return (
         <div className={styles.pokedex}>
             <DexHeader></DexHeader>
             <div className={styles.dex_previews}>
                 {test_data.map((pkmn) => (
-                        <PokedexPreview previewData={pkmn}></PokedexPreview>
+                        <PokedexPreview previewData={pkmn} key={key++}></PokedexPreview>
                 ))}
             </div>
             <NavigationMenu activePage='pokedex'></NavigationMenu>
