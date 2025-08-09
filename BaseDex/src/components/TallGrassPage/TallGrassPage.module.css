@@ -1,9 +1,35 @@
 .tall_grass {
     display: flex;
+    flex-direction: column;
     height: 100%;
 }
 
-.tall_grass p {
-    margin: auto;
+.tall_grass h2 {
+    padding: calc(80px + 1rem) 1rem 1rem 1rem;
+
+}
+
+.regions {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    padding: 1rem 1rem 1rem 1rem;
+    margin: 0 auto 68px auto;
+    gap: 1rem;
+    /* margin: auto; */
     color: black;
+    overflow-y: scroll;
+}
+
+.region {
+    width: 150px;
+    height: 100px;
+    transform: skew(20deg);
+    background: red;
+    display: flex;
+}
+
+.region p {
+    transform: skew(-20deg);
+    margin: auto;
 }
