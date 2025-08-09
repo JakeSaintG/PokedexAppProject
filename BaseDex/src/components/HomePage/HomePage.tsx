@@ -5,7 +5,7 @@ import { NavigationMenu } from "../NavigationMenu";
 export function HomePage( ) {
     return (
         <div className={styles.home}>
-            <DexHeader></DexHeader>
+            <DexHeader/>
             <p>HOME</p>
             <NavigationMenu activePage='home'></NavigationMenu>
         </div>

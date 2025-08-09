@@ -5,7 +5,7 @@ import { test, expect, afterEach } from 'vitest';
 // import { describe, it, test, expect, afterEach } from 'vitest';
 
 test('renders HTML section', () => {
-    render(<DexHeader></DexHeader>);
+    render(<DexHeader/>);
     expect(true).toBeTruthy();
 });
 

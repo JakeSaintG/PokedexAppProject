@@ -17,7 +17,7 @@ export function EntryPage() {
         */
 
         <div className={styles.entry}>
-            <DexHeader></DexHeader>
+            <DexHeader/>
             <div className={styles.entry_display}>
                 foo
                 <Link className={styles.back} to={`../pokedex#${id}`}>

@@ -196,7 +196,7 @@ export function PokedexPage( ) {
     
     return (
         <div className={styles.pokedex}>
-            <DexHeader></DexHeader>
+            <DexHeader/>
             <div className={styles.dex_previews}>
                 {test_data.map((pkmn) => (
                         <PokedexPreview previewData={pkmn} key={key++}></PokedexPreview>

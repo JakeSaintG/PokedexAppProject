@@ -5,7 +5,7 @@ import { NavigationMenu } from "../NavigationMenu";
 export function SettingsPage( ) {
     return (
         <div className={styles.settings}>
-            <DexHeader></DexHeader>
+            <DexHeader/>
             <p>SETTINGS</p>
             <NavigationMenu activePage='settings'></NavigationMenu>
         </div>
