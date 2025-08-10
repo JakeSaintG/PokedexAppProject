@@ -3,16 +3,16 @@ import { DexHeader } from "../DexHeader";
 import { NavigationMenu } from "../NavigationMenu";
 
 const test_data = [
-    "kanto",
-    "johto",
-    "hoenn",
-    "sinnoh",
-    "unova",
-    "kalos",
-    "alola",
-    "galar",
-    "hisui",
-    "paldea",
+    { region: "kanto", registered: 2, total: 3 },
+    { region: "johto", registered: 2, total: 3 },
+    { region: "hoenn", registered: 2, total: 3 },
+    { region: "sinnoh", registered: 2, total: 3 },
+    { region: "unova", registered: 2, total: 3 },
+    { region: "kalos", registered: 2, total: 3 },
+    { region: "alola", registered: 2, total: 3 },
+    { region: "galar", registered: 2, total: 3 },
+    { region: "hisui", registered: 2, total: 3 },
+    { region: "paldea", registered: 2, total: 3 },
 ];
 
 export function TallGrassPage() {
@@ -20,12 +20,13 @@ export function TallGrassPage() {
 
     return (
         <div className={styles.tall_grass}>
-            <DexHeader/>
+            <DexHeader />
             <h2>tall grass!</h2>
             <div className={styles.regions}>
                 {test_data.map((r) => (
                     <div className={styles.region} key={key++}>
-                        <p>{r}</p>
+                        <p>{r.region}</p>
+                        <p>{`${r.registered}/${r.total}`}</p>
                     </div>
                 ))}
             </div>
