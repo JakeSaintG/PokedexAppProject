@@ -1,9 +1,10 @@
 .home {
     display: flex;
+    flex-direction: column;
     height: 100%;
+    color: black;
 }
 
-.home p {
+.home * {
     margin: auto;
-    color: black;
 }
