@@ -1,5 +1,5 @@
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
-// import type { PokemonBaseData, PokemonSpeciesData } from '../../types/pokemonData';
+import type { PokemonBaseData/*, PokemonSpeciesData*/ } from '../../types/pokemonData';
 // import type { Pokemon } from '../../types/pokemon';
 // import type { PokedexData } from '../../types/pokedexData';
 // import type { PokemonImageData } from '../../types/pokemonImageData';
@@ -92,11 +92,66 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
     NOTE! Booleans above will need some rework to not be INTs in the below logic
 */ 
 
-// const createPokemonTablesIfNotExist = ()
 
 // export const upsertPokemonImage 
 
 // export const upsertPokemonBaseData
+export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData: PokemonBaseData) => {
+    const insert =  `
+        INSERT INTO pokemon_base_data (
+            id
+            ,name
+            ,url
+            ,species_url
+            ,is_default
+            ,male_sprite_url
+            ,female_sprite_url
+            ,img_path
+            ,has_forms
+            ,type_1
+            ,type_2
+            ,last_modified_dts
+        ) 
+        VALUES (
+            ${pkmnData.id}
+            ,${pkmnData.name}
+            ,${pkmnData.url}
+            ,${pkmnData.is_default}
+            ,${pkmnData.species_url}
+            ,${pkmnData.male_sprite_url}
+            ,${pkmnData.female_sprite_url}
+            ,${pkmnData.img_path}
+            ,${pkmnData.has_forms}
+            ,${pkmnData.type_1}
+            ,${pkmnData.type_2}
+            ,${new Date().toISOString()}
+        )
+            ON CONFLICT(id) 
+            DO UPDATE SET 
+                id = ${pkmnData.id}
+                ,name = ${pkmnData.name}
+                ,url = ${pkmnData.url}
+                ,is_default = ${pkmnData.is_default}
+                ,species_url = ${pkmnData.species_url}
+                ,male_sprite_url = ${pkmnData.male_sprite_url}
+                ,female_sprite_url = ${pkmnData.female_sprite_url}
+                ,img_path = ${pkmnData.img_path}
+                ,has_forms = ${pkmnData.has_forms}
+                ,type_1 = ${pkmnData.type_1}
+                ,type_2 = ${pkmnData.type_2}
+                ,last_modified_dts = ${new Date().toISOString()}
+    `;
+
+    try {
+        dbContext
+            .exec(insert)
+            .catch((e) =>
+                console.log(`foo ${e}`)
+            );
+    } catch (error) {
+        console.error(`Failed to UPSERT ${pkmnData.name}: ${error}`);
+    }
+}
 
 // export const upsertPokedexData 
 

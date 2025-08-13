@@ -202,17 +202,17 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
             ON CONFLICT(id) 
             DO UPDATE SET 
                 id = id
-                ,name = name
+                ,name = :name
                 ,url = :url
-                ,species_url = species_url
+                ,species_url = :species_url
                 ,is_default = :is_default
-                ,male_sprite_url = male_sprite_url
-                ,female_sprite_url = female_sprite_url
-                ,img_path = img_path
-                ,has_forms = has_forms
-                ,type_1 = type_1
-                ,type_2 = type_2
-                ,last_modified_dts = last_modified_dts
+                ,male_sprite_url = :male_sprite_url
+                ,female_sprite_url = :female_sprite_url
+                ,img_path = :img_path
+                ,has_forms = :has_forms
+                ,type_1 = :type_1
+                ,type_2 = :type_2
+                ,last_modified_dts = :last_modified_dts
     `;
 
     try {

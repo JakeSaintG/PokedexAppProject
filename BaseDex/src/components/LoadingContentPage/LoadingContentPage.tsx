@@ -24,10 +24,18 @@ export function LoadingContentPage() {
         });
     };
 
+    // Start up
     useEffect(() => {
         // Might want to handle offline mode here too but, since everything will be
         // hard coded for now, it may not be super worth it.
         initConfigDb(dbContext)
+            .then (() => {
+                // TODO: error handling
+                // if (configApiPing()) {
+                //     const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
+                //     updateConfiguration(configurationData);
+                // }
+            })
             .then(() => {
                 // TODO: handle offline by having preloaded fakemon data if first load
                 // If data has previously been loaded, notify the user that they are offline and
@@ -37,10 +45,13 @@ export function LoadingContentPage() {
             })
             .then(async () => {
                 // TODO: actually load the data
-                await placeholder(() =>
-                    setLoadingText("Loading PokeDex Data, courtesy of PokeAPI.")
-                    // setLoadingText("User is offline, ensuring usable state.")
-                );
+                await placeholder(() => {
+                    setLoadingText("Loading PokeDex Data, courtesy of PokeAPI.");
+                    // TODO: setLoadingText("User is offline, ensuring usable state.")
+
+
+
+                });
             })
             .then(async () => {
                 await placeholder(() =>
