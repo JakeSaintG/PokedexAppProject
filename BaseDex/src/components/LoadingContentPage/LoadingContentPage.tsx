@@ -8,6 +8,8 @@ import speakerIcon from '../../assets/icons/bars-solid-full.svg'
 import { DexHeader } from "../DexHeader";
 import { initPokemonDb } from "../../postgres/data/pokemonData";
 import { initConfigDb } from "../../postgres/data/configurationData";
+import type { ConfigurationData } from "../../types/configurationData";
+import { configApiPing, getUpdatedAppConfiguration, updateConfiguration } from "../../repositories/configurationRepository";
 
 export function LoadingContentPage() {
     const navigate = useNavigate();
@@ -29,12 +31,12 @@ export function LoadingContentPage() {
         // Might want to handle offline mode here too but, since everything will be
         // hard coded for now, it may not be super worth it.
         initConfigDb(dbContext)
-            .then (() => {
+            .then (async () => {
                 // TODO: error handling
-                // if (configApiPing()) {
-                //     const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
-                //     updateConfiguration(configurationData);
-                // }
+                if (configApiPing()) {
+                    const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
+                    updateConfiguration(configurationData, dbContext);
+                }
             })
             .then(() => {
                 // TODO: handle offline by having preloaded fakemon data if first load
@@ -59,7 +61,7 @@ export function LoadingContentPage() {
                 );
             })
         .then(async () => {
-            await placeholder(() => navigate("../home"));
+            // await placeholder(() => navigate("../home"));
         });
     }, []);
 
