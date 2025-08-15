@@ -50,9 +50,6 @@ export function LoadingContentPage() {
                 await placeholder(() => {
                     setLoadingText("Loading PokeDex Data, courtesy of PokeAPI.");
                     // TODO: setLoadingText("User is offline, ensuring usable state.")
-
-
-
                 });
             })
             .then(async () => {

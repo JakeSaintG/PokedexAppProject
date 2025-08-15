@@ -13,7 +13,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration, dbConte
     has that generation active.
     */ 
     
-    // TODO: Remember what was going on with local_last_modified vs last_modified...seems redundant and fragile
+    // TODO: Remember what was going on with local_last_modified vs last_modified; seems redundant and fragile
     const stmt =  `
         INSERT INTO supported_generations (
             id
@@ -28,16 +28,16 @@ export const upsertConfigurationData = (configData: SupportedGeneration, dbConte
             ,local_last_modified_dts
         ) 
         VALUES (
-            ${configData.id}
-            ,${configData.generation_name}
-            ,${configData.description}
-            ,${configData.starting_dex_no}
-            ,${configData.count}
-            ,${configData.stale_by_dts}
-            ,${configData.active}
-            ,${new Date().toISOString()}
-            ,${configData.last_modified_dts}
-            ,${''}
+            ${configData.id}                  -- id                 
+            ,${configData.generation_name}    -- generation_name                             
+            ,${configData.description}        -- description                         
+            ,${configData.starting_dex_no}    -- starting_dex_no                             
+            ,${configData.count}              -- count                     
+            ,${configData.stale_by_dts}       -- stale_by_dts                         
+            ,${configData.active}             -- active                     
+            ,${new Date().toISOString()}      -- last_modified_dts                             
+            ,${configData.last_modified_dts}  -- source_last_modified_dts                                 
+            ,${''}                            -- local_last_modified_dts     
         )
         ON CONFLICT(id) 
         DO UPDATE SET 
@@ -53,9 +53,7 @@ export const upsertConfigurationData = (configData: SupportedGeneration, dbConte
     `;
 
     try {
-        (dbContext.transaction(async (transaction) => {
-            transaction.exec(stmt)
-        }));
+        dbContext.transaction(async (transaction) => transaction.exec(stmt));
     } catch (error) {
         if (error instanceof Error) {
             console.log(`Failed to UPSERT config data for ${configData.generation_name}. This is a terminating error.\r\n${error.message}`, true);
@@ -107,7 +105,7 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
 }
 
 export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: number): Promise<DateData | undefined> => {
-    const stmt = `
+    let stmt = `
         SELECT 
             last_modified_dts
             ,source_last_modified_dts
@@ -118,9 +116,15 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
         LIMIT 1;
     `
 
-    const result = await dbContext
-        .query(stmt);
-    const genDateData = result.fields[0];
+    stmt = `
+        SELECT *
+        FROM supported_generations
+    `
+
+    const result = await dbContext.exec(stmt);
+    const genDateData = result;
+
+    console.log(result[0].rows)
 
     if (
         typeof genDateData === 'object' 
@@ -142,13 +146,21 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
             && typeof genDateData['active'] === 'boolean'
         )
     ) {
+        console.log('==============================================')
+        console.log(genDateData.last_modified_dts)
+        console.log(genDateData.source_last_modified_dts)
+        console.log(genDateData.stale_by_dts)
+        console.log(genDateData.active)
+        console.log('==============================================')
+        
         return {
             last_modified_dts: genDateData.last_modified_dts,
-            source_last_modified_dts:  genDateData.source_last_modified_dts,
+            source_last_modified_dts: genDateData.source_last_modified_dts,
             stale_by_dts: genDateData.stale_by_dts,
             active: genDateData.active
         }
     } else {
+        console.log('======================booooo========================')
         return undefined;
     }
 }

@@ -65,8 +65,8 @@ export const updateConfiguration = (configuration: ConfigurationData, dbContext:
 // export const updateGenerationActive = (id: number) => setGenerationActive(id);
 
 export const updateSupportedGenerations = (supportedGenerations: SupportedGeneration[], dbContext: PGliteWithLive) => {
-    supportedGenerations.forEach((generation: SupportedGeneration) => {
-        const generationDateData: DateData | undefined = getGenerationUpdateData(dbContext, generation.id);
+    supportedGenerations.forEach(async (generation: SupportedGeneration) => {
+        const generationDateData: DateData | undefined = await getGenerationUpdateData(dbContext, generation.id);
 
         if (
             // Update if there is no data stored
@@ -77,6 +77,7 @@ export const updateSupportedGenerations = (supportedGenerations: SupportedGenera
             Date.parse(generationDateData.stale_by_dts!) < Date.parse(generationDateData.last_modified_dts)
         ) {
             // TODO logInfo(`Updating configuration data for ${generation.generation_name}`);
+            console.log(`Updating configuration data for ${generation.generation_name}`);
             upsertConfigurationData(generation, dbContext);
         }
     });
