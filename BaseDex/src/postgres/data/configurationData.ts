@@ -105,7 +105,7 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
 }
 
 export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: number): Promise<DateData | undefined> => {
-    let stmt = `
+    const stmt = `
         SELECT 
             last_modified_dts
             ,source_last_modified_dts
@@ -114,11 +114,6 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
         FROM supported_generations
         WHERE id = ${id}
         LIMIT 1;
-    `
-
-    stmt = `
-        SELECT *
-        FROM supported_generations
     `
 
     const result = await dbContext.exec(stmt);
