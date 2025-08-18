@@ -53,19 +53,7 @@ export const getUpdatedAppConfiguration = async () => {
 };
 
 export const updateConfiguration = (configuration: ConfigurationData, dbContext: PGliteWithLive) => {
-    updateSupportedGenerations(configuration.supported_generations, dbContext);
-    // do other stuff if needed
-};
-
-// export const getGenerationCountOffset = (id: number): [number, number] | undefined =>
-//     getGenerationCountAndOffset(id);
-
-// export const getLastLocalGenerationUpdate = (): DateData[] => getGenerationLastUpdatedLocally();
-
-// export const updateGenerationActive = (id: number) => setGenerationActive(id);
-
-export const updateSupportedGenerations = (supportedGenerations: SupportedGeneration[], dbContext: PGliteWithLive) => {
-    supportedGenerations.forEach(async (generation: SupportedGeneration) => {
+    configuration.supported_generations.forEach(async (generation: SupportedGeneration) => {
         const generationDateData: DateData | undefined = await getGenerationUpdateData(dbContext, generation.id);
 
         if (
@@ -82,6 +70,15 @@ export const updateSupportedGenerations = (supportedGenerations: SupportedGenera
         }
     });
 };
+
+// export const getGenerationCountOffset = (id: number): [number, number] | undefined =>
+//     getGenerationCountAndOffset(id);
+
+// export const getLastLocalGenerationUpdate = (): DateData[] => getGenerationLastUpdatedLocally();
+
+// export const updateGenerationActive = (id: number) => setGenerationActive(id);
+
+
 
 // export const updateLocalLastModified = (id: number) => {
 //     setLocalLastModifiedDate(id);

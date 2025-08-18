@@ -1,8 +1,8 @@
 import styles from "./LoadingContentPage.module.css";
 
 import { useEffect, useState } from "react";
-import { useLiveQuery, usePGlite } from "@electric-sql/pglite-react";
-import { useNavigate } from "react-router-dom";
+import { usePGlite } from "@electric-sql/pglite-react";
+// import { useNavigate } from "react-router-dom";
 
 import speakerIcon from "../../assets/icons/bars-solid-full.svg";
 import { DexHeader } from "../DexHeader";
@@ -16,7 +16,7 @@ import {
 } from "../../repositories/configurationRepository";
 
 export function LoadingContentPage() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const dbContext = usePGlite();
 
     const [loadingText, setLoadingText] = useState(
@@ -30,33 +30,14 @@ export function LoadingContentPage() {
         });
     };
 
-    const items = useLiveQuery(
-        `
-            SELECT 
-                last_modified_dts
-                ,source_last_modified_dts
-                ,stale_by_dts
-                ,active
-            FROM supported_generations
-            WHERE id = 1
-            LIMIT 1;
-        `,
-        [1]
-    );
-
-    console.log('items')
-    console.log(items)
-
     // Start up
     useEffect(() => {
         // Might want to handle offline mode here too but, since everything will be
         // hard coded for now, it may not be super worth it.
         initConfigDb(dbContext)
             .then(async () => {
-                // TODO: error handling
                 if (configApiPing()) {
-                    const configurationData: ConfigurationData =
-                        await getUpdatedAppConfiguration();
+                    const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
                     updateConfiguration(configurationData, dbContext);
                 }
             })
@@ -85,6 +66,7 @@ export function LoadingContentPage() {
                 // await placeholder(() => navigate("../home"));
             });
     }, []);
+
 
     return (
         <>

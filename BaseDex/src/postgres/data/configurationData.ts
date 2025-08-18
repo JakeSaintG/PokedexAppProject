@@ -6,54 +6,55 @@ import type { DateData } from '../../types/dateData';
 // import { logError, logInfo, setLogRetentionDays } from '../repositories/logRepository';
 // import { LogData } from '../types/logData';
 
-export const upsertConfigurationData = (configData: SupportedGeneration, dbContext: PGliteWithLive) => {
+export const upsertConfigurationData = async (configData: SupportedGeneration, dbContext: PGliteWithLive) => {
     /*
     Insert configuration data. If configuration data is already there, set it with
     the exception of the "active" field. Perserve the active value in case a user
     has that generation active.
     */ 
-    
-    // TODO: Remember what was going on with local_last_modified vs last_modified; seems redundant and fragile
-    const stmt =  `
-        INSERT INTO supported_generations (
-            id
-            ,generation_name
-            ,description
-            ,starting_dex_no
-            ,count
-            ,stale_by_dts
-            ,active
-            ,last_modified_dts
-            ,source_last_modified_dts
-            ,local_last_modified_dts
-        ) 
-        VALUES (
-            ${configData.id}                  -- id                 
-            ,${configData.generation_name}    -- generation_name                             
-            ,${configData.description}        -- description                         
-            ,${configData.starting_dex_no}    -- starting_dex_no                             
-            ,${configData.count}              -- count                     
-            ,${configData.stale_by_dts}       -- stale_by_dts                         
-            ,${configData.active}             -- active                     
-            ,${new Date().toISOString()}      -- last_modified_dts                             
-            ,${configData.last_modified_dts}  -- source_last_modified_dts                                 
-            ,${''}                            -- local_last_modified_dts     
-        )
-        ON CONFLICT(id) 
-        DO UPDATE SET 
-            id = ${configData.id}
-            ,generation_name = ${configData.generation_name}
-            ,description = ${configData.description}
-            ,starting_dex_no = ${configData.starting_dex_no}
-            ,count = ${configData.count}
-            ,stale_by_dts = ${configData.stale_by_dts}
-            ,last_modified_dts = ${new Date().toISOString()}
-            ,source_last_modified_dts = ${configData.last_modified_dts}
-            ,local_last_modified_dts = ${''};
-    `;
 
     try {
-        dbContext.transaction(async (transaction) => transaction.exec(stmt));
+        // TODO: Remember what was going on with local_last_modified vs last_modified, seems redundant and fragile
+        await dbContext.transaction(async (transaction) => transaction.query(
+            `
+                INSERT INTO supported_generations (
+                    id
+                    ,generation_name
+                    ,description
+                    ,starting_dex_no
+                    ,count
+                    ,stale_by_dts
+                    ,active
+                    ,last_modified_dts
+                    ,source_last_modified_dts
+                    ,local_last_modified_dts
+                ) 
+                VALUES (
+                    $1      -- id
+                    ,$2     -- generation_name
+                    ,$3     -- description
+                    ,$4     -- starting_dex_no
+                    ,$5     -- count
+                    ,$6     -- stale_by_dts
+                    ,$7     -- active
+                    ,$8     -- last_modified_dts
+                    ,$9     -- source_last_modified_dts
+                    ,$10    -- local_last_modified_dts
+                )
+                ON CONFLICT(id) 
+                DO UPDATE SET 
+                    id = $1
+                    ,generation_name = $2
+                    ,description = $3
+                    ,starting_dex_no = $4
+                    ,count = $5
+                    ,stale_by_dts = $6
+                    ,last_modified_dts = $8
+                    ,source_last_modified_dts = $9
+                    ,local_last_modified_dts = $10
+            `,
+            [configData.id ,configData.generation_name ,configData.description ,configData.starting_dex_no ,configData.count ,configData.stale_by_dts ,configData.active ,new Date().toISOString() ,configData.last_modified_dts ,'']
+        ));
     } catch (error) {
         if (error instanceof Error) {
             console.log(`Failed to UPSERT config data for ${configData.generation_name}. This is a terminating error.\r\n${error.message}`, true);
@@ -105,21 +106,21 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
 }
 
 export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: number): Promise<DateData | undefined> => {
-    const stmt = `
-        SELECT 
-            last_modified_dts
-            ,source_last_modified_dts
-            ,stale_by_dts
-            ,active
-        FROM supported_generations
-        WHERE id = ${id}
-        LIMIT 1;
-    `
+    const result = await dbContext.query(
+        `
+            SELECT 
+                last_modified_dts
+                ,source_last_modified_dts
+                ,stale_by_dts
+                ,active
+            FROM supported_generations
+            WHERE id = $1
+            LIMIT 1;
+        `, 
+        [id]
+    );
 
-    const result = await dbContext.exec(stmt);
-    const genDateData = result;
-
-    console.log(result[0].rows)
+    const genDateData = result.rows[0];
 
     if (
         typeof genDateData === 'object' 
@@ -141,13 +142,6 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
             && typeof genDateData['active'] === 'boolean'
         )
     ) {
-        console.log('==============================================')
-        console.log(genDateData.last_modified_dts)
-        console.log(genDateData.source_last_modified_dts)
-        console.log(genDateData.stale_by_dts)
-        console.log(genDateData.active)
-        console.log('==============================================')
-        
         return {
             last_modified_dts: genDateData.last_modified_dts,
             source_last_modified_dts: genDateData.source_last_modified_dts,
@@ -155,7 +149,6 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
             active: genDateData.active
         }
     } else {
-        console.log('======================booooo========================')
         return undefined;
     }
 }
