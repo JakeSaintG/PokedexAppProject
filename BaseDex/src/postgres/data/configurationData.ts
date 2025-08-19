@@ -6,7 +6,7 @@ import type { DateData } from '../../types/dateData';
 // import { logError, logInfo, setLogRetentionDays } from '../repositories/logRepository';
 // import { LogData } from '../types/logData';
 
-export const upsertConfigurationData = async (configData: SupportedGeneration, dbContext: PGliteWithLive) => {
+export const upsertConfigurationData = async (dbContext: PGliteWithLive, configData: SupportedGeneration) => {
     /*
     Insert configuration data. If configuration data is already there, set it with
     the exception of the "active" field. Perserve the active value in case a user
@@ -157,7 +157,50 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
 
 // export const setLocalLastModifiedDate 
 
-// export const getGenerationLastUpdatedLocally
+export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive): Promise<(DateData | undefined)[]> => {
+    const results = await dbContext.query(`
+            SELECT 
+                id
+                ,last_modified_dts
+                ,active
+                ,local_last_modified_dts
+            FROM supported_generations;
+        `
+    );
+
+    return results.rows.map((e) => {
+        if (
+            typeof e === 'object' 
+            && e !== null 
+            && (
+                'id' in e
+                && typeof e['id'] === 'number'
+            )
+            && (
+                'last_modified_dts' in e
+                && typeof e['last_modified_dts'] === 'string'
+            )
+            && (
+                'local_last_modified_dts' in e
+                && typeof e['local_last_modified_dts'] === 'string'
+            )
+            && (
+                'active' in e
+                && (
+                    typeof e['active'] === 'boolean' 
+                    || e['active'] === null
+                )
+            )
+        ) {
+            return {
+                generation_id: e.id,
+                last_modified_dts: e.last_modified_dts,
+                active: Boolean(e.active),
+                local_last_modified_dts: e.local_last_modified_dts
+            };
+        }
+    });
+}
 
 // export const getGenerationCountAndOffset
 

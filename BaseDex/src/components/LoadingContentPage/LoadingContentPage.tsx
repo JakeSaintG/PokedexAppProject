@@ -11,11 +11,15 @@ import { initConfigDb } from "../../postgres/data/configurationData";
 import type { ConfigurationData } from "../../types/configurationData";
 import {
     configApiPing,
+    getLastLocalGenerationUpdate,
     getUpdatedAppConfiguration,
     updateConfiguration,
 } from "../../repositories/configurationRepository";
+import { checkIfUpdatesNeeded } from "../../repositories/pokemonData";
 
 export function LoadingContentPage() {
+    const forceUpdate = false;
+    
     // const navigate = useNavigate();
     const dbContext = usePGlite();
 
@@ -38,7 +42,7 @@ export function LoadingContentPage() {
             .then(async () => {
                 if (configApiPing()) {
                     const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
-                    updateConfiguration(configurationData, dbContext);
+                    updateConfiguration(dbContext, configurationData);
                 }
             })
             .then(() => {
@@ -56,6 +60,14 @@ export function LoadingContentPage() {
                     );
                     // TODO: setLoadingText("User is offline, ensuring usable state.")
                 });
+            })
+            .then(async () => {
+                const pkmnGenLastUpdatedLocally = await getLastLocalGenerationUpdate(dbContext);
+                const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
+
+                // if (pokeApiPing()) {
+                //     loadPokemonData( pokemonDataToLoad, batchSize );
+                // }
             })
             .then(async () => {
                 await placeholder(() =>

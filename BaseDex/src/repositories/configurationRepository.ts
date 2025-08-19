@@ -1,5 +1,6 @@
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
 import {
+    getGenerationLastUpdatedLocally,
     getGenerationUpdateData,
     // setLocalLastModifiedDate,
     upsertConfigurationData,
@@ -52,7 +53,7 @@ export const getUpdatedAppConfiguration = async () => {
     return simulatedResult;
 };
 
-export const updateConfiguration = (configuration: ConfigurationData, dbContext: PGliteWithLive) => {
+export const updateConfiguration = (dbContext: PGliteWithLive, configuration: ConfigurationData) => {
     configuration.supported_generations.forEach(async (generation: SupportedGeneration) => {
         const generationDateData: DateData | undefined = await getGenerationUpdateData(dbContext, generation.id);
 
@@ -66,7 +67,7 @@ export const updateConfiguration = (configuration: ConfigurationData, dbContext:
         ) {
             // TODO logInfo(`Updating configuration data for ${generation.generation_name}`);
             console.log(`Updating configuration data for ${generation.generation_name}`);
-            upsertConfigurationData(generation, dbContext);
+            upsertConfigurationData(dbContext, generation);
         }
     });
 };
@@ -74,11 +75,9 @@ export const updateConfiguration = (configuration: ConfigurationData, dbContext:
 // export const getGenerationCountOffset = (id: number): [number, number] | undefined =>
 //     getGenerationCountAndOffset(id);
 
-// export const getLastLocalGenerationUpdate = (): DateData[] => getGenerationLastUpdatedLocally();
+export const getLastLocalGenerationUpdate = async (dbContext: PGliteWithLive): Promise<(DateData | undefined)[]> => getGenerationLastUpdatedLocally(dbContext);
 
 // export const updateGenerationActive = (id: number) => setGenerationActive(id);
-
-
 
 // export const updateLocalLastModified = (id: number) => {
 //     setLocalLastModifiedDate(id);
