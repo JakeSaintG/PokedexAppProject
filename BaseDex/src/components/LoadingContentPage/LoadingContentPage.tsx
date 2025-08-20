@@ -15,10 +15,12 @@ import {
     getUpdatedAppConfiguration,
     updateConfiguration,
 } from "../../repositories/configurationRepository";
-import { checkIfUpdatesNeeded } from "../../repositories/pokemonData";
+import { checkIfUpdatesNeeded, loadPokemonData } from "../../repositories/pokemonRepository";
+import { pokeApiPing } from "../../repositories/pokeApiRepository";
 
 export function LoadingContentPage() {
     const forceUpdate = false;
+    const batchSize = 3;
     
     // const navigate = useNavigate();
     const dbContext = usePGlite();
@@ -65,10 +67,9 @@ export function LoadingContentPage() {
                 const pkmnGenLastUpdatedLocally = await getLastLocalGenerationUpdate(dbContext);
                 const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
 
-                console.log(pokemonDataToLoad);
-                // if (pokeApiPing()) {
-                //     loadPokemonData( pokemonDataToLoad, batchSize );
-                // }
+                if (pokeApiPing()) {
+                    loadPokemonData( pokemonDataToLoad, batchSize );
+                }
             })
             .then(async () => {
                 await placeholder(() =>

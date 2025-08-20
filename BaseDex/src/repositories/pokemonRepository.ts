@@ -17,22 +17,24 @@ import type { DateData } from "../types/dateData";
 //     fetchPokeApiImage
 // } from "./pokeApiRepository";
 
-// export const loadPokemonData = async ( generationToLoad: DateData[], batchSize: number) => {
-//     for (const gen of generationToLoad) {
-//         logInfoWithAttention(`Gen ${gen.generation_id} identified for update.`);
+export const loadPokemonData = async ( generationToLoad: DateData[], batchSize: number) => {
+    console.log('LOADING>>>>>WIP ' + batchSize);
+    for (const gen of generationToLoad) {
+        console.log(`Gen ${gen.generation_id} identified for update.`);
+        // TODO: logInfoWithAttention(`Gen ${gen.generation_id} identified for update.`);
 
-//         try {
-//             const [count, offset] = getGenerationCountOffset(gen.generation_id);
+    //     try {
+    //         const [count, offset] = getGenerationCountOffset(gen.generation_id);
 
-//             const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
-//             await loadPokemon(fetchedPokemon, batchSize);
+    //         const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
+    //         await loadPokemon(fetchedPokemon, batchSize);
 
-//             updateLocalLastModified(gen.generation_id);
-//         } catch (error) {
-//             console.error(`Error updating ${gen.generation_id} due to: ${error}`)
-//         }
-//     }
-// };
+    //         updateLocalLastModified(gen.generation_id);
+    //     } catch (error) {
+    //         console.error(`Error updating ${gen.generation_id} due to: ${error}`)
+    //     }
+    }
+};
 
 export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean): DateData[] => {
     return dateData.filter(d => {
