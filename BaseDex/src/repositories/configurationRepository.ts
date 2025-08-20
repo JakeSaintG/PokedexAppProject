@@ -75,7 +75,7 @@ export const updateConfiguration = (dbContext: PGliteWithLive, configuration: Co
 // export const getGenerationCountOffset = (id: number): [number, number] | undefined =>
 //     getGenerationCountAndOffset(id);
 
-export const getLastLocalGenerationUpdate = async (dbContext: PGliteWithLive): Promise<(DateData | undefined)[]> => getGenerationLastUpdatedLocally(dbContext);
+export const getLastLocalGenerationUpdate = async (dbContext: PGliteWithLive): Promise<DateData[]> => getGenerationLastUpdatedLocally(dbContext);
 
 // export const updateGenerationActive = (id: number) => setGenerationActive(id);
 

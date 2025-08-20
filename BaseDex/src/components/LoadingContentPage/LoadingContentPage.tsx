@@ -65,6 +65,7 @@ export function LoadingContentPage() {
                 const pkmnGenLastUpdatedLocally = await getLastLocalGenerationUpdate(dbContext);
                 const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
 
+                console.log(pokemonDataToLoad);
                 // if (pokeApiPing()) {
                 //     loadPokemonData( pokemonDataToLoad, batchSize );
                 // }

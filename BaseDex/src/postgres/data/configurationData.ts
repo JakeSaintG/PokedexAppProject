@@ -157,7 +157,7 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
 
 // export const setLocalLastModifiedDate 
 
-export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive): Promise<(DateData | undefined)[]> => {
+export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive): Promise<DateData[]> => {
     const results = await dbContext.query(`
             SELECT 
                 id
@@ -168,7 +168,7 @@ export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive)
         `
     );
 
-    return results.rows.map((e) => {
+    return results.rows.reduce((acc: DateData[], e: unknown) => {
         if (
             typeof e === 'object' 
             && e !== null 
@@ -192,14 +192,16 @@ export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive)
                 )
             )
         ) {
-            return {
+            acc.push({
                 generation_id: e.id,
                 last_modified_dts: e.last_modified_dts,
                 active: Boolean(e.active),
                 local_last_modified_dts: e.local_last_modified_dts
-            };
+            });
         }
-    });
+
+        return acc;
+    }, []);
 }
 
 // export const getGenerationCountAndOffset

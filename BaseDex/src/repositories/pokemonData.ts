@@ -34,7 +34,7 @@ import type { DateData } from "../types/dateData";
 //     }
 // };
 
-export const checkIfUpdatesNeeded = (dateData: (DateData | undefined)[], forceUpdate: boolean): DateData[] => {
+export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean): DateData[] => {
     return dateData.filter(d => {
         if((d.local_last_modified_dts === '' || forceUpdate) && d.active) {
             return d;
