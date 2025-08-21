@@ -2,24 +2,27 @@
 // import { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
 // import { Variety } from "../types/varieties";
 
-// export const fetchPkmnToLoad = async (limit: number, offset: number) => {
-//     // TODO: better error handling
-//     let pkmn = [];
+import type { Pokemon } from "../types/pokemon";
+import type { PokemonBaseData } from "../types/pokemonData";
 
-//     await fetch(
-//         `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`,
-//         { method: "GET" }
-//     )
-//         .then((res) => res.json())
-//         .then((data) => (pkmn = data.results))
-//         .catch(() =>
-//             console.log(
-//                 "Unable to contact PokeAPI. Continuing in offline mode.\r\nIf connectivity resumes, and you wish to sync data, please do so in the settings."
-//             )
-//         );
+export const fetchPkmnToLoad = async (limit: number, offset: number) => {
+    // TODO: better error handling
+    let pkmn: Pokemon[] = [];
 
-//     return pkmn;
-// };
+    await fetch(
+        `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`,
+        { method: "GET" }
+    )
+    .then((res) => res.json())
+    .then((data) => (pkmn = data.results))
+    .catch(() =>
+        console.log(
+            "Unable to contact PokeAPI. Continuing in offline mode.\r\nIf connectivity resumes, and you wish to sync data, please do so in the settings."
+        )
+    );
+
+    return pkmn;
+};
 
 // export const fetchPokeApiImage = async (url) => {
 //     // TODO: better error handling
@@ -27,42 +30,42 @@
 //         .then((res) => res.blob())
 // }
 
-// export const fetchPokeApiData = async (url: string) => {
-//     // TODO: better error handling
-//     return await fetch(url, { method: "GET" })
-//         .then((res) => res.json())
-//         .then((json) => {
-//             json.url = url
-//             return json
-//         })
-// }
+export const fetchPokeApiData = async (url: string) => {
+    // TODO: better error handling
+    return await fetch(url, { method: "GET" })
+        .then((res) => res.json())
+        .then((json) => {
+            json.url = url
+            return json
+        })
+}
 
-// export const parsePokemonBaseData = async (data: any) : Promise<PokemonBaseData> => {
-//     let parsedData: PokemonBaseData = {
-//         id: data.id,
-//         name: data.name,
-//         species_url: data.species.url,
-//         is_default: data.is_default,
-//         male_sprite_url: data.sprites.front_default,
-//         female_sprite_url: data.sprites.front_female,
-//         img_path: `./imgs/dex_imgs/${data.id}`,
-//         type_1: '',
-//         type_2: null,
-//         has_forms: false,
-//         url: data.url,
-//         last_modified_dts: ''
-//     };
+export const parsePokemonBaseData = async (data: any) : Promise<PokemonBaseData> => {
+    const parsedData: PokemonBaseData = {
+        id: data.id,
+        name: data.name,
+        species_url: data.species.url,
+        is_default: data.is_default,
+        male_sprite_url: data.sprites.front_default,
+        female_sprite_url: data.sprites.front_female,
+        img_path: `./imgs/dex_imgs/${data.id}`,
+        type_1: '',
+        type_2: undefined,
+        has_forms: false,
+        url: data.url,
+        last_modified_dts: ''
+    };
 
-//     if (data.forms.length > 1) {
-//         parsedData.has_forms = true;
-//     }
+    if (data.forms.length > 1) {
+        parsedData.has_forms = true;
+    }
 
-//     data.types.forEach((t) => {
-//         parsedData[`type_${t.slot}`] = t.type.name;
-//     });
+    data.types.forEach((t) => {
+        parsedData[`type_${t.slot}`] = t.type.name;
+    });
 
-//     return parsedData;
-// }
+    return parsedData;
+}
 
 // export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety[]] => {
 //     const specData: PokemonSpeciesData = {

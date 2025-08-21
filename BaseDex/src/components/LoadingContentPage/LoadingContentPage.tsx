@@ -68,7 +68,7 @@ export function LoadingContentPage() {
                 const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
 
                 if (pokeApiPing()) {
-                    loadPokemonData( pokemonDataToLoad, batchSize );
+                    loadPokemonData(dbContext, pokemonDataToLoad, batchSize );
                 }
             })
             .then(async () => {

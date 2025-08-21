@@ -144,7 +144,7 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
 
     try {
         dbContext
-            .exec(insert)
+            .query() // TODO: THIS ALMOST DEFINITELY NEEDS TO BE UPDATED
             .catch((e) =>
                 console.log(`foo ${e}`)
             );

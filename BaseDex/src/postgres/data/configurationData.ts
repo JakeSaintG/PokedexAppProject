@@ -204,7 +204,42 @@ export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive)
     }, []);
 }
 
-// export const getGenerationCountAndOffset
+export const getGenerationCountAndOffset = async (dbContext: PGliteWithLive, id: number): Promise<[number, number]> => {
+    const results = await dbContext.query(`
+            SELECT 
+                id
+                ,count
+                ,starting_dex_no
+            FROM supported_generations
+            WHERE id = $1
+            LIMIT 1;
+        `, [id]
+    )
+
+    const countData = results.rows[0];
+
+    if (
+        typeof countData === 'object' 
+        && countData !== null 
+        && (
+            'id' in countData
+            && typeof countData['id'] === 'number'
+        )
+        && (
+            'count' in countData
+            && typeof countData['count'] === 'number'
+        )
+        && (
+            'starting_dex_no' in countData
+            && typeof countData['starting_dex_no'] === 'number'
+        )
+    ) {
+        return [countData.count, countData.starting_dex_no]
+    }
+
+    throw "Unable to retrieve data from supported_generations table.";
+}
+
 
 // export const saveLog
 
