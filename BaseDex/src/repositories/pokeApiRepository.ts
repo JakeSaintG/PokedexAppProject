@@ -40,6 +40,14 @@ export const fetchPokeApiData = async (url: string) => {
         })
 }
 
+interface type {
+    slot: number,
+    type: {
+        name: string
+        url: string
+    }
+}
+
 export const parsePokemonBaseData = async (data: any) : Promise<PokemonBaseData> => {
     const parsedData: PokemonBaseData = {
         id: data.id,
@@ -60,7 +68,7 @@ export const parsePokemonBaseData = async (data: any) : Promise<PokemonBaseData>
         parsedData.has_forms = true;
     }
 
-    data.types.forEach((t) => {
+    data.types.forEach((t: type) => {
         parsedData[`type_${t.slot}`] = t.type.name;
     });
 
