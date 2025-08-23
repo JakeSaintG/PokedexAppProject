@@ -1,6 +1,7 @@
 import type { PGliteWithLive } from "@electric-sql/pglite/live";
 import type {
-    PokemonBaseData /*, PokemonSpeciesData*/,
+    PokemonBaseData, /*, PokemonSpeciesData*/
+    PokemonSpeciesData,
 } from "../../types/pokemonData";
 // import type { Pokemon } from '../../types/pokemon';
 // import type { PokedexData } from '../../types/pokedexData';
@@ -100,13 +101,9 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
 
 // export const upsertPokemonImage
 
-// export const upsertPokemonBaseData
-export const upsertPokemonBaseData = async (
-    dbContext: PGliteWithLive,
-    pkmnData: PokemonBaseData
-) => {
+export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData: PokemonBaseData) => {
     try {
-        dbContext.query(
+        await dbContext.transaction(async (transaction) => transaction.query(
             `
                 INSERT INTO pokemon_base_data (
                     id
@@ -165,15 +162,105 @@ export const upsertPokemonBaseData = async (
                 pkmnData.type_2,
                 new Date().toISOString(),
             ]
-        );
+        ));
     } catch (error) {
         console.error(`Failed to UPSERT ${pkmnData.name}: ${error}`);
     }
 };
 
-// export const upsertPokedexData
+export const upsertPokedexData = async (dbContext: PGliteWithLive, pkmnSpecData: PokemonSpeciesData) => {
+    pkmnSpecData.flavor_texts.forEach(async t => {
+        // English only for the time being
+        // This is a learning exercise and keeping it to english will keep scope down.
+        // I'm also trying to keep DB size down for now.
+        if (t.language.name !== 'en') return;
+        
+        const stmt = `
+            INSERT INTO pokedex_entries (
+                id
+                ,generation
+                ,text_entry
+                ,language
+                ,version_name
+                ,version_url
+                ,last_modified_dts
+            ) 
+            VALUES (
+                $1 -- id
+                ,$2 -- generation
+                ,$3 -- text_entry
+                ,$4 -- language
+                ,$5 -- version_name
+                ,$6 -- version_url
+                ,$7 -- last_modified_dts
+            )
+        `;
 
-// export const upsertPokemonSpeciesData
+        try {
+            await dbContext.transaction(async (transaction) => transaction.query(stmt, [
+                pkmnSpecData.id,
+                pkmnSpecData.generation,
+                t.flavor_text,
+                t.language.name,
+                t.version.name,
+                t.version.url,
+                new Date().toISOString(),
+            ]))
+        } catch (error) {
+            console.error(`Failed to UPSERT dex data for ${pkmnSpecData.id}: ${error}`);
+        }
+    })
+}
+
+export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSpecData: PokemonSpeciesData) => {
+    const stmt =  `
+        INSERT INTO pokemon_species_data (
+            id
+            ,dex_no
+            ,name
+            ,has_gender_differences
+            ,habitat
+            ,generation
+            ,evo_chain_url
+            ,last_modified_dts
+        ) 
+        VALUES (
+            $1
+            ,$2
+            ,$3
+            ,$4
+            ,$5
+            ,$6
+            ,$7
+            ,$8
+        )
+            ON CONFLICT(id) 
+            DO UPDATE SET 
+                id = $1
+                ,dex_no = $2
+                ,name = $3
+                ,has_gender_differences = $4
+                ,habitat = $5
+                ,generation = $6
+                ,evo_chain_url = $7
+                ,last_modified_dts = $8
+    `;
+
+    try {
+        await dbContext.transaction(async (transaction) => transaction.query(stmt, [
+            pkmnSpecData.id,
+            pkmnSpecData.dex_no,
+            pkmnSpecData.name,
+            pkmnSpecData.has_gender_differences,
+            pkmnSpecData.habitat,
+            pkmnSpecData.generation,
+            pkmnSpecData.evo_chain_url,
+            new Date().toISOString()
+        ]))
+    } catch (error) {
+        console.error(`Failed to UPSERT ${pkmnSpecData.id}: ${error}`);
+    }
+}
 
 // export const upsertDexData
 

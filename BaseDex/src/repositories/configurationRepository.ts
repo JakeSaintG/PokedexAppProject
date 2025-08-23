@@ -3,6 +3,7 @@ import {
     getGenerationCountAndOffset,
     getGenerationLastUpdatedLocally,
     getGenerationUpdateData,
+    setLocalLastModifiedDate,
     // setLocalLastModifiedDate,
     upsertConfigurationData,
     // getGenerationCountAndOffset,
@@ -32,8 +33,8 @@ export const getUpdatedAppConfiguration = async () => {
                 id: 1,
                 generation_name: 'generation1',
                 description: 'Red, Green, Blue, and Yellow.',
-                starting_dex_no: 1,
-                count: 9, //151
+                starting_dex_no: 3,
+                count: 1, //151
                 active: true,
                 stale_by_dts: placeHolderStaleByDate,
                 last_modified_dts: '2025-05-08T22:04:23.251Z', // new Date().toISOString()
@@ -80,6 +81,6 @@ export const getLastLocalGenerationUpdate = async (dbContext: PGliteWithLive): P
 
 // export const updateGenerationActive = (id: number) => setGenerationActive(id);
 
-// export const updateLocalLastModified = (id: number) => {
-//     setLocalLastModifiedDate(id);
-// };
+export const updateLocalLastModified = (dbContext: PGliteWithLive, id: number) => {
+    setLocalLastModifiedDate(dbContext, id);
+};

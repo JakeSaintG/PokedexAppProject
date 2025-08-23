@@ -155,7 +155,20 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
 
 // export const setGenerationActive
 
-// export const setLocalLastModifiedDate 
+export const setLocalLastModifiedDate = async (dbContext: PGliteWithLive, id: number) => {
+    const stmt = `
+        UPDATE supported_generations
+        SET local_last_modified_dts = $2
+        WHERE id = $1;
+    `;
+    
+    try {
+        await dbContext.transaction(async (transaction) => transaction.query(stmt, [id, new Date().toISOString()]));
+    } catch (error) {
+        // logError(`Failed to update supported_generations local_last_modified_dts: ${error}`);
+        console.error(`Failed to update supported_generations local_last_modified_dts: ${error}`);
+    }
+}
 
 export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive): Promise<DateData[]> => {
     const results = await dbContext.query(`
@@ -239,7 +252,6 @@ export const getGenerationCountAndOffset = async (dbContext: PGliteWithLive, id:
 
     throw "Unable to retrieve data from supported_generations table.";
 }
-
 
 // export const saveLog
 

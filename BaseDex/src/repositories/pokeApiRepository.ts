@@ -2,9 +2,11 @@
 // import { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
 // import { Variety } from "../types/varieties";
 
+import type { FlavorTextEntry } from "../types/flavorText";
 import type { Pokemon } from "../types/pokemon";
-import type { PokemonBaseData } from "../types/pokemonData";
+import type { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
 import type { pokemonType } from "../types/pokemonType";
+import type { Variety } from "../types/varieties";
 
 export const fetchPkmnToLoad = async (limit: number, offset: number) => {
     // TODO: better error handling
@@ -123,37 +125,93 @@ export const parsePokemonBaseData = async (data: unknown) : Promise<PokemonBaseD
     }
 }
 
-// export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety[]] => {
-//     const specData: PokemonSpeciesData = {
-//         id: data.id,
-//         dex_no: data.pokedex_numbers.find(e => e.pokedex.name === 'national').entry_number,
-//         name: data.name,
-//         has_gender_differences: data.has_gender_differences,
-//         habitat: data.habitat.name,
-//         generation: data.generation.name,
-//         evo_chain_url: data.evolution_chain.url,
-//         flavor_texts: [],
-//         last_modified_dts: ''
-//     }
+export const parsePokemonSpeciesData = async (data: unknown): Promise<[PokemonSpeciesData, Variety[]]> => {
+    if (
+        typeof data === 'object' 
+        && data !== null 
+        && (
+            'id' in data
+            && typeof data['id'] === 'number'
+        )
+        && (
+            'pokedex_numbers' in data
+            && Array.isArray(data['pokedex_numbers'])
+        )
+        && (
+            'name' in data
+            && typeof data['name'] === 'string'
+        )
+        && (
+            'has_gender_differences' in data
+            && typeof data['has_gender_differences'] === 'boolean'
+        )
+        && (
+            'habitat' in data
+            && typeof data['habitat'] === 'object'
+        )
+        && (
+            'name' in data.habitat! 
+            && typeof data.habitat!['name'] === 'string'    
+        )
+        && (
+            'generation' in data 
+            && typeof data['generation'] === 'object'    
+        )
+        && (
+            'name' in data.generation! 
+            && typeof data.generation!['name'] === 'string'    
+        )
+        && (
+            'evolution_chain' in data 
+            && typeof data['evolution_chain'] === 'object'    
+        )
+        && (
+            'url' in data.evolution_chain! 
+            && typeof data.evolution_chain['url'] === 'string'    
+        )
+        && (
+            'flavor_text_entries' in data
+            && Array.isArray(data['flavor_text_entries'])
+        )
+        && (
+            'varieties' in data
+            && Array.isArray(data['varieties'])
+        )
+    ) {
+        const specData: PokemonSpeciesData = {
+            id: data.id,
+            dex_no: data.pokedex_numbers.find(e => e.pokedex.name === 'national').entry_number,
+            name: data.name,
+            has_gender_differences: data.has_gender_differences,
+            habitat: data.habitat.name,
+            generation: data.generation.name,
+            evo_chain_url: data.evolution_chain.url,
+            flavor_texts: [],
+            last_modified_dts: ''
+        }
 
-//     specData.flavor_texts = data.flavor_text_entries.map( (flavorTxt: FlavorTextEntry) => {
-//         return {
-//             language: flavorTxt.language,
-//             version: flavorTxt.version,
-//             flavor_text: flavorTxt.flavor_text.replace(/\n|\f/g, " ")
-//         }
-//     })
+        specData.flavor_texts = data.flavor_text_entries.map( (flavorTxt: FlavorTextEntry) => {
+            return {
+                language: flavorTxt.language,
+                version: flavorTxt.version,
+                flavor_text: flavorTxt.flavor_text.replace(/\n|\f/g, " ")
+            }
+        })
 
-//     // TODO: varietyExclusions should probably be stored somewhere in config
-//     const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 
-//         variety.is_default != true 
-//             && !variety.pokemon.name.includes('-cap')
-//             && !variety.pokemon.name.includes('-starter')
-//             && !variety.pokemon.name.includes('-totem')
-//     );
+        // TODO: varietyExclusions should probably be stored somewhere in config
+        const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 
+            variety.is_default != true 
+                && !variety.pokemon.name.includes('-cap')
+                && !variety.pokemon.name.includes('-starter')
+                && !variety.pokemon.name.includes('-totem')
+        );
 
-//     return [specData, varietiesToGet];
-// }
+        return [specData, varietiesToGet];
+    }
+    else {
+        throw 'Unable to parse Pokemon species data.';
+    }
+}
 
 // TODO: Implement
 export const pokeApiPing = () => {

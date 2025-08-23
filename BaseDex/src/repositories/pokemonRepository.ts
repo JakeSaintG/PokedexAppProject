@@ -5,11 +5,11 @@
 //     upsertPokemonSpeciesData 
 // } from "../data/pokemonData";
 import type { DateData } from "../types/dateData";
-import { getGenerationCountOffset } from "./configurationRepository";
+import { getGenerationCountOffset, updateLocalLastModified } from "./configurationRepository";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
-import { fetchPkmnToLoad, fetchPokeApiData, parsePokemonBaseData } from "./pokeApiRepository";
+import { fetchPkmnToLoad, fetchPokeApiData, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
 import type { Pokemon } from "../types/pokemon";
-import { upsertPokemonBaseData } from "../postgres/data/pokemonData";
+import { upsertPokedexData, upsertPokemonBaseData, upsertPokemonSpeciesData } from "../postgres/data/pokemonData";
 // import { Pokemon } from "../types/pokemon";
 // import { PokemonImageData } from "../types/pokemonImageData";
 // import { updateLocalLastModified, getGenerationCountOffset } from "./configurationRepository";
@@ -33,7 +33,7 @@ export const loadPokemonData = async (dbContext: PGliteWithLive, generationToLoa
             const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
             await loadPokemon(dbContext, fetchedPokemon, batchSize);
 
-            // updateLocalLastModified(gen.generation_id);
+            updateLocalLastModified(dbContext, gen.generation_id!);
         } catch (error) {
             console.error(`Error updating ${gen.generation_id} due to: ${error}`)
         }
@@ -62,10 +62,9 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, loa
     // TODO: logInfoVerbose(`Loading base data for: ${pokemonToLoad.name}...`);
     console.log(`Loading base data for: ${pokemonToLoad.name}...`);
 
-    // const parsedBaseData = await loadBasePokemonData(dbContext, pokemonToLoad, loadStartTime);
-    await loadBasePokemonData(dbContext, pokemonToLoad, loadStartTime);
-    
-    // const pokemonSpeciesToLoad: Pokemon = { name: parsedBaseData.name, url: parsedBaseData.species_url };
+    const parsedBaseData = await loadBasePokemonData(dbContext, pokemonToLoad, loadStartTime);
+
+    const pokemonSpeciesToLoad: Pokemon = { name: parsedBaseData.name, url: parsedBaseData.species_url };
     
     // const imagesToGet = {
     //     id: parsedBaseData.id,
@@ -75,8 +74,9 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, loa
     // };
     
     // // TODO: logInfoVerbose(`Loading species data for: ${pokemonToLoad.name}...`);
-    // console.log(`Loading species data for: ${pokemonToLoad.name}...`);
-    // const varietiesToGet = await loadSpeciesPokemonData(pokemonSpeciesToLoad, loadStartTime);
+    console.log(`Loading species data for: ${pokemonToLoad.name}...`);
+    // const varietiesToGet = await loadSpeciesPokemonData(dbContext, pokemonSpeciesToLoad, loadStartTime);
+    await loadSpeciesPokemonData(dbContext, pokemonSpeciesToLoad, loadStartTime);
     
     // await loadPokemonImages(imagesToGet);
     
@@ -100,19 +100,22 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, loa
     // }
 }
 
-// const loadSpeciesPokemonData = async ( pokemonToLoad: Pokemon, loadStartTime: string ): Promise<Pokemon[]> => {
-//     logInfoVerbose(`fetching species data: ${pokemonToLoad.name}`);
-//     const pokemonSpeciesData = await fetchPokeApiData(pokemonToLoad.url)
+const loadSpeciesPokemonData = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, loadStartTime: string ): Promise<Pokemon[]> => {
+    // TODO: logInfoVerbose(`fetching species data: ${pokemonToLoad.name}`);
+    console.log(`${loadStartTime} - fetching species data: ${pokemonToLoad.name}`);
+    const pokemonSpeciesData = await fetchPokeApiData(pokemonToLoad.url)
     
-//     logInfoVerbose(`parsing species data: ${pokemonToLoad.name}`);
-//     const [parsedData, varieties] = parsePokemonSpeciesData(pokemonSpeciesData);
+    // TODO: logInfoVerbose(`parsing species data: ${pokemonToLoad.name}`);
+    console.log(`${loadStartTime} - parsing species data: ${pokemonToLoad.name}`);
+    const [parsedData, varieties] = await parsePokemonSpeciesData(pokemonSpeciesData);
 
-//     logInfoVerbose(`storing species data: ${pokemonToLoad.name}`);
-//     upsertPokemonSpeciesData(parsedData);
-//     upsertPokedexData(parsedData);
+    // TODO: logInfoVerbose(`storing species data: ${pokemonToLoad.name}`);
+    console.log(`${loadStartTime} - storing species data: ${pokemonToLoad.name}`);
+    await upsertPokemonSpeciesData(dbContext, parsedData);
+    await upsertPokedexData(dbContext, parsedData);
 
-//     return varieties.map(v => v.pokemon);
-// }
+    return varieties.map(v => v.pokemon);
+}
 
 const loadBasePokemonData = async ( dbContext: PGliteWithLive, pokemonToLoad: Pokemon, loadStartTime: string ) => {
     // TODO: logInfoVerbose(`fetching base data: ${pokemonToLoad.name}`);
