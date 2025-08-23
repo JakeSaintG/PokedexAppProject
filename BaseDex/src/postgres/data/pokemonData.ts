@@ -112,8 +112,8 @@ export const upsertPokemonBaseData = async (
                     id
                     ,name
                     ,url
-                    ,species_url
                     ,is_default
+                    ,species_url
                     ,male_sprite_url
                     ,female_sprite_url
                     ,img_path

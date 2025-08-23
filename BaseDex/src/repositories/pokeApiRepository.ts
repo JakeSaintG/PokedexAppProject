@@ -4,6 +4,7 @@
 
 import type { Pokemon } from "../types/pokemon";
 import type { PokemonBaseData } from "../types/pokemonData";
+import type { pokemonType } from "../types/pokemonType";
 
 export const fetchPkmnToLoad = async (limit: number, offset: number) => {
     // TODO: better error handling
@@ -24,11 +25,11 @@ export const fetchPkmnToLoad = async (limit: number, offset: number) => {
     return pkmn;
 };
 
-// export const fetchPokeApiImage = async (url) => {
-//     // TODO: better error handling
-//     return await fetch(url, { method: "GET" })
-//         .then((res) => res.blob())
-// }
+export const fetchPokeApiImage = async (url: string) => {
+    // TODO: better error handling
+    return await fetch(url, { method: "GET" })
+        .then((res) => res.blob())
+}
 
 export const fetchPokeApiData = async (url: string) => {
     // TODO: better error handling
@@ -40,39 +41,86 @@ export const fetchPokeApiData = async (url: string) => {
         })
 }
 
-interface type {
-    slot: number,
-    type: {
-        name: string
-        url: string
+export const parsePokemonBaseData = async (data: unknown) : Promise<PokemonBaseData> => {
+    if (
+        typeof data === 'object' 
+        && data !== null 
+        && (
+            'id' in data
+            && typeof data['id'] === 'number'
+        )
+        && (
+            'name' in data
+            && typeof data['name'] === 'string'
+        )
+        && (
+            'species' in data 
+            && typeof data['species'] === 'object'    
+        )
+        && (
+            'url' in data.species! 
+            && typeof data.species!['url'] === 'string'    
+        )
+        && (
+            'is_default' in data
+            && typeof data['is_default'] === 'boolean'
+        )
+        && (
+            'sprites' in data
+            && typeof data['sprites'] === 'object'
+        )
+        && (
+            'front_default' in data.sprites!
+            && typeof data.sprites['front_default'] === 'string'
+        )
+        && (
+            'front_female' in data.sprites!
+            && (
+                typeof data.sprites['front_female'] === 'string'
+                || data.sprites['front_female'] === null
+            )
+        )
+        && (
+            'forms' in data
+            && Array.isArray(data['forms'])
+        )
+        && (
+            'types' in data
+            && Array.isArray(data['types'])
+        )
+        && (
+            'url' in data
+            && typeof data['url'] === 'string'
+        )
+    ) {
+        const parsedData: PokemonBaseData = {
+            id: data.id,
+            name: data.name,
+            species_url: data.species.url,
+            is_default: data.is_default,
+            male_sprite_url: data.sprites.front_default,
+            female_sprite_url: data.sprites.front_female,
+            img_path: `./imgs/dex_imgs/${data.id}`,
+            type_1: '',
+            type_2: undefined,
+            has_forms: false,
+            url: data.url,
+            last_modified_dts: ''
+        };
+    
+        if (data.forms.length > 1) {
+            parsedData.has_forms = true;
+        }
+    
+        data.types.forEach((t: pokemonType) => {
+            const type = `type_${t.slot}`;
+            if (type == 'type_2' || type == 'type_2') parsedData[type] = t.type.name;
+        });
+    
+        return parsedData;
+    } else {
+        throw 'Unable to parse Pokemon base data.';
     }
-}
-
-export const parsePokemonBaseData = async (data: any) : Promise<PokemonBaseData> => {
-    const parsedData: PokemonBaseData = {
-        id: data.id,
-        name: data.name,
-        species_url: data.species.url,
-        is_default: data.is_default,
-        male_sprite_url: data.sprites.front_default,
-        female_sprite_url: data.sprites.front_female,
-        img_path: `./imgs/dex_imgs/${data.id}`,
-        type_1: '',
-        type_2: undefined,
-        has_forms: false,
-        url: data.url,
-        last_modified_dts: ''
-    };
-
-    if (data.forms.length > 1) {
-        parsedData.has_forms = true;
-    }
-
-    data.types.forEach((t: type) => {
-        parsedData[`type_${t.slot}`] = t.type.name;
-    });
-
-    return parsedData;
 }
 
 // export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety[]] => {

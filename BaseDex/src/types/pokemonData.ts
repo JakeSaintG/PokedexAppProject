@@ -6,7 +6,7 @@ export interface PokemonBaseData {
     species_url: string,
     is_default: boolean,
     male_sprite_url: string,
-    female_sprite_url?: string,
+    female_sprite_url: string | null,
     img_path: string,
     type_1: string,
     type_2?: string,
