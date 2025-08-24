@@ -84,11 +84,11 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
             `
                 CREATE TABLE IF NOT EXISTS pokemon_images (
                     id INT PRIMARY KEY NOT NULL
-                    ,name INT NOT NULL
+                    ,name TEXT NOT NULL
                     ,default_img_size INT NOT NULL
                     ,female_img_size INT NULL
-                    ,default_img_last_modified INT NOT NULL
-                    ,female_img_last_modified INT NULL
+                    ,default_img_last_modified TEXT NOT NULL
+                    ,female_img_last_modified TEXT NULL
                     ,default_img_data BYTEA NOT NULL
                     ,female_img_data BYTEA NULL
                 )
@@ -100,8 +100,8 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
 export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData: PokemonImageData) => {
     let defaultImageBuffer = null;
     let femaleImageBuffer = null;
-    let defaultImageSize = null;
-    let femaleImageSize = null;
+    let defaultImageSize: number;
+    let femaleImageSize: number;
     const defaultImageLastModifiedDate = new Date().toISOString();
     let femaleImageLastModifiedDate = null;
 
@@ -128,8 +128,8 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
             ,female_img_size
             ,default_img_last_modified
             ,female_img_last_modified
-            -- ,default_img_data
-            -- ,female_img_data
+            ,default_img_data
+            ,female_img_data
         ) 
         VALUES (
             $1 -- id
@@ -138,8 +138,8 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
             ,$4 -- female_img_size
             ,$5 -- default_img_last_modified
             ,$6 -- female_img_last_modified
-            -- ,$7 -- default_img_data
-            -- ,$8 -- female_img_data
+            ,$7 -- default_img_data
+            ,$8 -- female_img_data
         )
             ON CONFLICT(id) 
             DO UPDATE SET 
@@ -149,8 +149,8 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
                 ,female_img_size = $4
                 ,default_img_last_modified = $5
                 ,female_img_last_modified = $6
-                -- ,default_img_data = $7
-                -- ,female_img_data = $8
+                ,default_img_data = $7
+                ,female_img_data = $8
     `
 
     try {        
@@ -161,8 +161,8 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
             femaleImageSize,
             defaultImageLastModifiedDate,
             femaleImageLastModifiedDate,
-            // defaultImageBuffer,
-            // femaleImageBuffer,
+            defaultImageBuffer,
+            femaleImageBuffer,
         ]));
     } catch (error) {
         console.error(`Failed to UPSERT image data for ${pkmnImgData.name}: ${error}`);
