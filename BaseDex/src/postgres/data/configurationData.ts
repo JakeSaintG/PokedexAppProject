@@ -1,8 +1,6 @@
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
 import type { SupportedGeneration } from '../../types/configurationData';
 import type { DateData } from '../../types/dateData';
-// import type { DateData } from '../../types/dateData';
-// import { SupportedGeneration } from '../types/configurationData';
 // import { logError, logInfo, setLogRetentionDays } from '../repositories/logRepository';
 // import { LogData } from '../types/logData';
 
@@ -153,7 +151,21 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
     }
 }
 
-// export const setGenerationActive
+export const setGenerationActive = async (dbContext: PGliteWithLive, id: number) => {
+    try {
+        await dbContext.transaction(async (transaction) => transaction.query(
+            `
+                UPDATE supported_generations
+                SET active = 1
+                WHERE id = $1;
+            `, 
+            [id]
+        ));
+    } catch (error) {
+        // TODO: logError(`Failed to update supported_generations active field: ${error}`);
+        console.log(`Failed to update supported_generations active field: ${error}`);
+    }
+}
 
 export const setLocalLastModifiedDate = async (dbContext: PGliteWithLive, id: number) => {
     const stmt = `

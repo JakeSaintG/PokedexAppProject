@@ -330,7 +330,3 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
         console.error(`Failed to UPSERT ${pkmnSpecData.id}: ${error}`);
     }
 }
-
-// export const upsertDexData
-
-// export const getPokemonSpeciesToLoad

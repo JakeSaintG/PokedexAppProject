@@ -1,27 +1,22 @@
-// import { 
-//     upsertPokemonImage,
-//     upsertPokedexData,
-//     upsertPokemonBaseData,
-//     upsertPokemonSpeciesData 
-// } from "../data/pokemonData";
+import { 
+    upsertPokemonImage,
+    upsertPokedexData,
+    upsertPokemonBaseData,
+    upsertPokemonSpeciesData 
+} from "../postgres/data/pokemonData";
 import type { DateData } from "../types/dateData";
-import { getGenerationCountOffset, updateLocalLastModified } from "./configurationRepository";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
-import { fetchPkmnToLoad, fetchPokeApiData, fetchPokeApiImage, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
 import type { Pokemon } from "../types/pokemon";
-import { upsertPokedexData, upsertPokemonBaseData, upsertPokemonImage, upsertPokemonSpeciesData } from "../postgres/data/pokemonData";
 import type { PokemonImageData } from "../types/pokemonImageData";
-// import { Pokemon } from "../types/pokemon";
-// import { PokemonImageData } from "../types/pokemonImageData";
-// import { updateLocalLastModified, getGenerationCountOffset } from "./configurationRepository";
+import { updateLocalLastModified, getGenerationCountOffset } from "./configurationRepository";
 // import { logInfo, logInfoVerbose, logInfoWithAttention } from "./logRepository";
-// import { 
-//     fetchPokeApiData, 
-//     fetchPkmnToLoad, 
-//     parsePokemonBaseData, 
-//     parsePokemonSpeciesData, 
-//     fetchPokeApiImage
-// } from "./pokeApiRepository";
+import { 
+    fetchPokeApiData, 
+    fetchPkmnToLoad, 
+    parsePokemonBaseData, 
+    parsePokemonSpeciesData, 
+    fetchPokeApiImage
+} from "./pokeApiRepository";
 
 export const loadPokemonData = async (dbContext: PGliteWithLive, generationToLoad: DateData[], batchSize: number) => {
     for (const gen of generationToLoad) {
@@ -74,31 +69,30 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, loa
         female_sprite: parsedBaseData.female_sprite_url
     };
     
-    // // TODO: logInfoVerbose(`Loading species data for: ${pokemonToLoad.name}...`);
+    // TODO: logInfoVerbose(`Loading species data for: ${pokemonToLoad.name}...`);
     console.log(`Loading species data for: ${pokemonToLoad.name}...`);
-    // const varietiesToGet = await loadSpeciesPokemonData(dbContext, pokemonSpeciesToLoad, loadStartTime);
-    await loadSpeciesPokemonData(dbContext, pokemonSpeciesToLoad, loadStartTime);
+    const varietiesToGet = await loadSpeciesPokemonData(dbContext, pokemonSpeciesToLoad, loadStartTime);
     
     await loadPokemonImages(dbContext, imagesToGet);
     
-    // if (varietiesToGet.length > 0) {
-    //     for (const variety of varietiesToGet) {
-    //         // TODO: logInfoVerbose(`Loading remaining special forms for: ${variety.name}...`);
-    //         console.log(`Loading remaining special forms for: ${variety.name}...`);
-    //         const varietiesImagesLeftToGet = await loadBasePokemonData(variety, loadStartTime);
+    if (varietiesToGet.length > 0) {
+        for (const variety of varietiesToGet) {
+            // TODO: logInfoVerbose(`Loading remaining special forms for: ${variety.name}...`);
+            console.log(`Loading remaining special forms for: ${variety.name}...`);
+            const varietiesImagesLeftToGet = await loadBasePokemonData(dbContext, variety, loadStartTime);
             
-    //         const imagesToGet = {
-    //             id: varietiesImagesLeftToGet.id,
-    //             name: varietiesImagesLeftToGet.name,
-    //             male_sprite: varietiesImagesLeftToGet.male_sprite_url,
-    //             female_sprite: varietiesImagesLeftToGet.female_sprite_url
-    //         };
+            const imagesToGet = {
+                id: varietiesImagesLeftToGet.id,
+                name: varietiesImagesLeftToGet.name,
+                male_sprite: varietiesImagesLeftToGet.male_sprite_url,
+                female_sprite: varietiesImagesLeftToGet.female_sprite_url
+            };
             
-    //         // TODO: logInfoVerbose(`Loading remaining special forms image for: ${variety.name}...`);
-    //         console.log(`Loading remaining special forms image for: ${variety.name}...`);
-    //         await loadPokemonImages(imagesToGet);
-    //     }
-    // }
+            // TODO: logInfoVerbose(`Loading remaining special forms image for: ${variety.name}...`);
+            console.log(`Loading remaining special forms image for: ${variety.name}...`);
+            await loadPokemonImages(dbContext, imagesToGet);
+        }
+    }
 }
 
 const loadSpeciesPokemonData = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, loadStartTime: string ): Promise<Pokemon[]> => {
