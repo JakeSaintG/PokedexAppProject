@@ -3,6 +3,9 @@ import { DexHeader } from "../DexHeader";
 import { NavigationMenu } from "../NavigationMenu";
 
 export function SettingsPage( ) {
+    // TODO: set verbose logging
+    // TODO: view logs or dump to file
+    
     return (
         <div className={styles.settings}>
             <DexHeader/>

@@ -12,6 +12,7 @@ import {
 } from '../postgres/data/configurationData';
 import type { ConfigurationData, SupportedGeneration } from '../types/configurationData';
 import type { DateData } from '../types/dateData';
+import { logInfo } from './logRepository';
 // import { logInfo } from './logRepository';
 
 export const configApiPing = () => {
@@ -67,8 +68,8 @@ export const updateConfiguration = (dbContext: PGliteWithLive, configuration: Co
             // Update if the data is considered stale
             Date.parse(generationDateData.stale_by_dts!) < Date.parse(generationDateData.last_modified_dts)
         ) {
-            // TODO logInfo(`Updating configuration data for ${generation.generation_name}`);
-            console.log(`Updating configuration data for ${generation.generation_name}`);
+            logInfo(dbContext, `Updating configuration data for ${generation.generation_name}`);
+            // console.log(`Updating configuration data for ${generation.generation_name}`);
             upsertConfigurationData(dbContext, generation);
         }
     });

@@ -1,6 +1,7 @@
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
 import type { SupportedGeneration } from '../../types/configurationData';
 import type { DateData } from '../../types/dateData';
+import type { LogData } from '../../types/logData';
 // import { logError, logInfo, setLogRetentionDays } from '../repositories/logRepository';
 // import { LogData } from '../types/logData';
 
@@ -265,6 +266,60 @@ export const getGenerationCountAndOffset = async (dbContext: PGliteWithLive, id:
     throw "Unable to retrieve data from supported_generations table.";
 }
 
-// export const saveLog
+export const saveLog = async (dbContext: PGliteWithLive, logData: LogData) => {
+    console.log(logData)
+    
+    // TODO: Sqlite had the luxury of coming with a monotonically increasing ID field...postgres may need a little more massaging.
+    const stmt =  `
+        INSERT INTO logs (
+            log_message
+            ,log_level
+            ,verbose_logging
+            ,retain
+            ,log_written_dts
+        ) 
+        VALUES (
+            $1
+            ,$2
+            ,$3
+            ,$4
+            ,$5
+        )
+    `;
 
-// export const cleanUpOldLogs
+    try {
+        await dbContext.transaction(async (transaction) => transaction.query(
+            stmt, 
+            [
+                logData.message,
+                logData.logLevel,
+                logData.verbose,
+                logData.retain,
+                new Date().toISOString()
+            ]
+    ));
+    } catch (error) {
+        console.error(`Failed to write log message to log table: ${error}`)
+    }
+};
+
+export const cleanUpOldLogs = async (dbContext: PGliteWithLive, removeOlderThanDate: Date) => {
+    if(!(removeOlderThanDate) || removeOlderThanDate == undefined) {
+        // Somehow, we got in a position where removeOlderThanDate wasn't set or defaulted.
+        removeOlderThanDate = new Date(new Date().getTime() - 60 * 24 * 60 * 60 * 1000);
+    };
+    
+    const stmt =  `
+        DELETE FROM logs 
+        WHERE log_written_dts < $1
+        AND retain = 0 OR id > 1000000;
+    `;
+
+    try {
+        await dbContext.transaction(async (transaction) => transaction.query(
+            stmt, [removeOlderThanDate.toISOString()]
+        ));
+    } catch {
+        // TODO logError(`Failed to delete old logs! ${error}`);
+    }
+};
