@@ -7,9 +7,10 @@
 import type { DateData } from "../types/dateData";
 import { getGenerationCountOffset, updateLocalLastModified } from "./configurationRepository";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
-import { fetchPkmnToLoad, fetchPokeApiData, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
+import { fetchPkmnToLoad, fetchPokeApiData, fetchPokeApiImage, parsePokemonBaseData, parsePokemonSpeciesData } from "./pokeApiRepository";
 import type { Pokemon } from "../types/pokemon";
-import { upsertPokedexData, upsertPokemonBaseData, upsertPokemonSpeciesData } from "../postgres/data/pokemonData";
+import { upsertPokedexData, upsertPokemonBaseData, upsertPokemonImage, upsertPokemonSpeciesData } from "../postgres/data/pokemonData";
+import type { PokemonImageData } from "../types/pokemonImageData";
 // import { Pokemon } from "../types/pokemon";
 // import { PokemonImageData } from "../types/pokemonImageData";
 // import { updateLocalLastModified, getGenerationCountOffset } from "./configurationRepository";
@@ -66,19 +67,19 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, loa
 
     const pokemonSpeciesToLoad: Pokemon = { name: parsedBaseData.name, url: parsedBaseData.species_url };
     
-    // const imagesToGet = {
-    //     id: parsedBaseData.id,
-    //     name: parsedBaseData.name,
-    //     male_sprite: parsedBaseData.male_sprite_url,
-    //     female_sprite: parsedBaseData.female_sprite_url
-    // };
+    const imagesToGet = {
+        id: parsedBaseData.id,
+        name: parsedBaseData.name,
+        male_sprite: parsedBaseData.male_sprite_url,
+        female_sprite: parsedBaseData.female_sprite_url
+    };
     
     // // TODO: logInfoVerbose(`Loading species data for: ${pokemonToLoad.name}...`);
     console.log(`Loading species data for: ${pokemonToLoad.name}...`);
     // const varietiesToGet = await loadSpeciesPokemonData(dbContext, pokemonSpeciesToLoad, loadStartTime);
     await loadSpeciesPokemonData(dbContext, pokemonSpeciesToLoad, loadStartTime);
     
-    // await loadPokemonImages(imagesToGet);
+    await loadPokemonImages(dbContext, imagesToGet);
     
     // if (varietiesToGet.length > 0) {
     //     for (const variety of varietiesToGet) {
@@ -133,9 +134,9 @@ const loadBasePokemonData = async ( dbContext: PGliteWithLive, pokemonToLoad: Po
     return parsedData;
 }
 
-// const loadPokemonImages = async ( pkmnImgdata: PokemonImageData ) => {
-//     pkmnImgdata.male_sprite = await fetchPokeApiImage(pkmnImgdata.male_sprite);
-//     if (pkmnImgdata.female_sprite) pkmnImgdata.female_sprite = await fetchPokeApiImage(pkmnImgdata.female_sprite);
+const loadPokemonImages = async (dbContext: PGliteWithLive, pkmnImgdata: PokemonImageData ) => {
+    pkmnImgdata.male_sprite = await fetchPokeApiImage(pkmnImgdata.male_sprite as string);
+    if (pkmnImgdata.female_sprite) pkmnImgdata.female_sprite = await fetchPokeApiImage(pkmnImgdata.female_sprite as string);
 
-//     upsertPokemonImage(pkmnImgdata)
-// }
+    upsertPokemonImage(dbContext, pkmnImgdata);
+}

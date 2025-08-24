@@ -1,8 +1,10 @@
 import type { PGliteWithLive } from "@electric-sql/pglite/live";
+import { Buffer } from 'buffer';
 import type {
     PokemonBaseData, /*, PokemonSpeciesData*/
     PokemonSpeciesData,
 } from "../../types/pokemonData";
+import type { PokemonImageData } from "../../types/pokemonImageData";
 // import type { Pokemon } from '../../types/pokemon';
 // import type { PokedexData } from '../../types/pokedexData';
 // import type { PokemonImageData } from '../../types/pokemonImageData';
@@ -95,11 +97,78 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         .then(() => console.log("pokemon_images table created"));
 };
 
-/*
-    NOTE! Booleans above will need some rework to not be INTs in the below logic
-*/
+export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData: PokemonImageData) => {
+    let defaultImageBuffer = null;
+    let femaleImageBuffer = null;
+    let defaultImageSize = null;
+    let femaleImageSize = null;
+    const defaultImageLastModifiedDate = new Date().toISOString();
+    let femaleImageLastModifiedDate = null;
 
-// export const upsertPokemonImage
+    if (typeof(pkmnImgData.male_sprite) != 'string') {
+        defaultImageBuffer = Buffer.from(
+            await pkmnImgData.male_sprite.arrayBuffer()
+        );
+        defaultImageSize = pkmnImgData.male_sprite.size;
+    }
+    
+    if (typeof(pkmnImgData.female_sprite) != 'string' && pkmnImgData.female_sprite != null) {
+        femaleImageBuffer = Buffer.from(
+            await pkmnImgData.female_sprite.arrayBuffer()
+        );
+        femaleImageSize = pkmnImgData.female_sprite.size;
+        femaleImageLastModifiedDate = defaultImageLastModifiedDate;
+    }
+
+    const stmt = `
+        INSERT INTO pokemon_images (
+            id
+            ,name
+            ,default_img_size
+            ,female_img_size
+            ,default_img_last_modified
+            ,female_img_last_modified
+            -- ,default_img_data
+            -- ,female_img_data
+        ) 
+        VALUES (
+            $1 -- id
+            ,$2 -- name
+            ,$3 -- default_img_size
+            ,$4 -- female_img_size
+            ,$5 -- default_img_last_modified
+            ,$6 -- female_img_last_modified
+            -- ,$7 -- default_img_data
+            -- ,$8 -- female_img_data
+        )
+            ON CONFLICT(id) 
+            DO UPDATE SET 
+                id = $1
+                ,name = $2
+                ,default_img_size = $3
+                ,female_img_size = $4
+                ,default_img_last_modified = $5
+                ,female_img_last_modified = $6
+                -- ,default_img_data = $7
+                -- ,female_img_data = $8
+    `
+
+    try {        
+        await dbContext.transaction(async (transaction) => transaction.query(stmt, [
+            pkmnImgData.id,
+            pkmnImgData.name,
+            defaultImageSize,
+            femaleImageSize,
+            defaultImageLastModifiedDate,
+            femaleImageLastModifiedDate,
+            // defaultImageBuffer,
+            // femaleImageBuffer,
+        ]));
+    } catch (error) {
+        console.error(`Failed to UPSERT image data for ${pkmnImgData.name}: ${error}`);
+    }
+}
+
 
 export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData: PokemonBaseData) => {
     try {
