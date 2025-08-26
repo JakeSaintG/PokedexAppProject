@@ -46,7 +46,7 @@ const createConfigTablesIfNotExist = () => {
     dbContext
         .prepare(`
             CREATE TABLE IF NOT EXISTS logs (
-                id INTEGER PRIMARY KEY NOT NULL
+                id SERIAL PRIMARY KEY
                 ,log_message STRING NOT NULL
                 ,log_level STRING NOT NULL
                 ,verbose INT NULL -- boolean
@@ -329,7 +329,7 @@ export const saveLog = (logData: LogData) => {
 
 export const cleanUpOldLogs = (removeOlderThanDate: Date) => {
     if(!(removeOlderThanDate) || removeOlderThanDate == undefined) {
-        // Somehow, we got in a position where removeOlderThanDate wasn't set or defaulted.
+        // Avoid a position where removeOlderThanDate wasn't set or defaulted.
         removeOlderThanDate = new Date(new Date().getTime() - 60 * 24 * 60 * 60 * 1000);
     };
     
