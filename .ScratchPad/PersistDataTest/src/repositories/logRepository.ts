@@ -3,10 +3,10 @@ import { cleanUpOldLogs, saveLog } from "../data/configurationData";
 let logRetentionDate: Date;
 let verboseLogging = false;
 
-export const logError = (message: string, fatal: boolean = false) => {
+export const logError = (message: string, fatal: boolean = false, skipLogCleanUp = false) => {
     const logMsg = `${new Date().toISOString()} - ${message}`;
     console.error(logMsg);
-    writeLog(logMsg, 'error', false, true);
+    writeLog(logMsg, 'error', false, true, skipLogCleanUp);
 
     if (fatal) throw message;
 };
@@ -51,7 +51,8 @@ const writeLog = async (
     message: string,
     logLevel: string,
     verbose: boolean,
-    retain: boolean = false
+    retain: boolean = false,
+    skipLogCleanUp = false
 ) => {
     saveLog({
         message: message,
@@ -60,5 +61,5 @@ const writeLog = async (
         retain: retain
     });
 
-    cleanUpOldLogs(logRetentionDate);
+    if (!skipLogCleanUp) cleanUpOldLogs(logRetentionDate);
 };

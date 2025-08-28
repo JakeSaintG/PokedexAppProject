@@ -347,6 +347,6 @@ export const cleanUpOldLogs = (removeOlderThanDate: Date) => {
                 });
         }))(removeOlderThanDate);
     } catch (error) {
-        logError(`Failed to delete old logs! ${error}`);
+        logError(`Failed to delete old logs! ${error}`, false, true);
     }
 };
