@@ -2,6 +2,7 @@ import type { PGliteWithLive } from '@electric-sql/pglite/live';
 import type { SupportedGeneration } from '../../types/configurationData';
 import type { DateData } from '../../types/dateData';
 import type { LogData } from '../../types/logData';
+import { logError, logInfo } from '../../repositories/logRepository';
 // import { logError, logInfo, setLogRetentionDays } from '../repositories/logRepository';
 // import { LogData } from '../types/logData';
 
@@ -56,8 +57,7 @@ export const upsertConfigurationData = async (dbContext: PGliteWithLive, configD
         ));
     } catch (error) {
         if (error instanceof Error) {
-            console.log(`Failed to UPSERT config data for ${configData.generation_name}. This is a terminating error.\r\n${error.message}`, true);
-            // logError(`Failed to UPSERT config data for ${configData.generation_name}. This is a terminating error.\r\n${error.message}`, true);
+            logError(dbContext, `Failed to UPSERT config data for ${configData.generation_name}. This is a terminating error.\r\n${error.message}`, true);
         }
     }
 }
@@ -65,7 +65,7 @@ export const upsertConfigurationData = async (dbContext: PGliteWithLive, configD
 export const initConfigDb = async (dbContext: PGliteWithLive) => {
     await createConfigTablesIfNotExist(dbContext);
     // migrateTablesIfNeeded()
-    // logInfo('Prepared Pokemon database.');
+    logInfo(dbContext, 'Prepared Pokemon database.');
 }
 
 const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
@@ -92,7 +92,7 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
     dbContext
         .exec(`
             CREATE TABLE IF NOT EXISTS logs (
-                id INTEGER PRIMARY KEY NOT NULL
+                id SERIAL PRIMARY KEY
                 ,log_message TEXT NOT NULL
                 ,log_level TEXT NOT NULL
                 ,verbose_logging BOOLEAN NULL
@@ -163,8 +163,9 @@ export const setGenerationActive = async (dbContext: PGliteWithLive, id: number)
             [id]
         ));
     } catch (error) {
-        // TODO: logError(`Failed to update supported_generations active field: ${error}`);
-        console.log(`Failed to update supported_generations active field: ${error}`);
+        if (error instanceof Error) {
+            logError(dbContext, `Failed to update supported_generations active field: ${error}`);
+        }
     }
 }
 
@@ -178,8 +179,9 @@ export const setLocalLastModifiedDate = async (dbContext: PGliteWithLive, id: nu
     try {
         await dbContext.transaction(async (transaction) => transaction.query(stmt, [id, new Date().toISOString()]));
     } catch (error) {
-        // logError(`Failed to update supported_generations local_last_modified_dts: ${error}`);
-        console.error(`Failed to update supported_generations local_last_modified_dts: ${error}`);
+        if (error instanceof Error) {
+            logError(dbContext, `Failed to update supported_generations local_last_modified_dts: ${error.message}`);
+        }
     }
 }
 
@@ -267,9 +269,6 @@ export const getGenerationCountAndOffset = async (dbContext: PGliteWithLive, id:
 }
 
 export const saveLog = async (dbContext: PGliteWithLive, logData: LogData) => {
-    console.log(logData)
-    
-    // TODO: Sqlite had the luxury of coming with a monotonically increasing ID field...postgres may need a little more massaging.
     const stmt =  `
         INSERT INTO logs (
             log_message
@@ -312,14 +311,16 @@ export const cleanUpOldLogs = async (dbContext: PGliteWithLive, removeOlderThanD
     const stmt =  `
         DELETE FROM logs 
         WHERE log_written_dts < $1
-        AND retain = 0 OR id > 1000000;
+        AND retain = false OR id > 1000000;
     `;
 
     try {
         await dbContext.transaction(async (transaction) => transaction.query(
             stmt, [removeOlderThanDate.toISOString()]
         ));
-    } catch {
-        // TODO logError(`Failed to delete old logs! ${error}`);
+    } catch (error) {
+        if (error instanceof Error) {
+            logError(dbContext, `Failed to delete old logs! ${error.message}`, false, true);
+        }
     }
 };

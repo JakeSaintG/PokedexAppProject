@@ -5,6 +5,7 @@ import type {
     PokemonSpeciesData,
 } from "../../types/pokemonData";
 import type { PokemonImageData } from "../../types/pokemonImageData";
+import { logInfo } from "../../repositories/logRepository";
 // import type { Pokemon } from '../../types/pokemon';
 // import type { PokedexData } from '../../types/pokedexData';
 // import type { PokemonImageData } from '../../types/pokemonImageData';
@@ -12,7 +13,7 @@ import type { PokemonImageData } from "../../types/pokemonImageData";
 export const initPokemonDb = async (dbContext: PGliteWithLive) => {
     await createPokemonTablesIfNotExist(dbContext);
     // migrateTablesIfNeeded()
-    // logInfo('Prepared Pokemon database.');
+    logInfo(dbContext, 'Prepared Pokemon database.');
 };
 
 const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {

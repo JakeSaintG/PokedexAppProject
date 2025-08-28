@@ -5,10 +5,12 @@ let logRetentionDate: Date;
 // TODO: make this settable
 let verboseLogging = false;
 
-export const logError = (dbContext: PGliteWithLive, message: string, fatal: boolean = false) => {
+// TODO: All of my logging is now coming from the logger... meaning that an error is being reported from the logError...fix this 
+
+export const logError = (dbContext: PGliteWithLive, message: string, fatal: boolean = false, skipLogCleanUp = false) => {
     const logMsg = `${new Date().toISOString()} - ${message}`;
     console.error(logMsg);
-    writeLog(dbContext, logMsg, 'error', false, true);
+    writeLog(dbContext, logMsg, 'error', false, true, skipLogCleanUp);
 
     if (fatal) throw message;
 };
@@ -31,7 +33,7 @@ export const logInfoWithAttention = (dbContext: PGliteWithLive, message: string)
     const logMsg = `${new Date().toISOString()} - ${message}`;
     const attnTxt = '==================================================';
 
-    console.log(`\r\n${attnTxt}\r\n${logMsg}\r\n${attnTxt}`);
+    console.log(`${attnTxt}\r\n${logMsg}\r\n${attnTxt}`);
 
     writeLog(dbContext, message, 'info', false);
 };
@@ -52,7 +54,8 @@ const writeLog = async (
     message: string,
     logLevel: string,
     verbose: boolean,
-    retain: boolean = false
+    retain: boolean = false,
+    skipLogCleanUp = false
 ) => {
     saveLog(dbContext, {
         message: message,
@@ -61,5 +64,5 @@ const writeLog = async (
         retain: retain
     });
 
-    cleanUpOldLogs(dbContext, logRetentionDate);
+    if (!skipLogCleanUp) cleanUpOldLogs(dbContext, logRetentionDate);
 };
