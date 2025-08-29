@@ -308,7 +308,7 @@ export const saveLog = async (dbContext: PGliteWithLive, logData: LogData) => {
 };
 
 export const cleanUpOldLogs = async (dbContext: PGliteWithLive, removeOlderThanDate: Date) => {
-    if(!(removeOlderThanDate) || removeOlderThanDate == undefined) {
+    if(!removeOlderThanDate || removeOlderThanDate == undefined) {
         // Somehow, we got in a position where removeOlderThanDate wasn't set or defaulted.
         removeOlderThanDate = new Date(new Date().getTime() - 60 * 24 * 60 * 60 * 1000);
     };

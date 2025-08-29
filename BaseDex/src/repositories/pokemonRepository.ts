@@ -44,11 +44,13 @@ export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean)
     })
 }
 
+// I still want to do something with batch size
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const loadPokemon = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon[], batchSize: number) => {
     // TODO: I still want to to try to be loading multiple pokemon at once...
     for (const pkmn of pokemonToLoad) {
         logInfo(dbContext, `Loading data for ${pkmn.name}.`)
-        await startLoad(dbContext, pkmn, (new Date().toISOString()));
+        await startLoad(dbContext, pkmn, new Date().toISOString());
     }
 }
 

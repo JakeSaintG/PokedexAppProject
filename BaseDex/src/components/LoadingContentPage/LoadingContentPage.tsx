@@ -2,7 +2,7 @@ import styles from "./LoadingContentPage.module.css";
 
 import { useEffect, useState } from "react";
 import { usePGlite } from "@electric-sql/pglite-react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import speakerIcon from "../../assets/icons/bars-solid-full.svg";
 import { DexHeader } from "../DexHeader";
@@ -22,7 +22,7 @@ export function LoadingContentPage() {
     const forceUpdate = false;
     const batchSize = 3;
     
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const dbContext = usePGlite();
 
     const [loadingText, setLoadingText] = useState(
@@ -77,7 +77,7 @@ export function LoadingContentPage() {
                 );
             })
             .then(async () => {
-                // await placeholder(() => navigate("../home"));
+                await placeholder(() => navigate("../home"));
             });
     }, []);
 
