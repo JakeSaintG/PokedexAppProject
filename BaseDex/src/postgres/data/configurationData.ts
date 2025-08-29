@@ -3,8 +3,7 @@ import type { SupportedGeneration } from '../../types/configurationData';
 import type { DateData } from '../../types/dateData';
 import type { LogData } from '../../types/logData';
 import { logError, logInfo } from '../../repositories/logRepository';
-// import { logError, logInfo, setLogRetentionDays } from '../repositories/logRepository';
-// import { LogData } from '../types/logData';
+// import { setLogRetentionDays } from '../repositories/logRepository';
 
 export const upsertConfigurationData = async (dbContext: PGliteWithLive, configData: SupportedGeneration) => {
     /*
@@ -57,7 +56,9 @@ export const upsertConfigurationData = async (dbContext: PGliteWithLive, configD
         ));
     } catch (error) {
         if (error instanceof Error) {
-            logError(dbContext, `Failed to UPSERT config data for ${configData.generation_name}. This is a terminating error.\r\n${error.message}`, true);
+            console.error(
+                logError(dbContext, `Failed to UPSERT config data for ${configData.generation_name}. This is a terminating error.\r\n${error.message}`, true)
+            )
         }
     }
 }
@@ -164,7 +165,9 @@ export const setGenerationActive = async (dbContext: PGliteWithLive, id: number)
         ));
     } catch (error) {
         if (error instanceof Error) {
-            logError(dbContext, `Failed to update supported_generations active field: ${error}`);
+            console.error(
+                logError(dbContext, `Failed to update supported_generations active field: ${error}`)
+            )
         }
     }
 }
@@ -180,7 +183,9 @@ export const setLocalLastModifiedDate = async (dbContext: PGliteWithLive, id: nu
         await dbContext.transaction(async (transaction) => transaction.query(stmt, [id, new Date().toISOString()]));
     } catch (error) {
         if (error instanceof Error) {
-            logError(dbContext, `Failed to update supported_generations local_last_modified_dts: ${error.message}`);
+            console.error(
+                logError(dbContext, `Failed to update supported_generations local_last_modified_dts: ${error.message}`)
+            )
         }
     }
 }
@@ -320,7 +325,9 @@ export const cleanUpOldLogs = async (dbContext: PGliteWithLive, removeOlderThanD
         ));
     } catch (error) {
         if (error instanceof Error) {
-            logError(dbContext, `Failed to delete old logs! ${error.message}`, false, true);
+            console.error(
+                logError(dbContext, `Failed to delete old logs! ${error.message}`, false, true)
+            )
         }
     }
 };

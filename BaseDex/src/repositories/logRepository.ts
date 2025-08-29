@@ -9,10 +9,12 @@ let verboseLogging = false;
 
 export const logError = (dbContext: PGliteWithLive, message: string, fatal: boolean = false, skipLogCleanUp = false) => {
     const logMsg = `${new Date().toISOString()} - ${message}`;
-    console.error(logMsg);
+
     writeLog(dbContext, logMsg, 'error', false, true, skipLogCleanUp);
 
     if (fatal) throw message;
+
+    return logMsg;
 };
 
 export const logInfo = (dbContext: PGliteWithLive, message: string) => {
