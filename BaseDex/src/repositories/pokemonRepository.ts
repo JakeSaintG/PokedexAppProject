@@ -2,7 +2,8 @@ import {
     upsertPokemonImage,
     upsertPokedexData,
     upsertPokemonBaseData,
-    upsertPokemonSpeciesData 
+    upsertPokemonSpeciesData, 
+    getRegionCountData
 } from "../postgres/data/pokemonData";
 import type { DateData } from "../types/dateData";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
@@ -124,4 +125,9 @@ const loadPokemonImages = async (dbContext: PGliteWithLive, pkmnImgdata: Pokemon
     if (pkmnImgdata.female_sprite) pkmnImgdata.female_sprite = await fetchPokeApiImage(pkmnImgdata.female_sprite as string);
 
     upsertPokemonImage(dbContext, pkmnImgdata);
+}
+
+export const getTallGrassData = (dbContext: PGliteWithLive) => {
+
+    getRegionCountData(dbContext);
 }

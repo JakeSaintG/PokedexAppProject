@@ -1,6 +1,7 @@
 import styles from "./TallGrassPage.module.css";
 import { DexHeader } from "../DexHeader";
 import { NavigationMenu } from "../NavigationMenu";
+import { useEffect, useState } from "react";
 
 const test_data = [
     { region: "kanto", registered: 2, total: 3 },
@@ -15,10 +16,21 @@ const test_data = [
     { region: "paldea", registered: 2, total: 3 },
 ];
 
+
+
 export function TallGrassPage() {
     let key = 0;
 
+    const [generationData, setGenerationData] = useState('');
+    
+    useEffect(() => {
+        
+        setGenerationData('beep');
+    }, [])
+
     return (
+        
+        
         <div className={styles.tall_grass}>
             <DexHeader />
             <h2>tall grass!</h2>
@@ -26,7 +38,7 @@ export function TallGrassPage() {
                 {test_data.map((r) => (
                     <div className={styles.region} key={key++}>
                         <p>{r.region}</p>
-                        <p>{`${r.registered}/${r.total}`}</p>
+                        <p>{`${r.registered}/${r.total} ${generationData}`}</p>
                     </div>
                 ))}
             </div>

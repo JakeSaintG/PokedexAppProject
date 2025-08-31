@@ -19,6 +19,8 @@ export const initPokemonDb = async (dbContext: PGliteWithLive) => {
 const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
     console.log("Creating Pokémon tables...");
 
+    // TODO: Add is_registered
+
     // pokemon_base_data
     await dbContext
         .exec(
@@ -169,7 +171,6 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
         console.error(`Failed to UPSERT image data for ${pkmnImgData.name}: ${error}`);
     }
 }
-
 
 export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData: PokemonBaseData) => {
     try {
@@ -330,4 +331,41 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
     } catch (error) {
         console.error(`Failed to UPSERT ${pkmnSpecData.id}: ${error}`);
     }
+}
+
+
+export const getRegionCountData = async (dbContext: PGliteWithLive) => {
+
+    // TODO: need to get is_registered once its added...
+    // TODO: return count(*) from base_data joined on pokedex_entries grouped by generation
+
+    const results = await dbContext.query(`
+            SELECT 
+                *
+            FROM pokedex_entries;
+        `, [/*id*/]
+    )
+
+    const countData = results.rows[0];
+
+    if (
+        typeof countData === 'object' 
+        && countData !== null 
+        && (
+            'id' in countData
+            && typeof countData['id'] === 'number'
+        )
+        && (
+            'count' in countData
+            && typeof countData['count'] === 'number'
+        )
+        && (
+            'starting_dex_no' in countData
+            && typeof countData['starting_dex_no'] === 'number'
+        )
+    ) {
+        return [countData.count, countData.starting_dex_no]
+    }
+
+    throw "Unable to retrieve data from supported_generations table.";
 }
