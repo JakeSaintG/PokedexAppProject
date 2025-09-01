@@ -335,37 +335,52 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
 
 
 export const getRegionCountData = async (dbContext: PGliteWithLive) => {
-
     // TODO: need to get is_registered once its added...
     // TODO: return count(*) from base_data joined on pokedex_entries grouped by generation
 
     const results = await dbContext.query(`
             SELECT 
-                *
-            FROM pokedex_entries;
+                DISTINCT(s.generation)
+                ,COUNT(b.id)
+            FROM pokemon_species_data s
+            JOIN pokemon_base_data b on s.id = b.id
+            GROUP BY s.generation;
         `, [/*id*/]
     )
 
-    const countData = results.rows[0];
+    const countData = results.rows;
 
-    if (
-        typeof countData === 'object' 
-        && countData !== null 
-        && (
-            'id' in countData
-            && typeof countData['id'] === 'number'
-        )
-        && (
-            'count' in countData
-            && typeof countData['count'] === 'number'
-        )
-        && (
-            'starting_dex_no' in countData
-            && typeof countData['starting_dex_no'] === 'number'
-        )
-    ) {
-        return [countData.count, countData.starting_dex_no]
-    }
+    console.log(countData)
 
-    throw "Unable to retrieve data from supported_generations table.";
+    const foo = await dbContext.query(`
+            SELECT 
+                *
+            FROM pokemon_base_data
+        `, [/*id*/]
+    )
+
+    const bar = foo.rows;
+
+    console.log(bar)
+
+    // if (
+    //     typeof countData === 'object' 
+    //     && countData !== null 
+    //     && (
+    //         'id' in countData
+    //         && typeof countData['id'] === 'number'
+    //     )
+    //     && (
+    //         'count' in countData
+    //         && typeof countData['count'] === 'number'
+    //     )
+    //     && (
+    //         'starting_dex_no' in countData
+    //         && typeof countData['starting_dex_no'] === 'number'
+    //     )
+    // ) {
+    //     return [countData.count, countData.starting_dex_no]
+    // }
+
+    // throw "Unable to retrieve data from supported_generations table.";
 }

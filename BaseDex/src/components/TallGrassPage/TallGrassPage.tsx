@@ -2,6 +2,8 @@ import styles from "./TallGrassPage.module.css";
 import { DexHeader } from "../DexHeader";
 import { NavigationMenu } from "../NavigationMenu";
 import { useEffect, useState } from "react";
+import { getTallGrassData } from "../../repositories/pokemonRepository";
+import { usePGlite } from "@electric-sql/pglite-react";
 
 const test_data = [
     { region: "kanto", registered: 2, total: 3 },
@@ -19,6 +21,10 @@ const test_data = [
 
 
 export function TallGrassPage() {
+    // TODO: If they empty cache...this page will blow up. So will others. Need to handle that? 
+    // Maybe? The main apps won't work like that and this is a poc
+    
+    const dbContext = usePGlite();
     let key = 0;
 
     const [generationData, setGenerationData] = useState('');
@@ -26,6 +32,8 @@ export function TallGrassPage() {
     useEffect(() => {
         
         setGenerationData('beep');
+
+        getTallGrassData(dbContext);
     }, [])
 
     return (

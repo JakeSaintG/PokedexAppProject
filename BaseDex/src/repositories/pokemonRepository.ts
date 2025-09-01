@@ -127,7 +127,6 @@ const loadPokemonImages = async (dbContext: PGliteWithLive, pkmnImgdata: Pokemon
     upsertPokemonImage(dbContext, pkmnImgdata);
 }
 
-export const getTallGrassData = (dbContext: PGliteWithLive) => {
-
-    getRegionCountData(dbContext);
+export const getTallGrassData = async (dbContext: PGliteWithLive) => {
+    await getRegionCountData(dbContext);
 }
