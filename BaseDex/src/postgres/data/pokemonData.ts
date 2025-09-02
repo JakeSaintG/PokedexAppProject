@@ -336,6 +336,7 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
 export const getRegionCountData = async (dbContext: PGliteWithLive) => {
     // TODO: need to get is_registered once its added...
     // TODO: return count(*) from base_data joined on pokedex_entries grouped by generation
+    // I don't want to return megas...or gmaxes...but I do want regional variations. I may need go back to the drawing board with my data
 
     const results = await dbContext.query(`
             SELECT 
