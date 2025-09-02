@@ -333,7 +333,6 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
     }
 }
 
-
 export const getRegionCountData = async (dbContext: PGliteWithLive) => {
     // TODO: need to get is_registered once its added...
     // TODO: return count(*) from base_data joined on pokedex_entries grouped by generation
@@ -341,7 +340,8 @@ export const getRegionCountData = async (dbContext: PGliteWithLive) => {
     const results = await dbContext.query(`
             SELECT 
                 DISTINCT(s.generation)
-                ,COUNT(b.id)
+                ,COUNT(b.id) as total
+                ,COUNT(b.id) as registered -- need to make this actually count registered mons
             FROM pokemon_species_data s
             JOIN pokemon_base_data b on s.id = b.id
             GROUP BY s.generation;
@@ -355,7 +355,7 @@ export const getRegionCountData = async (dbContext: PGliteWithLive) => {
     const foo = await dbContext.query(`
             SELECT 
                 *
-            FROM pokemon_base_data
+            FROM pokemon_species_data
         `, [/*id*/]
     )
 
