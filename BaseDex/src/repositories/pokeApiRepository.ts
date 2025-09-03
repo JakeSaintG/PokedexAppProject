@@ -198,7 +198,7 @@ export const parsePokemonSpeciesData = async (data: unknown): Promise<[PokemonSp
             }
         })
 
-        // TODO: varietyExclusions should probably be stored somewhere in config
+        // TODO: move to using obtainable_blacklist
         const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 
             variety.is_default != true 
                 && !variety.pokemon.name.includes('-cap')

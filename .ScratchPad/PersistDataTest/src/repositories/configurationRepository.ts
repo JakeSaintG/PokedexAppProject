@@ -46,6 +46,32 @@ export const getUpdatedAppConfiguration = async () => {
                 last_modified_dts: '2025-05-08T22:01:16.299Z', // new Date().toISOString()
             },
         ],
+        obtainable: [
+            {
+                form: 'alola',
+                list: 'white'
+            },
+            {
+                form: 'galar',
+                list: 'white'
+            },
+            {
+                form: 'hisui',
+                list: 'white'
+            },
+            {
+                form: 'cap',
+                list: 'black'
+            },
+            {
+                form: 'starter',
+                list: 'black'
+            },
+            {
+                form: 'totem',
+                list: 'black'
+            },
+        ]
     };
 
     return simulatedResult;
