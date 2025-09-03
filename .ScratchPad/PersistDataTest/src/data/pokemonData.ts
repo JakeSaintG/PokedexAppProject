@@ -41,6 +41,8 @@ const createPokemonTablesIfNotExist = () => {
                 ,has_forms INT NOT NULL --INT used as BIT
                 ,male_sprite_url STRING NOT NULL
                 ,female_sprite_url STRING NULL
+                ,is_registered INT NOT NULL --INT used as BIT
+                ,is_obtainable INT NOT NULL --INT used as BIT
                 ,last_modified_dts STRING NOT NULL
             )
         `)
@@ -183,6 +185,8 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
             ,has_forms
             ,type_1
             ,type_2
+            ,is_obtainable
+            ,is_registered
             ,last_modified_dts
         ) 
         VALUES (
@@ -197,6 +201,8 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
             ,:has_forms
             ,:type_1
             ,:type_2
+            ,:is_registered
+            ,:is_obtainable
             ,:last_modified_dts
         )
             ON CONFLICT(id) 
@@ -212,6 +218,7 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
                 ,has_forms = :has_forms
                 ,type_1 = :type_1
                 ,type_2 = :type_2
+                ,is_obtainable = :is_obtainable
                 ,last_modified_dts = :last_modified_dts
     `;
 
@@ -230,6 +237,8 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
                 has_forms: pkmnData.has_forms ? 1 : 0,
                 type_1: pkmnData.type_1,
                 type_2: pkmnData.type_2,
+                is_registed: 0, // TODO: TEST THIS!!! IS A BOOLEAN!! Need to make sure that configuration/reloads don't overwrite via the merge
+                is_obtainable: pkmnData.isObtainable, // TODO: BROKEN ON PURPOSE! Make only "is_default" and whitelisted (-galar,-hisui,etc) equal true
                 last_modified_dts: new Date().toISOString()
             });
     } catch (error) {
