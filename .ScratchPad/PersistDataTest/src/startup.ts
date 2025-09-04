@@ -19,6 +19,9 @@ export const runStartUp = async (dataSource: string, forceUpdate: boolean, batch
     // TODO: error handling
     if (configApiPing()) {
         const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
+        console.log('================================================')
+        console.log(configurationData)
+        console.log('================================================')
         updateConfiguration(configurationData);
     }
 
@@ -27,7 +30,7 @@ export const runStartUp = async (dataSource: string, forceUpdate: boolean, batch
     const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
 
     if (pokeApiPing()) {
-        loadPokemonData( pokemonDataToLoad, batchSize );
+        loadPokemonData(pokemonDataToLoad, batchSize);
     }
 
     // Run anything needed in case user is offline

@@ -50,6 +50,13 @@ export const parsePokemonBaseData = async (data: any) : Promise<PokemonBaseData>
         type_2: null,
         has_forms: false,
         url: data.url,
+
+
+        obtainable: 'placholder',
+        is_registered: false,
+        expanded_dex: 'placholder',
+
+
         last_modified_dts: ''
     };
 
