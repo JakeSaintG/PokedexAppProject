@@ -1,3 +1,4 @@
+import { Obtainable } from "../types/configurationData";
 import { FlavorTextEntry } from "../types/flavorText";
 import { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
 import { Variety } from "../types/varieties";
@@ -37,7 +38,7 @@ export const fetchPokeApiData = async (url: string) => {
         })
 }
 
-export const parsePokemonBaseData = async (data: any) : Promise<PokemonBaseData> => {
+export const parsePokemonBaseData = async (data: any,  obtainableList: Obtainable[]) : Promise<PokemonBaseData> => {
     let parsedData: PokemonBaseData = {
         id: data.id,
         name: data.name,
@@ -52,7 +53,7 @@ export const parsePokemonBaseData = async (data: any) : Promise<PokemonBaseData>
         url: data.url,
 
 
-        obtainable: 'placholder',
+        obtainable: false,
         is_registered: false,
         expanded_dex: 'placholder',
 

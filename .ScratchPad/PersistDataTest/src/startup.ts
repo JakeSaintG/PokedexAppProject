@@ -19,9 +19,6 @@ export const runStartUp = async (dataSource: string, forceUpdate: boolean, batch
     // TODO: error handling
     if (configApiPing()) {
         const configurationData: ConfigurationData = await getUpdatedAppConfiguration();
-        console.log('================================================')
-        console.log(configurationData)
-        console.log('================================================')
         updateConfiguration(configurationData);
     }
 

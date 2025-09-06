@@ -1,5 +1,5 @@
 import sqlite from 'better-sqlite3';
-import { SupportedGeneration } from '../types/configurationData';
+import { Obtainable, SupportedGeneration } from '../types/configurationData';
 import { DateData } from '../types/dateData';
 import { logError, logInfo, setLogRetentionDays } from '../repositories/logRepository';
 import { LogData } from '../types/logData';
@@ -26,6 +26,16 @@ const setDbContext = (dataSource: string) => {
 }
 
 const createConfigTablesIfNotExist = () => {
+    dbContext
+        .prepare(`
+            CREATE TABLE IF NOT EXISTS obtainable_forms (
+                form STRING PRIMARY KEY NOT NULL
+                ,list STRING NOT NULL
+                ,last_modified_dts STRING NOT NULL
+            )
+        `)
+        .run();
+
     dbContext
         .prepare(`
             CREATE TABLE IF NOT EXISTS supported_generations (
@@ -55,6 +65,40 @@ const createConfigTablesIfNotExist = () => {
             )
         `)
         .run();
+}
+
+export const upsertObtainableData = (obtainable: Obtainable) => {
+    const stmt = `
+            INSERT INTO obtainable_forms (
+                form
+                ,list
+                ,last_modified_dts
+            )
+            VALUES (
+                :form
+                ,:list
+                ,:last_modified_dts
+            )
+            ON CONFLICT(form)
+            DO UPDATE SET
+                form = :form
+                ,list = :list
+                ,last_modified_dts = :last_modified_dts
+        `;
+
+    try {
+        (dbContext.transaction((obtainable: Obtainable) => {
+            dbContext
+                .prepare(stmt)
+                .run({
+                    form: obtainable.form,
+                    list: obtainable.list,
+                    last_modified_dts: new Date().toISOString(),
+                });
+        }))(obtainable);
+    } catch (error) {
+        logError(`Failed to UPSERT config data for ${obtainable.form}. This is a terminating error.\r\n${error.message}`, true);
+    }
 }
 
 export const upsertConfigurationData = (configData: SupportedGeneration) => {

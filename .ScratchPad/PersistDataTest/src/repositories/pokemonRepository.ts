@@ -4,11 +4,11 @@ import {
     upsertPokemonBaseData,
     upsertPokemonSpeciesData 
 } from "../data/pokemonData";
-import { ConfigurationData } from "../types/configurationData";
+import { ConfigurationData, Obtainable } from "../types/configurationData";
 import { DateData } from "../types/dateData";
 import { Pokemon } from "../types/pokemon";
 import { PokemonImageData } from "../types/pokemonImageData";
-import { updateLocalLastModified, getGenerationCountOffset } from "./configurationRepository";
+import { updateLocalLastModified, getGenerationCountOffset, getObtainableList } from "./configurationRepository";
 import { logInfo, logInfoVerbose, logInfoWithAttention } from "./logRepository";
 import { 
     fetchPokeApiData, 
@@ -20,7 +20,8 @@ import {
 
 export const loadPokemonData = async ( generationToLoad: DateData[], batchSize: number) => {
     // GET CONFIG DATA FROM DB HERE
-    
+    const obtainableList = getObtainableList();
+
     for (const gen of generationToLoad) {
         logInfoWithAttention(`Gen ${gen.generation_id} identified for update.`);
 
@@ -28,7 +29,7 @@ export const loadPokemonData = async ( generationToLoad: DateData[], batchSize: 
             const [count, offset] = getGenerationCountOffset(gen.generation_id);
 
             const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
-            await loadPokemon(fetchedPokemon, configurationData, batchSize);
+            await loadPokemon(fetchedPokemon, obtainableList, batchSize);
 
             updateLocalLastModified(gen.generation_id);
         } catch (error) {
@@ -45,18 +46,18 @@ export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean)
     })
 }
 
-const loadPokemon = async ( pokemonToLoad: Pokemon[], configurationData: ConfigurationData, batchSize: number) => {
+const loadPokemon = async ( pokemonToLoad: Pokemon[], obtainableList: Obtainable[], batchSize: number) => {
     // TODO: I still want to to try to be loading multiple pokemon at once...
     for (const pkmn of pokemonToLoad) {
         logInfo(`Loading data for ${pkmn.name}.`)
-        await startLoad(pkmn, configurationData, (new Date().toISOString()))
+        await startLoad(pkmn, obtainableList, (new Date().toISOString()))
     }
 }
 
-const startLoad  = async ( pokemonToLoad: Pokemon, configurationData: ConfigurationData, loadStartTime: string ) => {
+const startLoad  = async ( pokemonToLoad: Pokemon, obtainableList: Obtainable[], loadStartTime: string ) => {
     // TODO: maybe add some timing...better logging
     logInfoVerbose(`Loading base data for: ${pokemonToLoad.name}...`);
-    const parsedBaseData = await loadBasePokemonData(pokemonToLoad, loadStartTime);
+    const parsedBaseData = await loadBasePokemonData(pokemonToLoad, obtainableList, loadStartTime);
     
     const pokemonSpeciesToLoad: Pokemon = { name: parsedBaseData.name, url: parsedBaseData.species_url };
     
@@ -75,7 +76,7 @@ const startLoad  = async ( pokemonToLoad: Pokemon, configurationData: Configurat
     if (varietiesToGet.length > 0) {
         for (const variety of varietiesToGet) {
             logInfoVerbose(`Loading remaining special forms for: ${variety.name}...`);
-            const varietiesImagesLeftToGet = await loadBasePokemonData(variety, loadStartTime);
+            const varietiesImagesLeftToGet = await loadBasePokemonData(variety, obtainableList, loadStartTime);
             
             const imagesToGet = {
                 id: varietiesImagesLeftToGet.id,
@@ -104,12 +105,12 @@ const loadSpeciesPokemonData = async ( pokemonToLoad: Pokemon, loadStartTime: st
     return varieties.map(v => v.pokemon);
 }
 
-const loadBasePokemonData = async (  pokemonToLoad: Pokemon, loadStartTime: string ) => {
+const loadBasePokemonData = async (  pokemonToLoad: Pokemon,  obtainableList: Obtainable[], loadStartTime: string ) => {
     logInfoVerbose(`fetching base data: ${pokemonToLoad.name}`)
     const fetchedData = await fetchPokeApiData(pokemonToLoad.url);
     
     logInfoVerbose(`parsing base data: ${pokemonToLoad.name}`)
-    const parsedData = await parsePokemonBaseData(fetchedData);
+    const parsedData = await parsePokemonBaseData(fetchedData, obtainableList);
 
     logInfoVerbose(`storing base data: ${pokemonToLoad.name}`);
     await upsertPokemonBaseData(parsedData);

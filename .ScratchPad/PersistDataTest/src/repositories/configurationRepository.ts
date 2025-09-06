@@ -5,8 +5,9 @@ import {
     getGenerationCountAndOffset,
     getGenerationLastUpdatedLocally,
     setGenerationActive,
+    upsertObtainableData,
 } from '../data/configurationData';
-import { ConfigurationData, SupportedGeneration } from '../types/configurationData';
+import { ConfigurationData, Obtainable, SupportedGeneration } from '../types/configurationData';
 import { DateData } from '../types/dateData';
 import { logInfo } from './logRepository';
 
@@ -79,9 +80,12 @@ export const getUpdatedAppConfiguration = async () => {
 
 export const updateConfiguration = (configuration: ConfigurationData) => {
     updateSupportedGenerations(configuration.supported_generations);
-
-    // do other stuff if needed
+    updateObtainablity(configuration.obtainable);
 };
+
+export const getObtainableList = (): Obtainable[] => {
+    return []
+}; 
 
 export const getGenerationCountOffset = (id: number): [number, number] | undefined =>
     getGenerationCountAndOffset(id);
@@ -90,7 +94,11 @@ export const getLastLocalGenerationUpdate = (): DateData[] => getGenerationLastU
 
 export const updateGenerationActive = (id: number) => setGenerationActive(id);
 
-export const updateSupportedGenerations = (supportedGenerations: SupportedGeneration[]) => {
+const updateObtainablity = (obtainableList: Obtainable[]) => {
+    obtainableList.forEach((obtainable) => upsertObtainableData(obtainable))
+}
+
+const updateSupportedGenerations = (supportedGenerations: SupportedGeneration[]) => {
     supportedGenerations.forEach((generation: SupportedGeneration) => {
         const generationDateData: DateData | null = getGenerationUpdateData(generation.id);
 
