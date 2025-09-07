@@ -6,6 +6,7 @@ import {
     getGenerationLastUpdatedLocally,
     setGenerationActive,
     upsertObtainableData,
+    selectObtainableList,
 } from '../data/configurationData';
 import { ConfigurationData, Obtainable, SupportedGeneration } from '../types/configurationData';
 import { DateData } from '../types/dateData';
@@ -83,9 +84,7 @@ export const updateConfiguration = (configuration: ConfigurationData) => {
     updateObtainablity(configuration.obtainable);
 };
 
-export const getObtainableList = (): Obtainable[] => {
-    return []
-}; 
+export const getObtainableList = (): Obtainable[] => {const foo = selectObtainableList(); console.log(foo); return foo}; 
 
 export const getGenerationCountOffset = (id: number): [number, number] | undefined =>
     getGenerationCountAndOffset(id);

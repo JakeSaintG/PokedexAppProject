@@ -299,6 +299,38 @@ export const getGenerationLastUpdatedLocally = (): DateData[] => {
     });
 }
 
+export const selectObtainableList = () => {
+        const stmt = `
+        SELECT 
+            form
+            ,list
+        FROM obtainable_forms
+    `
+    const result = dbContext
+    .prepare(stmt)
+    .all();
+    
+    console.log(result);
+    if (
+        typeof result === 'object' 
+        && result !== null 
+        && (
+            'form' in result
+            && typeof result['form'] === 'string'
+        )
+        && (
+            'list' in result
+            && typeof result['list'] === 'string'
+        )
+    ) {
+        console.log(result.list + result.form)
+        
+        // return [result.count, result.starting_dex_no]
+    } 
+
+    return undefined;
+}
+
 export const getGenerationCountAndOffset = (id: number): [number, number] | undefined => {
     const stmt = `
         SELECT 
