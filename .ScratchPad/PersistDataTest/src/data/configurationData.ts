@@ -306,28 +306,32 @@ export const selectObtainableList = () => {
             ,list
         FROM obtainable_forms
     `
+
     const result = dbContext
     .prepare(stmt)
     .all();
-    
-    console.log(result);
+
     if (
-        typeof result === 'object' 
+        typeof Array.isArray(result) 
         && result !== null 
         && (
             'form' in result
-            && typeof result['form'] === 'string'
+            && typeof result[0]['form'] === 'string'
         )
-        && (
-            'list' in result
-            && typeof result['list'] === 'string'
-        )
+        // && (
+        //     'list' in result
+        //     && typeof result[0]['list'] === 'string'
+        // )
     ) {
-        console.log(result.list + result.form)
+        
+        console.log(result)
+        
+        // console.log(result.list + result.form)
         
         // return [result.count, result.starting_dex_no]
     } 
-
+    
+    console.log('!~fdasdfasdfasdfsadf')
     return undefined;
 }
 
