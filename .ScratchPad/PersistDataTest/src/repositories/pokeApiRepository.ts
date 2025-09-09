@@ -69,6 +69,8 @@ export const parsePokemonBaseData = async (data: any,  obtainableList: Obtainabl
         parsedData[`type_${t.slot}`] = t.type.name;
     });
 
+    console.log(obtainableList)
+
     // TODO: maybe process is_obtainable here. If is_default and whitelisted like "-hisui" or "-alola"
 
     return parsedData;

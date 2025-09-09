@@ -299,7 +299,7 @@ export const getGenerationLastUpdatedLocally = (): DateData[] => {
     });
 }
 
-export const selectObtainableList = () => {
+export const selectObtainableList = (): Obtainable[] => {
         const stmt = `
         SELECT 
             form
@@ -312,26 +312,28 @@ export const selectObtainableList = () => {
     .all();
 
     if (
-        typeof Array.isArray(result) 
-        && result !== null 
-        && (
-            'form' in result
-            && typeof result[0]['form'] === 'string'
-        )
-        // && (
-        //     'list' in result
-        //     && typeof result[0]['list'] === 'string'
-        // )
+        Array.isArray(result) 
+        && result !== null
     ) {
-        
-        console.log(result)
-        
-        // console.log(result.list + result.form)
-        
-        // return [result.count, result.starting_dex_no]
+        return result.filter(r => {
+            if (
+                typeof r === 'object' 
+                && r !== null 
+                && (
+                    'form' in r
+                    && typeof r['form'] === 'string'
+                ) 
+                && (
+                    'list' in r
+                    && typeof r['list'] === 'string'
+                ) 
+            ) {
+                return {form: r.form, list: r.list};
+            }
+
+        }) as Obtainable[];
     } 
-    
-    console.log('!~fdasdfasdfasdfsadf')
+
     return undefined;
 }
 
