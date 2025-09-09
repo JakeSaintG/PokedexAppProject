@@ -299,17 +299,23 @@ export const getGenerationLastUpdatedLocally = (): DateData[] => {
     });
 }
 
-export const selectObtainableList = (): Obtainable[] => {
-        const stmt = `
+export const selectObtainableList = (listType: string): Obtainable[] => {
+    const stmt = `
         SELECT 
             form
             ,list
         FROM obtainable_forms
+        WHERE list = :listType
     `
 
-    const result = dbContext
-    .prepare(stmt)
-    .all();
+    let result: any;
+    (dbContext.transaction((listType: string) => {
+        result = dbContext
+            .prepare(stmt)
+            .all({
+                listType: listType
+            });
+    }))(listType);
 
     if (
         Array.isArray(result) 

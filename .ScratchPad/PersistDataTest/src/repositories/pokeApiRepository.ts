@@ -76,7 +76,7 @@ export const parsePokemonBaseData = async (data: any,  obtainableList: Obtainabl
     return parsedData;
 }
 
-export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety[]] => {
+export const parsePokemonSpeciesData = (data: any, blackList: Obtainable[]): [PokemonSpeciesData, Variety[]] => {
     const specData: PokemonSpeciesData = {
         id: data.id,
         dex_no: data.pokedex_numbers.find(e => e.pokedex.name === 'national').entry_number,
@@ -97,7 +97,7 @@ export const parsePokemonSpeciesData = (data: any): [PokemonSpeciesData, Variety
         }
     })
 
-    // TODO: varietyExclusions should probably be stored somewhere in config
+    // TODO: use blackList
     const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 
         variety.is_default != true 
             && !variety.pokemon.name.includes('-cap')

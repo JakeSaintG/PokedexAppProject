@@ -32,10 +32,10 @@ export const getUpdatedAppConfiguration = async () => {
                 generation_name: 'generation1',
                 description: 'Red, Green, Blue, and Yellow.',
                 starting_dex_no: 1,
-                count: 9, //151
+                count: 3, //151
                 active: true,
                 stale_by_dts: placeHolderStaleByDate,
-                last_modified_dts: '2025-05-08T22:04:23.251Z', // new Date().toISOString()
+                last_modified_dts: '2025-05-08T22:04:24.251Z', // new Date().toISOString()
             },
             {
                 id: 2,
@@ -84,7 +84,7 @@ export const updateConfiguration = (configuration: ConfigurationData) => {
     updateObtainablity(configuration.obtainable);
 };
 
-export const getObtainableList = (): Obtainable[] => selectObtainableList();
+export const getObtainableList = (listType: string): Obtainable[] => selectObtainableList(listType);
 
 export const getGenerationCountOffset = (id: number): [number, number] | undefined =>
     getGenerationCountAndOffset(id);
