@@ -22,7 +22,6 @@ const setDbContext = (dataSource: string) => {
     } else if (dataSource === 'postgres') {
         throw 'postgres support not yet implemented.'
     }
-
 }
 
 const createConfigTablesIfNotExist = () => {
