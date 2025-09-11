@@ -84,7 +84,7 @@ export const updateConfiguration = (configuration: ConfigurationData) => {
     updateObtainablity(configuration.obtainable);
 };
 
-export const getObtainableList = (listType: string): Obtainable[] => selectObtainableList(listType);
+export const getObtainableList = (listType: string): string[] => selectObtainableList(listType);
 
 export const getGenerationCountOffset = (id: number): [number, number] | undefined =>
     getGenerationCountAndOffset(id);

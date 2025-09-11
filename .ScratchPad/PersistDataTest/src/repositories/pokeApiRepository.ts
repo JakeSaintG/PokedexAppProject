@@ -38,7 +38,7 @@ export const fetchPokeApiData = async (url: string) => {
         })
 }
 
-export const parsePokemonBaseData = async (data: any,  obtainableList: Obtainable[]) : Promise<PokemonBaseData> => {
+export const parsePokemonBaseData = async (data: any,  whiteList: string[]) : Promise<PokemonBaseData> => {
     let parsedData: PokemonBaseData = {
         id: data.id,
         name: data.name,
@@ -69,14 +69,14 @@ export const parsePokemonBaseData = async (data: any,  obtainableList: Obtainabl
         parsedData[`type_${t.slot}`] = t.type.name;
     });
 
-    console.log(obtainableList)
+    console.log(whiteList)
 
     // TODO: maybe process is_obtainable here. If is_default and whitelisted like "-hisui" or "-alola"
 
     return parsedData;
 }
 
-export const parsePokemonSpeciesData = (data: any, blackList: Obtainable[]): [PokemonSpeciesData, Variety[]] => {
+export const parsePokemonSpeciesData = (data: any, blackList: string[]): [PokemonSpeciesData, Variety[]] => {
     const specData: PokemonSpeciesData = {
         id: data.id,
         dex_no: data.pokedex_numbers.find(e => e.pokedex.name === 'national').entry_number,
@@ -96,6 +96,8 @@ export const parsePokemonSpeciesData = (data: any, blackList: Obtainable[]): [Po
             flavor_text: flavorTxt.flavor_text.replace(/\n|\f/g, " ")
         }
     })
+
+    console.log(blackList)
 
     // TODO: use blackList
     const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 

@@ -299,11 +299,10 @@ export const getGenerationLastUpdatedLocally = (): DateData[] => {
     });
 }
 
-export const selectObtainableList = (listType: string): Obtainable[] => {
+export const selectObtainableList = (listType: string): string[] => {
     const stmt = `
         SELECT 
             form
-            ,list
         FROM obtainable_forms
         WHERE list = :listType
     `
@@ -314,14 +313,14 @@ export const selectObtainableList = (listType: string): Obtainable[] => {
             .prepare(stmt)
             .all({
                 listType: listType
-            });
+            })
     }))(listType);
 
     if (
         Array.isArray(result) 
         && result !== null
     ) {
-        return result.filter(r => {
+        return result.map(r => {
             if (
                 typeof r === 'object' 
                 && r !== null 
@@ -329,16 +328,11 @@ export const selectObtainableList = (listType: string): Obtainable[] => {
                     'form' in r
                     && typeof r['form'] === 'string'
                 ) 
-                && (
-                    'list' in r
-                    && typeof r['list'] === 'string'
-                ) 
             ) {
-                return {form: r.form, list: r.list};
+                return r.form;
             }
-
-        }) as Obtainable[];
-    } 
+        });
+    }
 
     return undefined;
 }
