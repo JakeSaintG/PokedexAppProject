@@ -55,7 +55,7 @@ export const parsePokemonBaseData = async (data: any,  whiteList: string[]) : Pr
 
         obtainable: false,
         is_registered: false,
-        expanded_dex: 'placholder',
+        regional_form: false,
 
 
         last_modified_dts: ''
@@ -69,9 +69,13 @@ export const parsePokemonBaseData = async (data: any,  whiteList: string[]) : Pr
         parsedData[`type_${t.slot}`] = t.type.name;
     });
 
-    console.log(whiteList)
-
-    // TODO: maybe process is_obtainable here. If is_default and whitelisted like "-hisui" or "-alola"
+    
+    if (parsedData.is_default) {
+        parsedData.obtainable = true;
+    } else if (whiteList.some(wl => parsedData.name.includes(wl))) {
+        parsedData.obtainable = true;
+        parsedData.regional_form = true;
+    }
 
     return parsedData;
 }
@@ -97,14 +101,12 @@ export const parsePokemonSpeciesData = (data: any, blackList: string[]): [Pokemo
         }
     })
 
-    console.log(blackList)
-
-    // TODO: use blackList
+    // Build regex string to test use in filtering out unneeded varieties.
+    // Doing this process with regex was the least time-complex option I could think of for now.
+    const blackListRegex = new RegExp(blackList.join("|"), "i");
     const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 
-        variety.is_default != true 
-            && !variety.pokemon.name.includes('-cap')
-            && !variety.pokemon.name.includes('-starter')
-            && !variety.pokemon.name.includes('-totem')
+        // It's a special form that needs more data if it's not default or blacklisted
+        variety.is_default == false && !blackListRegex.test(variety.pokemon.name)
     );
 
     return [specData, varietiesToGet];

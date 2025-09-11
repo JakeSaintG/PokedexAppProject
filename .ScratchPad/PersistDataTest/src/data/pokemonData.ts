@@ -43,7 +43,7 @@ const createPokemonTablesIfNotExist = () => {
                 ,female_sprite_url STRING NULL
                 ,is_registered INT NOT NULL --INT used as BIT
                 ,obtainable INT NOT NULL --INT used as BIT
-                ,expanded_dex STRING NOT NULL
+                ,regional_form STRING NOT NULL
                 ,last_modified_dts STRING NOT NULL
             )
         `)
@@ -188,7 +188,7 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
             ,type_2
             ,obtainable
             ,is_registered
-            ,expanded_dex
+            ,regional_form
             ,last_modified_dts
         ) 
         VALUES (
@@ -205,7 +205,7 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
             ,:type_2
             ,:is_registered
             ,:obtainable
-            ,:expanded_dex
+            ,:regional_form
             ,:last_modified_dts
         )
             ON CONFLICT(id) 
@@ -222,7 +222,7 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
                 ,type_1 = :type_1
                 ,type_2 = :type_2
                 ,obtainable = :obtainable
-                ,expanded_dex = :expanded_dex
+                ,regional_form = :regional_form
                 ,last_modified_dts = :last_modified_dts
     `;
 
@@ -243,7 +243,7 @@ export const upsertPokemonBaseData = async (pkmnData: PokemonBaseData) => {
                 type_2: pkmnData.type_2,
                 is_registed: 0, // TODO: TEST THIS!!! IS A BOOLEAN!! Need to make sure that configuration/reloads don't overwrite via the merge
                 obtainable: pkmnData.obtainable, // TODO: BROKEN ON PURPOSE! Make only "is_default" and whitelisted (-galar,-hisui,etc) equal true
-                expanded_dex: pkmnData.expanded_dex ? 1 : 0, // TODO: true if regional form
+                expanded_dex: pkmnData.regional_form ? 1 : 0, // TODO: true if regional form
                 last_modified_dts: new Date().toISOString()
             });
     } catch (error) {

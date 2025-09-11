@@ -14,7 +14,7 @@ export interface PokemonBaseData {
     url: string,
     obtainable: boolean,
     is_registered: boolean,
-    expanded_dex: string,
+    regional_form: boolean,
     last_modified_dts: string,
 }
 
