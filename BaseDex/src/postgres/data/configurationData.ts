@@ -159,6 +159,7 @@ export const setGenerationActive = async (dbContext: PGliteWithLive, id: number)
             `
                 UPDATE supported_generations
                 SET active = 1
+                ,local_last_modified_dts = NOW()
                 WHERE id = $1;
             `, 
             [id]

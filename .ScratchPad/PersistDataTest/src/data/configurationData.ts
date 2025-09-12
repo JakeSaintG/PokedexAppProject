@@ -216,7 +216,9 @@ export const getGenerationUpdateData = (id: number): DateData | undefined => {
 export const setGenerationActive = (id: number) => {
     const stmt = `
         UPDATE supported_generations
-        SET active = 1
+        SET 
+            active = 1
+            ,local_last_modified_dts = date('now')
         WHERE id = :id;
     `;
 
