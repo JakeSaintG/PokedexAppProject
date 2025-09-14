@@ -1,5 +1,6 @@
 export interface ConfigurationData {
-    supported_generations: SupportedGeneration[]
+    supported_generations: SupportedGeneration[],
+    obtainable: Obtainable[]
 }
 
 export interface SupportedGeneration {
@@ -11,4 +12,9 @@ export interface SupportedGeneration {
     active: boolean | undefined | null,
     stale_by_dts: null | string,
     last_modified_dts: string
+}
+
+export interface Obtainable {
+    form: string,
+    list: string
 }

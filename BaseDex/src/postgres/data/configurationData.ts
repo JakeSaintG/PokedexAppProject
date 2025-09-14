@@ -1,9 +1,97 @@
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
-import type { SupportedGeneration } from '../../types/configurationData';
+import type { Obtainable, SupportedGeneration } from '../../types/configurationData';
 import type { DateData } from '../../types/dateData';
 import type { LogData } from '../../types/logData';
 import { logError, logInfo } from '../../repositories/logRepository';
 // import { setLogRetentionDays } from '../repositories/logRepository';
+
+export const initConfigDb = async (dbContext: PGliteWithLive) => {
+    await createConfigTablesIfNotExist(dbContext);
+    // migrateTablesIfNeeded()
+    logInfo(dbContext, 'Prepared Pokemon database.');
+}
+
+const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
+    console.log('Creating config tables...');
+    
+    dbContext
+        .exec(`
+            CREATE TABLE IF NOT EXISTS obtainable_forms (
+                form TEXT PRIMARY KEY NOT NULL
+                ,list TEXT NOT NULL
+                ,last_modified_dts TEXT NOT NULL
+            )
+        `).then ( () => 
+            console.log('obtainable_forms table created')
+        );
+
+    dbContext
+        .exec(`
+            CREATE TABLE IF NOT EXISTS supported_generations (
+                id INT PRIMARY KEY NOT NULL
+                ,generation_name TEXT NOT NULL
+                ,description TEXT NOT NULL
+                ,starting_dex_no INT NOT NULL
+                ,count INT NOT NULL
+                ,stale_by_dts TEXT NOT NULL
+                ,active BOOLEAN NULL
+                ,last_modified_dts TEXT NOT NULL
+                ,local_last_modified_dts TEXT NULL
+                ,source_last_modified_dts TEXT NOT NULL
+            )
+        `).then ( () => 
+            console.log('supported_generations table created')
+        );
+
+    dbContext
+        .exec(`
+            CREATE TABLE IF NOT EXISTS logs (
+                id SERIAL PRIMARY KEY
+                ,log_message TEXT NOT NULL
+                ,log_level TEXT NOT NULL
+                ,verbose_logging BOOLEAN NULL
+                ,retain BOOLEAN NULL
+                ,log_written_dts TEXT NOT NULL
+            )
+        `).then ( () => 
+            console.log('logs table created')
+        );
+}
+
+export const upsertObtainableData = async (dbContext: PGliteWithLive, obtainable: Obtainable) => {
+    try {
+        await dbContext.transaction(async (transaction) => transaction.query(
+            `
+                INSERT INTO obtainable_forms (
+                    form
+                    ,list
+                    ,last_modified_dts
+                )
+                VALUES (
+                    $1
+                    ,$2
+                    ,$3
+                )
+                ON CONFLICT(form)
+                DO UPDATE SET
+                    form = $1
+                    ,list = $2
+                    ,last_modified_dts = $3
+            `,
+            [
+                obtainable.form,
+                obtainable.list,
+                new Date().toISOString(),
+            ]
+        ));
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(
+                logError(dbContext, `Failed to UPSERT config data for ${obtainable.form}. This is a terminating error.\r\n${error.message}`, true)
+            )
+        }
+    }
+}
 
 export const upsertConfigurationData = async (dbContext: PGliteWithLive, configData: SupportedGeneration) => {
     /*
@@ -61,48 +149,6 @@ export const upsertConfigurationData = async (dbContext: PGliteWithLive, configD
             )
         }
     }
-}
-
-export const initConfigDb = async (dbContext: PGliteWithLive) => {
-    await createConfigTablesIfNotExist(dbContext);
-    // migrateTablesIfNeeded()
-    logInfo(dbContext, 'Prepared Pokemon database.');
-}
-
-const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
-    console.log('Creating config tables...');
-    
-    dbContext
-        .exec(`
-            CREATE TABLE IF NOT EXISTS supported_generations (
-                id INT PRIMARY KEY NOT NULL
-                ,generation_name TEXT NOT NULL
-                ,description TEXT NOT NULL
-                ,starting_dex_no INT NOT NULL
-                ,count INT NOT NULL
-                ,stale_by_dts TEXT NOT NULL
-                ,active BOOLEAN NULL
-                ,last_modified_dts TEXT NOT NULL
-                ,local_last_modified_dts TEXT NULL
-                ,source_last_modified_dts TEXT NOT NULL
-            )
-        `).then ( () => 
-            console.log('supported_generations table created')
-        );
-
-    dbContext
-        .exec(`
-            CREATE TABLE IF NOT EXISTS logs (
-                id SERIAL PRIMARY KEY
-                ,log_message TEXT NOT NULL
-                ,log_level TEXT NOT NULL
-                ,verbose_logging BOOLEAN NULL
-                ,retain BOOLEAN NULL
-                ,log_written_dts TEXT NOT NULL
-            )
-        `).then ( () => 
-            console.log('logs table created')
-        );
 }
 
 export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: number): Promise<DateData | undefined> => {
@@ -236,6 +282,38 @@ export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive)
 
         return acc;
     }, []);
+}
+
+export const selectObtainableList = async (dbContext: PGliteWithLive, listType: string): Promise<string[]> => {
+    const stmt = `
+        SELECT 
+            form
+        FROM obtainable_forms
+        WHERE list = $1
+    `
+    
+
+    const result = await dbContext.transaction(async (transaction) => transaction.query(stmt, [listType]));
+
+    if (
+        Array.isArray(result) 
+        && result !== null
+    ) {
+        return result.map(r => {
+            if (
+                typeof r === 'object' 
+                && r !== null 
+                && (
+                    'form' in r
+                    && typeof r['form'] === 'string'
+                ) 
+            ) {
+                return r.form;
+            }
+        });
+    }
+
+    throw "Unable to retrieve data from obtainable_forms table.";
 }
 
 export const getGenerationCountAndOffset = async (dbContext: PGliteWithLive, id: number): Promise<[number, number]> => {

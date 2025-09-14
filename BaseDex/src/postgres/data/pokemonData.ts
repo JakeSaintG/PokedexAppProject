@@ -1,18 +1,16 @@
 import type { PGliteWithLive } from "@electric-sql/pglite/live";
 import { Buffer } from 'buffer';
 import type {
-    PokemonBaseData, /*, PokemonSpeciesData*/
+    PokemonBaseData,
     PokemonSpeciesData,
 } from "../../types/pokemonData";
 import type { PokemonImageData } from "../../types/pokemonImageData";
 import { logInfo } from "../../repositories/logRepository";
-// import type { Pokemon } from '../../types/pokemon';
-// import type { PokedexData } from '../../types/pokedexData';
-// import type { PokemonImageData } from '../../types/pokemonImageData';
 
 export const initPokemonDb = async (dbContext: PGliteWithLive) => {
     await createPokemonTablesIfNotExist(dbContext);
     // migrateTablesIfNeeded()
+
     logInfo(dbContext, 'Prepared Pokemon database.');
 };
 
@@ -37,6 +35,11 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
                 ,has_forms BOOLEAN NOT NULL
                 ,male_sprite_url TEXT NOT NULL
                 ,female_sprite_url TEXT NULL
+
+                ,is_registered BOOLEAN NOT NULL
+                ,obtainable BOOLEAN NOT NULL
+                ,regional_form TEXT NOT NULL
+
                 ,last_modified_dts TEXT NOT NULL
             )
         `
@@ -173,6 +176,12 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
 }
 
 export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData: PokemonBaseData) => {
+    /*
+        Insert base data. If configuration data is already there, set it with
+        the exception of the "is_registered" field. Perserve the is_registered
+        value in case a user has already registered that Pokemon.
+    */ 
+
     try {
         await dbContext.transaction(async (transaction) => transaction.query(
             `
@@ -188,6 +197,9 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                     ,has_forms
                     ,type_1
                     ,type_2
+                    ,is_registered
+                    ,obtainable
+                    ,regional_form
                     ,last_modified_dts
                 ) 
                 VALUES (
@@ -202,7 +214,10 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                     ,$9 -- pkmnData.has_forms
                     ,$10 -- pkmnData.type_1
                     ,$11 -- pkmnData.type_2
-                    ,$12 -- new Date().toISOString()
+                    ,$12 -- is_registered
+                    ,$13 -- obtainable
+                    ,$14 -- regional_form
+                    ,$15 -- new Date().toISOString()
                 )
                     ON CONFLICT(id) 
                     DO UPDATE SET 
@@ -217,7 +232,9 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                         ,has_forms = $9                     -- pkmnData.has_forms
                         ,type_1 = $10                       -- pkmnData.type_1
                         ,type_2 = $11                       -- pkmnData.type_2
-                        ,last_modified_dts = $12            -- new Date().toISOString()
+                        ,obtainable = $13                   -- obtainable
+                        ,regional_form = $14                -- regional_form
+                        ,last_modified_dts = $15            -- new Date().toISOString()
             `,
             [
                 pkmnData.id,
@@ -231,6 +248,9 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                 pkmnData.has_forms,
                 pkmnData.type_1,
                 pkmnData.type_2,
+                false,
+                pkmnData.obtainable,
+                pkmnData.regional_form,
                 new Date().toISOString(),
             ]
         ));

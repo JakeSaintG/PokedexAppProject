@@ -1,7 +1,3 @@
-// import { FlavorTextEntry } from "../types/flavorText";
-// import { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
-// import { Variety } from "../types/varieties";
-
 import type { FlavorTextEntry } from "../types/flavorText";
 import type { Pokemon } from "../types/pokemon";
 import type { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
@@ -43,7 +39,7 @@ export const fetchPokeApiData = async (url: string) => {
         })
 }
 
-export const parsePokemonBaseData = async (data: unknown) : Promise<PokemonBaseData> => {
+export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) : Promise<PokemonBaseData> => {
     if (
         typeof data === 'object' 
         && data !== null 
@@ -94,6 +90,18 @@ export const parsePokemonBaseData = async (data: unknown) : Promise<PokemonBaseD
             'url' in data
             && typeof data['url'] === 'string'
         )
+        && (
+            'obtainable' in data
+            && typeof data['obtainable'] === 'boolean'
+        )
+        && (
+            'is_registered' in data
+            && typeof data['is_registered'] === 'boolean'
+        )
+        && (
+            'regional_form' in data
+            && typeof data['regional_form'] === 'boolean'
+        )
     ) {
         const parsedData: PokemonBaseData = {
             id: data.id,
@@ -107,6 +115,11 @@ export const parsePokemonBaseData = async (data: unknown) : Promise<PokemonBaseD
             type_2: undefined,
             has_forms: false,
             url: data.url,
+
+            obtainable: false,
+            is_registered: false,
+            regional_form: false,
+
             last_modified_dts: ''
         };
     
@@ -118,14 +131,21 @@ export const parsePokemonBaseData = async (data: unknown) : Promise<PokemonBaseD
             const type = `type_${t.slot}`;
             if (type == 'type_2' || type == 'type_2') parsedData[type] = t.type.name;
         });
-    
+
+        if (parsedData.is_default) {
+            parsedData.obtainable = true;
+        } else if (whiteList.some(wl => parsedData.name.includes(wl))) {
+            parsedData.obtainable = true;
+            parsedData.regional_form = true;
+        }
+
         return parsedData;
     } else {
         throw 'Unable to parse Pokemon base data.';
     }
 }
 
-export const parsePokemonSpeciesData = async (data: unknown): Promise<[PokemonSpeciesData, Variety[]]> => {
+export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]): Promise<[PokemonSpeciesData, Variety[]]> => {
     if (
         typeof data === 'object' 
         && data !== null 
@@ -198,12 +218,12 @@ export const parsePokemonSpeciesData = async (data: unknown): Promise<[PokemonSp
             }
         })
 
-        // TODO: move to using obtainable_blacklist
+        // Build regex string to test use in filtering out unneeded varieties.
+        // Doing this process with regex was the least time-complex option I could think of for now.
+        const blackListRegex = new RegExp(blackList.join("|"), "i");
         const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 
-            variety.is_default != true 
-                && !variety.pokemon.name.includes('-cap')
-                && !variety.pokemon.name.includes('-starter')
-                && !variety.pokemon.name.includes('-totem')
+            // It's a special form that needs more data if it's not default or blacklisted
+            variety.is_default == false && !blackListRegex.test(variety.pokemon.name)
         );
 
         return [specData, varietiesToGet];

@@ -3,17 +3,15 @@ import {
     getGenerationCountAndOffset,
     getGenerationLastUpdatedLocally,
     getGenerationUpdateData,
+    setGenerationActive,
     setLocalLastModifiedDate,
-    // setLocalLastModifiedDate,
     upsertConfigurationData,
-    // getGenerationCountAndOffset,
-    // getGenerationLastUpdatedLocally,
-    // setGenerationActive,
+    upsertObtainableData,
+    selectObtainableList
 } from '../postgres/data/configurationData';
-import type { ConfigurationData, SupportedGeneration } from '../types/configurationData';
+import type { ConfigurationData, Obtainable, SupportedGeneration } from '../types/configurationData';
 import type { DateData } from '../types/dateData';
 import { logInfo } from './logRepository';
-// import { logInfo } from './logRepository';
 
 export const configApiPing = () => {
     return true;
@@ -51,13 +49,57 @@ export const getUpdatedAppConfiguration = async () => {
                 last_modified_dts: '2025-05-08T22:01:16.299Z', // new Date().toISOString()
             },
         ],
+        obtainable: [
+            {
+                form: 'alola',
+                list: 'white'
+            },
+            {
+                form: 'galar',
+                list: 'white'
+            },
+            {
+                form: 'hisui',
+                list: 'white'
+            },
+            {
+                form: 'cap',
+                list: 'black'
+            },
+            {
+                form: 'starter',
+                list: 'black'
+            },
+            {
+                form: 'totem',
+                list: 'black'
+            },
+        ]
     };
 
     return simulatedResult;
 };
 
 export const updateConfiguration = (dbContext: PGliteWithLive, configuration: ConfigurationData) => {
-    configuration.supported_generations.forEach(async (generation: SupportedGeneration) => {
+    updateSupportedGenerations(dbContext, configuration.supported_generations);
+    updateObtainablity(dbContext, configuration.obtainable);
+};
+
+export const getObtainableList = async (dbContext: PGliteWithLive, listType: string): Promise<string[]> => await selectObtainableList(dbContext, listType);
+
+export const getGenerationCountOffset = async (dbContext: PGliteWithLive, id: number): Promise<[number, number]> =>
+    await getGenerationCountAndOffset(dbContext, id);
+
+export const getLastLocalGenerationUpdate = async (dbContext: PGliteWithLive): Promise<DateData[]> => getGenerationLastUpdatedLocally(dbContext);
+
+export const updateGenerationActive = (dbContext: PGliteWithLive, id: number) => setGenerationActive(dbContext, id);
+
+const updateObtainablity = (dbContext: PGliteWithLive, obtainableList: Obtainable[]) => {
+    obtainableList.forEach((obtainable) => upsertObtainableData(dbContext, obtainable))
+}
+
+export const updateSupportedGenerations = (dbContext: PGliteWithLive, supported_generations: SupportedGeneration[]) => {
+    supported_generations.forEach(async (generation: SupportedGeneration) => {
         const generationDateData: DateData | undefined = await getGenerationUpdateData(dbContext, generation.id);
 
         if (
@@ -74,13 +116,6 @@ export const updateConfiguration = (dbContext: PGliteWithLive, configuration: Co
         }
     });
 };
-
-export const getGenerationCountOffset = async (dbContext: PGliteWithLive, id: number): Promise<[number, number]> =>
-    await getGenerationCountAndOffset(dbContext, id);
-
-export const getLastLocalGenerationUpdate = async (dbContext: PGliteWithLive): Promise<DateData[]> => getGenerationLastUpdatedLocally(dbContext);
-
-// export const updateGenerationActive = (id: number) => setGenerationActive(id);
 
 export const updateLocalLastModified = (dbContext: PGliteWithLive, id: number) => {
     setLocalLastModifiedDate(dbContext, id);
