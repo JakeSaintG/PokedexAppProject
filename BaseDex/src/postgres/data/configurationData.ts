@@ -291,9 +291,8 @@ export const selectObtainableList = async (dbContext: PGliteWithLive, listType: 
         FROM obtainable_forms
         WHERE list = $1
     `
-    
 
-    const result = await dbContext.transaction(async (transaction) => transaction.query(stmt, [listType]));
+    const result = (await dbContext.transaction(async (transaction) => transaction.query(stmt, [listType]))).rows;
 
     if (
         Array.isArray(result) 
@@ -310,7 +309,7 @@ export const selectObtainableList = async (dbContext: PGliteWithLive, listType: 
             ) {
                 return r.form;
             }
-        });
+        }) as string[];
     }
 
     throw "Unable to retrieve data from obtainable_forms table.";

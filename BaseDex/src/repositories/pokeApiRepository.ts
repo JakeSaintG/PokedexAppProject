@@ -90,18 +90,6 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
             'url' in data
             && typeof data['url'] === 'string'
         )
-        && (
-            'obtainable' in data
-            && typeof data['obtainable'] === 'boolean'
-        )
-        && (
-            'is_registered' in data
-            && typeof data['is_registered'] === 'boolean'
-        )
-        && (
-            'regional_form' in data
-            && typeof data['regional_form'] === 'boolean'
-        )
     ) {
         const parsedData: PokemonBaseData = {
             id: data.id,
@@ -115,11 +103,9 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
             type_2: undefined,
             has_forms: false,
             url: data.url,
-
             obtainable: false,
             is_registered: false,
             regional_form: false,
-
             last_modified_dts: ''
         };
     
@@ -140,9 +126,9 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
         }
 
         return parsedData;
-    } else {
-        throw 'Unable to parse Pokemon base data.';
     }
+
+    throw 'Unable to parse Pokemon base data.';
 }
 
 export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]): Promise<[PokemonSpeciesData, Variety[]]> => {
