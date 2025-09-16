@@ -1,9 +1,29 @@
 .settings {
     display: flex;
+    flex-direction: column;
     height: 100%;
+    overflow-y: scroll;
 }
 
-.settings p {
-    margin: auto;
+.settings h2 {
+    padding: calc(80px + 1rem) 1rem 0 1rem;
+    color: black;
+    margin: 0;
+}
+
+.settings_menu {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    padding: 1rem 2rem 1rem 2rem;
+    margin: 0 auto 68px auto;
+    gap: 1rem;
     color: black;
 }
+
+/* TODO: Make a button component... */
+.settings_menu button {
+
+    height: 100px;
+}
+
