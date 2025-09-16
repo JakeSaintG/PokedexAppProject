@@ -35,11 +35,9 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
                 ,has_forms BOOLEAN NOT NULL
                 ,male_sprite_url TEXT NOT NULL
                 ,female_sprite_url TEXT NULL
-
                 ,is_registered BOOLEAN NOT NULL
                 ,obtainable BOOLEAN NOT NULL
-                ,regional_form TEXT NOT NULL
-
+                ,regional_form BOOLEAN NOT NULL
                 ,last_modified_dts TEXT NOT NULL
             )
         `

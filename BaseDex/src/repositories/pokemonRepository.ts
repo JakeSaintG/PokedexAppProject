@@ -34,7 +34,7 @@ export const loadPokemonData = async (dbContext: PGliteWithLive, generationToLoa
 
             updateLocalLastModified(dbContext, gen.generation_id!);
         } catch (error) {
-            console.error(`Error updating ${gen.generation_id} due to: ${error}`)
+            console.error(`Error updating gen ${gen.generation_id} due to: ${error}`)
         }
     }
 };

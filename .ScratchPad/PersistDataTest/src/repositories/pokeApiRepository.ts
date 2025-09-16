@@ -1,11 +1,12 @@
 import { Obtainable } from "../types/configurationData";
 import { FlavorTextEntry } from "../types/flavorText";
+import { Pokemon } from "../types/pokemon";
 import { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
 import { Variety } from "../types/varieties";
 
 export const fetchPkmnToLoad = async (limit: number, offset: number) => {
     // TODO: better error handling
-    let pkmn = [];
+    let pkmn: Pokemon[] = [];
 
     await fetch(
         `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`,
@@ -69,7 +70,6 @@ export const parsePokemonBaseData = async (data: any,  whiteList: string[]) : Pr
         parsedData[`type_${t.slot}`] = t.type.name;
     });
 
-    
     if (parsedData.is_default) {
         parsedData.obtainable = true;
     } else if (whiteList.some(wl => parsedData.name.includes(wl))) {

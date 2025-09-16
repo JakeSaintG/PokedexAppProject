@@ -4,7 +4,6 @@ import {
     upsertPokemonBaseData,
     upsertPokemonSpeciesData 
 } from "../data/pokemonData";
-import { ConfigurationData, Obtainable } from "../types/configurationData";
 import { DateData } from "../types/dateData";
 import { Pokemon } from "../types/pokemon";
 import { PokemonImageData } from "../types/pokemonImageData";
@@ -19,7 +18,6 @@ import {
 } from "./pokeApiRepository";
 
 export const loadPokemonData = async ( generationToLoad: DateData[], batchSize: number) => {
-    // GET CONFIG DATA FROM DB HERE
     const blackList = getObtainableList('black');
     const whiteList = getObtainableList('white');
 
@@ -47,15 +45,15 @@ export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean)
     })
 }
 
-const loadPokemon = async ( pokemonToLoad: Pokemon[], whiteList: string[], blackList: string[], batchSize: number) => {
+const loadPokemon = async (pokemonToLoad: Pokemon[], whiteList: string[], blackList: string[], batchSize: number) => {
     // TODO: I still want to to try to be loading multiple pokemon at once...
     for (const pkmn of pokemonToLoad) {
         logInfo(`Loading data for ${pkmn.name}.`)
-        await startLoad(pkmn, whiteList, blackList,(new Date().toISOString()))
+        await startLoad(pkmn, whiteList, blackList, (new Date().toISOString()))
     }
 }
 
-const startLoad  = async ( pokemonToLoad: Pokemon, whiteList: string[], blackList: string[], loadStartTime: string ) => {
+const startLoad  = async (pokemonToLoad: Pokemon, whiteList: string[], blackList: string[], loadStartTime: string) => {
     // TODO: maybe add some timing...better logging
     logInfoVerbose(`Loading base data for: ${pokemonToLoad.name}...`);
     const parsedBaseData = await loadBasePokemonData(pokemonToLoad, whiteList, loadStartTime);
@@ -92,7 +90,7 @@ const startLoad  = async ( pokemonToLoad: Pokemon, whiteList: string[], blackLis
     }
 }
 
-const loadSpeciesPokemonData = async ( pokemonToLoad: Pokemon, blackList: string[], loadStartTime: string ): Promise<Pokemon[]> => {
+const loadSpeciesPokemonData = async (pokemonToLoad: Pokemon, blackList: string[], loadStartTime: string): Promise<Pokemon[]> => {
     logInfoVerbose(`fetching species data: ${pokemonToLoad.name}`);
     const pokemonSpeciesData = await fetchPokeApiData(pokemonToLoad.url)
     
@@ -106,7 +104,7 @@ const loadSpeciesPokemonData = async ( pokemonToLoad: Pokemon, blackList: string
     return varieties.map(v => v.pokemon);
 }
 
-const loadBasePokemonData = async (  pokemonToLoad: Pokemon,  whiteList: string[], loadStartTime: string ) => {
+const loadBasePokemonData = async (pokemonToLoad: Pokemon,  whiteList: string[], loadStartTime: string) => {
     logInfoVerbose(`fetching base data: ${pokemonToLoad.name}`)
     const fetchedData = await fetchPokeApiData(pokemonToLoad.url);
     

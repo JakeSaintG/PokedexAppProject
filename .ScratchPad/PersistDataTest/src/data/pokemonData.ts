@@ -41,7 +41,7 @@ const createPokemonTablesIfNotExist = () => {
                 ,female_sprite_url STRING NULL
                 ,is_registered INT NOT NULL --INT used as BIT
                 ,obtainable INT NOT NULL --INT used as BIT
-                ,regional_form STRING NOT NULL
+                ,regional_form INT NOT NULL --INT used as BIT
                 ,last_modified_dts STRING NOT NULL
             )
         `)

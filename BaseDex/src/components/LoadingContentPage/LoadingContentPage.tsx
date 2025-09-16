@@ -81,7 +81,6 @@ export function LoadingContentPage() {
             });
     }, []);
 
-
     return (
         <>
             <DexHeader />
