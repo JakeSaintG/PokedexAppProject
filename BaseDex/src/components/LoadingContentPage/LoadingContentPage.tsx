@@ -1,9 +1,7 @@
 import styles from "./LoadingContentPage.module.css";
-
 import { useEffect, useState } from "react";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { useNavigate } from "react-router-dom";
-
 import speakerIcon from "../../assets/icons/bars-solid-full.svg";
 import { DexHeader } from "../DexHeader";
 import { initPokemonDb } from "../../postgres/data/pokemonData";

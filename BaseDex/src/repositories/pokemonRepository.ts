@@ -3,7 +3,8 @@ import {
     upsertPokedexData,
     upsertPokemonBaseData,
     upsertPokemonSpeciesData, 
-    getRegionCountData
+    getRegionCountData,
+    getPokedexList
 } from "../postgres/data/pokemonData";
 import type { DateData } from "../types/dateData";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
@@ -18,6 +19,7 @@ import {
     fetchPokeApiImage
 } from "./pokeApiRepository";
 import { logInfo, logInfoVerbose, logInfoWithAttention } from "./logRepository";
+import type { PokedexPreviewData } from "../types/dexTile";
 
 export const loadPokemonData = async (dbContext: PGliteWithLive, generationToLoad: DateData[], batchSize: number) => {
     const blackList = await getObtainableList(dbContext, 'black');
@@ -68,7 +70,7 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, whi
     const imagesToGet = {
         id: parsedBaseData.id,
         name: parsedBaseData.name,
-        male_sprite: parsedBaseData.male_sprite_url,
+        default_sprite: parsedBaseData.male_sprite_url,
         female_sprite: parsedBaseData.female_sprite_url
     };
     
@@ -85,7 +87,7 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, whi
             const imagesToGet = {
                 id: varietiesImagesLeftToGet.id,
                 name: varietiesImagesLeftToGet.name,
-                male_sprite: varietiesImagesLeftToGet.male_sprite_url,
+                default_sprite: varietiesImagesLeftToGet.male_sprite_url,
                 female_sprite: varietiesImagesLeftToGet.female_sprite_url
             };
             
@@ -123,12 +125,18 @@ const loadBasePokemonData = async ( dbContext: PGliteWithLive, pokemonToLoad: Po
 }
 
 const loadPokemonImages = async (dbContext: PGliteWithLive, pkmnImgdata: PokemonImageData ) => {
-    pkmnImgdata.male_sprite = await fetchPokeApiImage(pkmnImgdata.male_sprite as string);
+    pkmnImgdata.default_sprite = await fetchPokeApiImage(pkmnImgdata.default_sprite as string);
     if (pkmnImgdata.female_sprite) pkmnImgdata.female_sprite = await fetchPokeApiImage(pkmnImgdata.female_sprite as string);
 
     upsertPokemonImage(dbContext, pkmnImgdata);
 }
 
-export const getTallGrassData = async (dbContext: PGliteWithLive) => {
+export const getTallGrassPageData = async (dbContext: PGliteWithLive) => {
     await getRegionCountData(dbContext);
+}
+
+export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {
+    // TODO: handle error
+
+    return await getPokedexList(dbContext);
 }

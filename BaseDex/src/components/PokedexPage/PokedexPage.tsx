@@ -3,202 +3,27 @@ import { DexHeader } from "../DexHeader";
 import { NavigationMenu } from "../NavigationMenu";
 import { PokedexPreview } from './PokedexPreview';
 import type { PokedexPreviewData } from '../../types/pokdexPreviewData';
-
-const test_data: PokedexPreviewData[] = [
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "bulbasaur",
-        "dex_no": 1,
-        "id": 1
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    },
-    {
-        "name": "pikachu",
-        "dex_no": 25,
-        "id": 25
-    }
-]
+import { usePGlite } from "@electric-sql/pglite-react";
+import { useEffect, useState } from 'react';
+import { getPokedexPageData } from '../../repositories/pokemonRepository';
 
 export function PokedexPage( ) {
+    const dbContext = usePGlite();
+
+    const dexTile: PokedexPreviewData[] = [];
+    const [pokedexPreviewData, setPokedexPreviewData] = useState(dexTile);
+    
     let key = 0;
+    
+    useEffect(() => {
+        getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));
+    }, []);
     
     return (
         <div className={styles.pokedex}>
             <DexHeader/>
             <div className={styles.dex_previews}>
-                {test_data.map((pkmn) => (
+                {pokedexPreviewData.map((pkmn) => (
                         <PokedexPreview previewData={pkmn} key={key++}></PokedexPreview>
                 ))}
             </div>

@@ -6,6 +6,7 @@ import type {
 } from "../../types/pokemonData";
 import type { PokemonImageData } from "../../types/pokemonImageData";
 import { logInfo } from "../../repositories/logRepository";
+import type { PokedexPreviewData } from "../../types/dexTile";
 
 export const initPokemonDb = async (dbContext: PGliteWithLive) => {
     await createPokemonTablesIfNotExist(dbContext);
@@ -109,11 +110,11 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
     const defaultImageLastModifiedDate = new Date().toISOString();
     let femaleImageLastModifiedDate = null;
 
-    if (typeof(pkmnImgData.male_sprite) != 'string') {
+    if (typeof(pkmnImgData.default_sprite) != 'string') {
         defaultImageBuffer = Buffer.from(
-            await pkmnImgData.male_sprite.arrayBuffer()
+            await pkmnImgData.default_sprite.arrayBuffer()
         );
-        defaultImageSize = pkmnImgData.male_sprite.size;
+        defaultImageSize = pkmnImgData.default_sprite.size;
     }
     
     if (typeof(pkmnImgData.female_sprite) != 'string' && pkmnImgData.female_sprite != null) {
@@ -402,4 +403,65 @@ export const getRegionCountData = async (dbContext: PGliteWithLive) => {
     // }
 
     // throw "Unable to retrieve data from supported_generations table.";
+}
+
+export const getPokedexList = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {
+    const results = await dbContext.query(`
+            SELECT 
+                d.id
+                ,s.dex_no
+                ,s.name
+                ,i.default_img_data
+                -- will need to get image
+            FROM pokemon_species_data s
+            JOIN pokemon_base_data d
+                ON d.id = s.dex_no
+            JOIN pokemon_images i
+                on d.id = i.id;
+        `
+    )
+
+    const data = results.rows;
+
+    console.log(data)
+
+    if (
+        Array.isArray(data)
+        && data !== null
+    ) {
+        const foo = data.map(d => {
+            if (
+                    typeof d === 'object' 
+                    && d !== null
+                    && (
+                        'id' in d
+                        && typeof d['id'] === 'number'
+                    )
+                    && (
+                        'dex_no' in d
+                        && typeof d['dex_no'] === 'number'
+                    )
+                    && (
+                        'name' in d
+                        && typeof d['name'] === 'string'
+                    )
+                    && (
+                        'default_img_data' in d
+                        && typeof d['default_img_data'] === 'object'
+
+                    )
+            ) {
+                return {
+                    id: d.id,
+                    name: d.name,
+                    dex_no: d.dex_no,
+                    img_data: new Blob(d.default_img_data as BlobPart[])
+                }
+            }
+        })
+        
+        return foo as PokedexPreviewData[];
+    }
+
+    throw "Error reading pokedex list";
 }

@@ -2,7 +2,7 @@ import styles from "./TallGrassPage.module.css";
 import { DexHeader } from "../DexHeader";
 import { NavigationMenu } from "../NavigationMenu";
 import { useEffect, useState } from "react";
-import { getTallGrassData } from "../../repositories/pokemonRepository";
+import { getTallGrassPageData } from "../../repositories/pokemonRepository";
 import { usePGlite } from "@electric-sql/pglite-react";
 
 const test_data = [
@@ -18,8 +18,6 @@ const test_data = [
     { region: "paldea", registered: 2, total: 3 },
 ];
 
-
-
 export function TallGrassPage() {
     // TODO: If they empty cache...this page will blow up. So will others. Need to handle that? 
     // Maybe? The main apps won't work like that and this is a poc
@@ -33,7 +31,7 @@ export function TallGrassPage() {
         
         setGenerationData('beep');
 
-        getTallGrassData(dbContext);
+        getTallGrassPageData(dbContext);
     }, [])
 
     return (
