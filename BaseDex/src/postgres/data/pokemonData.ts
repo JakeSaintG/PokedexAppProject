@@ -6,7 +6,7 @@ import type {
 } from "../../types/pokemonData";
 import type { PokemonImageData } from "../../types/pokemonImageData";
 import { logInfo } from "../../repositories/logRepository";
-import type { PokedexPreviewData } from "../../types/dexTile";
+import type { PokedexPreviewData } from "../../types/pokdexPreviewData";
 
 export const initPokemonDb = async (dbContext: PGliteWithLive) => {
     await createPokemonTablesIfNotExist(dbContext);
@@ -423,13 +423,11 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
 
     const data = results.rows;
 
-    console.log(data)
-
     if (
         Array.isArray(data)
         && data !== null
     ) {
-        const foo = data.map(d => {
+        const previewData = data.map(d => {
             if (
                     typeof d === 'object' 
                     && d !== null
@@ -459,8 +457,8 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
                 }
             }
         })
-        
-        return foo as PokedexPreviewData[];
+
+        return previewData as PokedexPreviewData[];
     }
 
     throw "Error reading pokedex list";

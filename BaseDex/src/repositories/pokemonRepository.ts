@@ -19,7 +19,7 @@ import {
     fetchPokeApiImage
 } from "./pokeApiRepository";
 import { logInfo, logInfoVerbose, logInfoWithAttention } from "./logRepository";
-import type { PokedexPreviewData } from "../types/dexTile";
+import type { PokedexPreviewData } from "../types/pokdexPreviewData";
 
 export const loadPokemonData = async (dbContext: PGliteWithLive, generationToLoad: DateData[], batchSize: number) => {
     const blackList = await getObtainableList(dbContext, 'black');
