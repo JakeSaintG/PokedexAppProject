@@ -3,5 +3,6 @@ export interface PokedexPreviewData {
     dex_no: number
     id: number
     img_url: string
+    is_registered: boolean
     img_data: Blob
 }
