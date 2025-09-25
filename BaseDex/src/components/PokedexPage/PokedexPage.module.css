@@ -9,20 +9,22 @@
     overflow-y: scroll;
     width: 100%;
     color: black;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    /* display: grid;
+    grid-template-columns: 1fr 1fr; */
     gap: 1rem;
 }
 
 @media only screen and (min-width: 430px) {
     .dex_previews {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        /* grid-template-columns: 1fr 1fr 1fr; */
     }
 }
 
 @media only screen and (min-width: 790px) {
     .dex_previews {
         /* TODO: probably not 5 column */
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        /* grid-template-columns: 1fr 1fr 1fr 1fr; */
     }
 }

@@ -414,7 +414,7 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
                 ,s.dex_no
                 ,s.name
                 ,i.default_img_data
-                -- will need to get image
+                ,d.male_sprite_url
             FROM pokemon_species_data s
             JOIN pokemon_base_data d
                 ON d.id = s.dex_no
@@ -446,14 +446,21 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
                         && typeof d['name'] === 'string'
                     )
                     && (
+                        'male_sprite_url' in d
+                        && typeof d['male_sprite_url'] === 'string'
+                    )
+                    && (
                         'default_img_data' in d
                         && typeof d['default_img_data'] === 'object'
                     )
             ) {
+                console.log(d.male_sprite_url)
+                
                 return {
                     id: d.id,
                     name: d.name,
                     dex_no: d.dex_no,
+                    img_url: d.male_sprite_url,
                     img_data: new Blob(d.default_img_data as BlobPart[], {type: 'image/png'})
                 }
             }
