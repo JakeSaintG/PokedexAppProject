@@ -20,6 +20,8 @@ export function SettingsPage( ) {
                     <button onClick={() => navigate('../loading')}>Reload Data</button>
                     <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
                     <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
+                    <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
+                    <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
                 </div>
             </div>
             <NavigationMenu activePage='settings'></NavigationMenu>

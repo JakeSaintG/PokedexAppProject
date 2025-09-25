@@ -19,7 +19,8 @@ export function EntryPage() {
         <div className={styles.entry}>
             <DexHeader/>
             <div className={styles.entry_display}>
-                foo
+                {/* TODO: allow this to force a dex registery if it is on in the settings */}
+                <button>Register</button>
                 <Link className={styles.back} to={`../pokedex#${id}`}>
                     back
                 </Link>
