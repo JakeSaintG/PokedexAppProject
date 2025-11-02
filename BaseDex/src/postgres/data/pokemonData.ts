@@ -125,8 +125,6 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
         femaleImageLastModifiedDate = defaultImageLastModifiedDate;
     }
 
-    console.log(defaultImageBuffer)
-
     const stmt = `
         INSERT INTO pokemon_images (
             id
