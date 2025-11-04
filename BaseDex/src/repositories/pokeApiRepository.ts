@@ -40,6 +40,8 @@ export const fetchPokeApiData = async (url: string) => {
 }
 
 export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) : Promise<PokemonBaseData> => {
+
+    
     if (
         typeof data === 'object' 
         && data !== null 
@@ -64,12 +66,19 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
             && typeof data['is_default'] === 'boolean'
         )
         && (
+            'forms' in data
+            && Array.isArray(data['forms'])
+        )
+        && (
             'sprites' in data
             && typeof data['sprites'] === 'object'
         )
         && (
             'front_default' in data.sprites!
-            && typeof data.sprites['front_default'] === 'string'
+            && (
+                typeof data.sprites['front_default'] === 'string'
+                || data.sprites['front_default'] === null
+            )
         )
         && (
             'front_female' in data.sprites!
@@ -79,24 +88,24 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
             )
         )
         && (
-            'forms' in data
-            && Array.isArray(data['forms'])
+            'url' in data
+            && typeof data['url'] === 'string'
         )
         && (
             'types' in data
             && Array.isArray(data['types'])
         )
-        && (
-            'url' in data
-            && typeof data['url'] === 'string'
-        )
     ) {
+        if (typeof data.sprites.front_default !== 'string') {
+            data.sprites.front_default = 'https://bulbapedia.bulbagarden.net/wiki/MissingNo.#/media/File:Missingno_RB.png';
+        }
+        
         const parsedData: PokemonBaseData = {
             id: data.id,
             name: data.name,
             species_url: data.species.url,
             is_default: data.is_default,
-            male_sprite_url: data.sprites.front_default,
+            male_sprite_url: data.sprites.front_default as string,
             female_sprite_url: data.sprites.front_female,
             img_path: `./imgs/dex_imgs/${data.id}`,
             type_1: '',
@@ -128,7 +137,8 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
         return parsedData;
     }
 
-    throw 'Unable to parse Pokemon base data.';
+    console.log(data)
+    throw `Unable to parse Pokemon base data for ${data['name']}.`;
 }
 
 export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]): Promise<[PokemonSpeciesData, Variety[]]> => {

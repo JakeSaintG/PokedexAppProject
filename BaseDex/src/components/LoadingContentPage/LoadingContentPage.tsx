@@ -75,7 +75,7 @@ export function LoadingContentPage() {
                 );
             })
             .then(async () => {
-                await placeholder(() => navigate("../home"));
+                // await placeholder(() => navigate("../home"));
             });
     }, []);
 
