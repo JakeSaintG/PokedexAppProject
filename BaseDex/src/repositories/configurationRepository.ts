@@ -33,7 +33,7 @@ export const getUpdatedAppConfiguration = async () => {
                 generation_name: 'generation1',
                 description: 'Red, Green, Blue, and Yellow.',
                 starting_dex_no: 1,
-                count: 3, //151
+                count: 25, //151
                 active: true,
                 stale_by_dts: placeHolderStaleByDate,
                 last_modified_dts: '2025-05-08T22:04:23.251Z', // new Date().toISOString()
@@ -44,7 +44,7 @@ export const getUpdatedAppConfiguration = async () => {
                 description: 'Gold, Silver, and Crystal.',
                 starting_dex_no: 152, //152,
                 count: 9, // 100
-                active: true,//null,
+                active: null,//null,
                 stale_by_dts: placeHolderStaleByDate,
                 last_modified_dts: '2025-05-08T22:01:16.299Z', // new Date().toISOString()
             },

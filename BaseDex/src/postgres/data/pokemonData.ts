@@ -125,6 +125,8 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
         femaleImageLastModifiedDate = defaultImageLastModifiedDate;
     }
 
+    console.log(defaultImageBuffer)
+
     const stmt = `
         INSERT INTO pokemon_images (
             id
@@ -412,7 +414,8 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
                 ,s.dex_no
                 ,s.name
                 ,i.default_img_data
-                -- will need to get image
+                ,d.male_sprite_url
+                ,d.is_registered
             FROM pokemon_species_data s
             JOIN pokemon_base_data d
                 ON d.id = s.dex_no
@@ -444,16 +447,25 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
                         && typeof d['name'] === 'string'
                     )
                     && (
+                        'male_sprite_url' in d
+                        && typeof d['male_sprite_url'] === 'string'
+                    )
+                    && (
+                        'is_registered' in d
+                        && typeof d['is_registered'] === 'boolean'
+                    )
+                    && (
                         'default_img_data' in d
                         && typeof d['default_img_data'] === 'object'
-
                     )
             ) {
                 return {
                     id: d.id,
                     name: d.name,
                     dex_no: d.dex_no,
-                    img_data: new Blob(d.default_img_data as BlobPart[])
+                    img_url: d.male_sprite_url,
+                    is_registered: d.is_registered,
+                    img_data: new Blob(d.default_img_data as BlobPart[], {type: 'image/png'})
                 }
             }
         })
