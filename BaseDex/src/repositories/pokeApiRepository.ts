@@ -137,7 +137,6 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
         return parsedData;
     }
 
-    console.log(data)
     throw `Unable to parse Pokemon base data.`;
 }
 
