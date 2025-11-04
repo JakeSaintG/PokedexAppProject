@@ -138,7 +138,7 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
     }
 
     console.log(data)
-    throw `Unable to parse Pokemon base data for ${data['name']}.`;
+    throw `Unable to parse Pokemon base data.`;
 }
 
 export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]): Promise<[PokemonSpeciesData, Variety[]]> => {
