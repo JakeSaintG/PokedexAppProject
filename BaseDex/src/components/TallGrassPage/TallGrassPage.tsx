@@ -19,9 +19,6 @@ const test_data = [
 ];
 
 export function TallGrassPage() {
-    // TODO: If they empty cache...this page will blow up. So will others. Need to handle that? 
-    // Maybe? The main apps won't work like that and this is a poc
-    
     const dbContext = usePGlite();
     let key = 0;
 
