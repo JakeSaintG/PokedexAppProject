@@ -53,7 +53,6 @@ export function LoadingContentPage() {
                 initPokemonDb(dbContext);
             })
             .then(async () => {
-                // TODO: actually load the data
                 await placeholder(() => {
                     setLoadingText(
                         "Loading PokeDex Data, courtesy of PokeAPI."
@@ -66,7 +65,7 @@ export function LoadingContentPage() {
                 const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
 
                 if (pokeApiPing()) {
-                    loadPokemonData(dbContext, pokemonDataToLoad, batchSize );
+                    await loadPokemonData(dbContext, pokemonDataToLoad, batchSize );
                 }
             })
             .then(async () => {
@@ -75,7 +74,7 @@ export function LoadingContentPage() {
                 );
             })
             .then(async () => {
-                await placeholder(() => navigate("../home"));
+                await navigate("../home")
             });
     }, []);
 
