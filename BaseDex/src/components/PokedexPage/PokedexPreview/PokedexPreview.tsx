@@ -11,6 +11,7 @@ export function PokedexPreview(props: Props) {
 
     const [imageSrc, setImageSrc] = useState('https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png');
     const [registered, setRegistered] = useState('not_registered');
+    const [previewName, setPreviewName] = useState('not_registered');
     
     // TODO: Use the stored blobs instead of the URL....................
     useEffect(() => {
@@ -20,6 +21,7 @@ export function PokedexPreview(props: Props) {
 
         setImageSrc(props.previewData.img_url);
         setRegistered(() => props.previewData.is_registered ? 'registered' : 'not_registered');
+        setPreviewName(() => props.previewData.is_registered ? props.previewData.name : '???');
     }, [])
 
     const capitalizeWords = (str: string) => {
@@ -32,7 +34,7 @@ export function PokedexPreview(props: Props) {
     return (
         <Link className={styles.pokedex_preview} to={`/pokedex/entry?id=${props.previewData.id}`}>
             <img src={imageSrc} alt={`Image of ${props.previewData.name}`} className={styles[`${registered}`]}/>
-            <span className={styles.preview_name}>{props.previewData.dex_no}. {capitalizeWords(props.previewData.name)}</span>
+            <span className={styles.preview_name}>{props.previewData.dex_no}. {capitalizeWords(previewName)}</span>
         </Link>
     );
 }
