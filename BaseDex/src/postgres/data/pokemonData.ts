@@ -473,3 +473,21 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
 
     throw "Error reading pokedex list";
 }
+
+export const getPokedexEntry = async (dbContext: PGliteWithLive) => {
+    const results = await dbContext.query(`
+            SELECT 
+                d.id
+                ,s.dex_no
+                ,s.name
+                ,i.default_img_data
+                ,d.male_sprite_url
+                ,d.is_registered
+            FROM pokemon_species_data s
+            JOIN pokemon_base_data d
+                ON d.id = s.dex_no
+            JOIN pokemon_images i
+                on d.id = i.id;
+        `
+    )
+}
