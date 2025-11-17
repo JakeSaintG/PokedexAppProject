@@ -6,6 +6,8 @@
 .entry_display {
     margin: auto;
     color: black;
+    display: flex;
+    flex-direction: column;
 }
 
 .back {
