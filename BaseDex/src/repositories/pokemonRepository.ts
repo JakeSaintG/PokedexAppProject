@@ -4,7 +4,8 @@ import {
     upsertPokemonBaseData,
     upsertPokemonSpeciesData, 
     getRegionCountData,
-    getPokedexList
+    getPokedexList,
+    getPokedexEntry
 } from "../postgres/data/pokemonData";
 import type { DateData } from "../types/dateData";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
@@ -139,4 +140,10 @@ export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<Pok
     // TODO: handle error
 
     return await getPokedexList(dbContext);
+}
+
+export const getEntryPageData = async (dbContext: PGliteWithLive) => {
+    // TODO: handle error
+
+    return await getPokedexEntry(dbContext);
 }

@@ -1,13 +1,23 @@
 import styles from "./EntryPage.module.css";
 import { DexHeader } from "../../DexHeader";
+import { usePGlite } from "@electric-sql/pglite-react";
 import { NavigationMenu } from "../../NavigationMenu";
 import { Link, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import { getEntryPageData } from "../../../repositories/pokemonRepository";
 
 // const test_data: any = {};
 
 export function EntryPage() {
+    const dbContext = usePGlite();
+
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id")?.split('id=');
+
+    useEffect(() => {
+        // getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));
+        getEntryPageData(dbContext)//.then(setSomething())
+    }, []);
 
     return (
         /*
@@ -21,6 +31,7 @@ export function EntryPage() {
             <div className={styles.entry_display}>
                 {/* TODO: allow this to force a dex registery if it is on in the settings */}
                 <button>Register</button>
+                <p>{id}</p>
                 <Link className={styles.back} to={`../pokedex#${id}`}>
                     back
                 </Link>
