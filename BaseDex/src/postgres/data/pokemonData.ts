@@ -7,6 +7,7 @@ import type {
 import type { PokemonImageData } from "../../types/pokemonImageData";
 import { logInfo } from "../../repositories/logRepository";
 import type { PokedexPreviewData } from "../../types/pokdexPreviewData";
+import type { PokedexEntryData } from "../../types/pokedexEntryData";
 
 export const initPokemonDb = async (dbContext: PGliteWithLive) => {
     await createPokemonTablesIfNotExist(dbContext);
@@ -474,20 +475,101 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
     throw "Error reading pokedex list";
 }
 
-export const getPokedexEntry = async (dbContext: PGliteWithLive) => {
+export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Promise<PokedexEntryData> => {
     const results = await dbContext.query(`
             SELECT 
                 d.id
-                ,s.dex_no
                 ,s.name
-                ,i.default_img_data
+                ,s.dex_no
+                ,s.habitat
+                ,s.has_gender_differences
+                ,s.generation
+                ,d.is_default
+                ,d.type_1
+                ,d.type_2
+                ,d.has_forms
                 ,d.male_sprite_url
+                ,d.female_sprite_url
                 ,d.is_registered
+                ,i.default_img_data
+                ,i.female_img_data
             FROM pokemon_species_data s
             JOIN pokemon_base_data d
                 ON d.id = s.dex_no
             JOIN pokemon_images i
-                on d.id = i.id;
-        `
+                on d.id = i.id
+            WHERE d.id = $1
+            LIMIT 1;
+        `, [id]
     )
+
+    const data = results.rows[0];
+
+    if (
+        typeof data === 'object' 
+        && data !== null
+        && (
+            'id' in data
+            && typeof data['id'] === 'number'
+        )
+        && (
+            'name' in data
+            && typeof data['name'] === 'string'
+        )
+        && (
+            'dex_no' in data
+            && typeof data['dex_no'] === 'number'
+        )
+        && (
+            'habitat' in data
+            && typeof data['habitat'] === 'string'
+        )
+        && (
+            'has_gender_differences' in data
+            && typeof data['has_gender_differences'] === 'boolean'
+        )
+        && (
+            'generation' in data
+            && typeof data['generation'] === 'string'
+        )
+        && (
+            'is_default' in data
+            && typeof data['is_default'] === 'boolean'
+        )
+        && (
+            'type_1' in data
+            && typeof data['type_1'] === 'string'
+        )
+        && (
+            'type_2' in data
+            && (
+                typeof data['type_2'] === 'string'
+                || data['type_2'] === null
+            )
+        )
+        && (
+            'has_forms' in data
+            && typeof data['has_forms'] === 'boolean'
+        )
+        && (
+            'male_sprite_url' in data
+            && typeof data['male_sprite_url'] === 'string'
+        )
+        && (
+            'is_registered' in data
+            && typeof data['is_registered'] === 'boolean'
+        )
+        && (
+            'default_img_data' in data
+            && typeof data['default_img_data'] === 'object'
+        )
+        && (
+            'female_img_data' in data
+            && typeof data['female_img_data'] === 'object'
+        )
+    ) {
+        return data as PokedexEntryData;
+    }
+
+    throw "Error reading pokedex entry";
 }

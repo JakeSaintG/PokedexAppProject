@@ -21,6 +21,7 @@ import {
 } from "./pokeApiRepository";
 import { logInfo, logInfoVerbose, logInfoWithAttention } from "./logRepository";
 import type { PokedexPreviewData } from "../types/pokdexPreviewData";
+import type { PokedexEntryData } from "../types/pokedexEntryData";
 
 export const loadPokemonData = async (dbContext: PGliteWithLive, generationToLoad: DateData[], batchSize: number) => {
     const blackList = await getObtainableList(dbContext, 'black');
@@ -142,8 +143,8 @@ export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<Pok
     return await getPokedexList(dbContext);
 }
 
-export const getEntryPageData = async (dbContext: PGliteWithLive) => {
+export const getEntryPageData = async (dbContext: PGliteWithLive, id: string): Promise<PokedexEntryData>  => {
     // TODO: handle error
 
-    return await getPokedexEntry(dbContext);
+    return await getPokedexEntry(dbContext, id);
 }

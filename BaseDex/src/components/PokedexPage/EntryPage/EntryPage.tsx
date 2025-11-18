@@ -3,8 +3,9 @@ import { DexHeader } from "../../DexHeader";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { NavigationMenu } from "../../NavigationMenu";
 import { Link, useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getEntryPageData } from "../../../repositories/pokemonRepository";
+import type { PokedexEntryData } from "../../../types/pokedexEntryData";
 
 // const test_data: any = {};
 
@@ -12,12 +13,15 @@ export function EntryPage() {
     const dbContext = usePGlite();
 
     const [searchParams] = useSearchParams();
-    const id = searchParams.get("id")?.split('id=');
+    const id = searchParams.get("id")!;
+
+    const [pokedexEntryData, setPokedexEntryData] = useState({});
 
     useEffect(() => {
-        // getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));
-        getEntryPageData(dbContext)//.then(setSomething())
+        getEntryPageData(dbContext, id).then((d: PokedexEntryData) => setPokedexEntryData(d))
     }, []);
+
+    console.log(pokedexEntryData)
 
     return (
         /*
