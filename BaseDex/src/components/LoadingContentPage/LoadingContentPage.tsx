@@ -27,7 +27,7 @@ export function LoadingContentPage() {
         "Initializing PokeDex data storage..."
     );
 
-    const placeholder = async (f: () => void) => {
+    const artificalDelay = async (f: () => void) => {
         return new Promise((resolve) => {
             const timeoutId = setTimeout(() => resolve(f()), 1000);
             return () => clearTimeout(timeoutId);
@@ -53,7 +53,7 @@ export function LoadingContentPage() {
                 initPokemonDb(dbContext);
             })
             .then(async () => {
-                await placeholder(() => {
+                await artificalDelay(() => {
                     setLoadingText(
                         "Loading PokeDex Data, courtesy of PokeAPI."
                     );
@@ -65,16 +65,18 @@ export function LoadingContentPage() {
                 const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
 
                 if (pokeApiPing()) {
-                    await loadPokemonData(dbContext, pokemonDataToLoad, batchSize );
+                    await loadPokemonData(dbContext, pokemonDataToLoad, batchSize, setLoadingText);
                 }
             })
             .then(async () => {
-                await placeholder(() =>
-                    setLoadingText("Done! Welcome to your PokeDex!")
+                await artificalDelay(() =>
+                    setLoadingText("Welcome to your PokeDex!")
+            );
+        })
+        .then(async () => {
+                await artificalDelay(() =>
+                    navigate("../home")
                 );
-            })
-            .then(async () => {
-                await navigate("../home")
             });
     }, []);
 

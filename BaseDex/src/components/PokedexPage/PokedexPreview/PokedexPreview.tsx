@@ -32,9 +32,12 @@ export function PokedexPreview(props: Props) {
     }
 
     return (
+        <section>
+
         <Link className={styles.pokedex_preview} to={`/pokedex/entry?id=${props.previewData.id}`}>
             <img src={imageSrc} alt={`Image of ${props.previewData.name}`} className={styles[`${registered}`]}/>
             <span className={styles.preview_name}>{props.previewData.dex_no}. {capitalizeWords(previewName)}</span>
         </Link>
+        </section>
     );
 }
