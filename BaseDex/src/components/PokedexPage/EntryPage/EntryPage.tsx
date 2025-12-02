@@ -15,13 +15,41 @@ export function EntryPage() {
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id")!;
 
-    const [pokedexEntryData, setPokedexEntryData] = useState({});
+    const placeholderEntry: PokedexEntryData = {
+        id: 0,
+        name: "",
+        dex_no: 0,
+        habitat: "",
+        has_gender_differences: false,
+        generation: "",
+        is_default: false,
+        type_1: "",
+        type_2: "",
+        has_forms: false,
+        male_sprite_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
+        female_sprite_url: null,
+        is_registered: false,
+    }
+
+    const [pokedexEntryData, setPokedexEntryData] = useState(placeholderEntry);
 
     useEffect(() => {
         getEntryPageData(dbContext, id).then((d: PokedexEntryData) => setPokedexEntryData(d))
     }, []);
 
-    console.log(pokedexEntryData)
+    const parsePkmnName = (name: string) => {
+        //TODO: special names list like Mr. Mime
+
+        return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
+    const parseFemaleImg = () => {
+        if (pokedexEntryData.female_sprite_url !== null) {
+            return <img src={pokedexEntryData.female_sprite_url} alt={`Image of female variant for ${pokedexEntryData.name}`} />
+        } else {
+            return <></>
+        }
+    }
 
     return (
         /*
@@ -34,6 +62,10 @@ export function EntryPage() {
             <DexHeader/>
             <div className={styles.entry_display}>
                 {/* TODO: allow this to force a dex registery if it is on in the settings */}
+
+                <h2>{parsePkmnName(pokedexEntryData.name)}</h2>
+                <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} />
+                {parseFemaleImg()}
                 <button>Register</button>
                 <p>{id}</p>
                 <Link className={styles.back} to={`../pokedex#${id}`}>
