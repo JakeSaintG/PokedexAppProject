@@ -171,6 +171,7 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
             femaleImageBuffer,
         ]));
     } catch (error) {
+        // TODO: better error handling
         console.error(`Failed to UPSERT image data for ${pkmnImgData.name}: ${error}`);
     }
 }
@@ -255,6 +256,7 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
             ]
         ));
     } catch (error) {
+        // TODO: better error handling
         console.error(`Failed to UPSERT ${pkmnData.name}: ${error}`);
     }
 };
@@ -298,6 +300,7 @@ export const upsertPokedexData = async (dbContext: PGliteWithLive, pkmnSpecData:
                 new Date().toISOString(),
             ]))
         } catch (error) {
+            // TODO: better error handling
             console.error(`Failed to UPSERT dex data for ${pkmnSpecData.id}: ${error}`);
         }
     })
@@ -349,6 +352,7 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
             new Date().toISOString()
         ]))
     } catch (error) {
+        // TODO: better error handling
         console.error(`Failed to UPSERT ${pkmnSpecData.id}: ${error}`);
     }
 }
@@ -572,4 +576,24 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
     }
 
     throw "Error reading pokedex entry";
+}
+
+export const setPokedexRegistered = async (dbContext: PGliteWithLive, id: number) => {
+    /*
+        Set the boolean is_registered for a specified row given a unique id.
+    */ 
+
+    try {
+        await dbContext.transaction(async (transaction) => transaction.query(
+            `
+                UPDATE pokemon_base_data
+                SET is_registered = true
+                WHERE id = $1;
+            `,
+            [id]
+        ));
+    } catch (error) {
+        // TODO: better error handling
+        console.error(`Failed to set ${id} as registered: ${error}`);
+    }
 }

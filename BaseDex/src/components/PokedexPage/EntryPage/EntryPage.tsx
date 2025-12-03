@@ -4,8 +4,9 @@ import { usePGlite } from "@electric-sql/pglite-react";
 import { NavigationMenu } from "../../NavigationMenu";
 import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getEntryPageData } from "../../../repositories/pokemonRepository";
+import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../repositories/pokemonRepository";
 import type { PokedexEntryData } from "../../../types/pokedexEntryData";
+import type { PGliteWithLive } from "@electric-sql/pglite/live";
 
 // const test_data: any = {};
 
@@ -24,7 +25,6 @@ export function EntryPage() {
         generation: "",
         is_default: false,
         type_1: "",
-        type_2: "",
         has_forms: false,
         male_sprite_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
         female_sprite_url: null,
@@ -32,24 +32,39 @@ export function EntryPage() {
     }
 
     const [pokedexEntryData, setPokedexEntryData] = useState(placeholderEntry);
+    const [registered, setRegistered] = useState('not_registered');
+    const [previewName, setPreviewName] = useState('not_registered');
+    const [reloadEntry, setReloadEntry] = useState(0);
 
     useEffect(() => {
         getEntryPageData(dbContext, id).then((d: PokedexEntryData) => setPokedexEntryData(d))
-    }, []);
+    }, [reloadEntry]);
 
-    const parsePkmnName = (name: string) => {
-        //TODO: special names list like Mr. Mime
-
-        return name.charAt(0).toUpperCase() + name.slice(1);
-    }
+    useEffect(() => {
+        setRegistered(() => pokedexEntryData.is_registered ? 'registered' : 'not_registered');
+        setPreviewName(() => pokedexEntryData.is_registered ? displayPkmnName(pokedexEntryData.name) : '???');
+    }, [pokedexEntryData])
 
     const parseFemaleImg = () => {
-        if (pokedexEntryData.female_sprite_url !== null) {
+        if (pokedexEntryData.has_gender_differences && pokedexEntryData.female_sprite_url) {
             return <img src={pokedexEntryData.female_sprite_url} alt={`Image of female variant for ${pokedexEntryData.name}`} />
         } else {
             return <></>
         }
     }
+
+    const displayRegisterBtn = (context: PGliteWithLive, id: number) => {
+        if (pokedexEntryData.is_registered) {
+            return <></>;
+        }
+
+        return <button onClick={() => registerPkmn(context, id)}>Register</button>;
+    } 
+
+    const registerPkmn = async (dbContext: PGliteWithLive, id: number) => {
+        await registerPokemon(dbContext, id);
+        setReloadEntry(1); 
+    }   
 
     return (
         /*
@@ -61,12 +76,10 @@ export function EntryPage() {
         <div className={styles.entry}>
             <DexHeader/>
             <div className={styles.entry_display}>
-                {/* TODO: allow this to force a dex registery if it is on in the settings */}
-
-                <h2>{parsePkmnName(pokedexEntryData.name)}</h2>
+                <h2>{previewName}</h2>
                 <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} />
                 {parseFemaleImg()}
-                <button>Register</button>
+                {displayRegisterBtn(dbContext, pokedexEntryData.id)}
                 <p>{id}</p>
                 <Link className={styles.back} to={`../pokedex#${id}`}>
                     back

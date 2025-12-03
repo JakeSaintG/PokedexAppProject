@@ -7,7 +7,7 @@ export interface PokedexEntryData {
     generation: string
     is_default: boolean
     type_1: string
-    type_2: string
+    type_2?: string
     has_forms: boolean
     male_sprite_url: string
     female_sprite_url: string | null

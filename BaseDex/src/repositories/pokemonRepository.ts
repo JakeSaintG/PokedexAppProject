@@ -5,7 +5,8 @@ import {
     upsertPokemonSpeciesData, 
     getRegionCountData,
     getPokedexList,
-    getPokedexEntry
+    getPokedexEntry,
+    setPokedexRegistered
 } from "../postgres/data/pokemonData";
 import type { DateData } from "../types/dateData";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
@@ -40,7 +41,10 @@ export const loadPokemonData = async (
             const [count, offset] = await getGenerationCountOffset(dbContext, gen.generation_id!);
 
             const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
-            await loadPokemon(dbContext, fetchedPokemon, whiteList, blackList, batchSize, gen.generation_id, setLoadingText);
+
+            if (gen.generation_id) {
+                await loadPokemon(dbContext, fetchedPokemon, whiteList, blackList, batchSize, gen.generation_id, setLoadingText);
+            }
 
             updateLocalLastModified(dbContext, gen.generation_id!);
         } catch (error) {
@@ -169,4 +173,13 @@ export const getEntryPageData = async (dbContext: PGliteWithLive, id: string): P
     // TODO: handle error
 
     return await getPokedexEntry(dbContext, id);
+}
+
+export const registerPokemon = async (dbContext: PGliteWithLive, id: number) => {
+    setPokedexRegistered(dbContext, id);
+}
+
+export const displayPkmnName = (name: string) => {
+    //TODO: special names list like Mr. Mime
+    return name.charAt(0).toUpperCase() + name.slice(1);
 }
