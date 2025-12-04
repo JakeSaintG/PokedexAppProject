@@ -1,14 +1,14 @@
 import styles from "./EntryPage.module.css";
-import { DexHeader } from "../../DexHeader";
-import { usePGlite } from "@electric-sql/pglite-react";
-import { NavigationMenu } from "../../NavigationMenu";
-import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { usePGlite } from "@electric-sql/pglite-react";
+import type { PGliteWithLive } from "@electric-sql/pglite/live";
+import { DexHeader } from "../../DexHeader";
+import { NavigationMenu } from "../../NavigationMenu";
+import backArrow from "../../../assets/icons/arrow-left-solid-full.svg";
 import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../repositories/pokemonRepository";
 import type { PokedexEntryData } from "../../../types/pokedexEntryData";
-import type { PGliteWithLive } from "@electric-sql/pglite/live";
 
-// const test_data: any = {};
 
 export function EntryPage() {
     const dbContext = usePGlite();
@@ -48,9 +48,9 @@ export function EntryPage() {
     const parseFemaleImg = () => {
         if (pokedexEntryData.has_gender_differences && pokedexEntryData.female_sprite_url) {
             return <img src={pokedexEntryData.female_sprite_url} alt={`Image of female variant for ${pokedexEntryData.name}`} />
-        } else {
-            return <></>
         }
+
+        return <></>
     }
 
     const displayRegisterBtn = (context: PGliteWithLive, id: number) => {
@@ -76,14 +76,17 @@ export function EntryPage() {
         <div className={styles.entry}>
             <DexHeader/>
             <div className={styles.entry_display}>
+                <div className={styles.top_bar}>
+                    <Link className={styles.back} to={`../pokedex#${id}`}>
+                        <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img} height='38'/>
+                    </Link>
+                    {displayRegisterBtn(dbContext, pokedexEntryData.id)}
+                </div>
+
                 <h2>{previewName}</h2>
                 <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} />
                 {parseFemaleImg()}
-                {displayRegisterBtn(dbContext, pokedexEntryData.id)}
                 <p>{id}</p>
-                <Link className={styles.back} to={`../pokedex#${id}`}>
-                    back
-                </Link>
             </div>
             {/* TODO: back button instead */}
             <NavigationMenu activePage='entry'></NavigationMenu>

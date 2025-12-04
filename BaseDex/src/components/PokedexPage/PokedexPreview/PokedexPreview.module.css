@@ -1,6 +1,6 @@
 .pokedex_preview {
     border: solid #008080 3px;
-    background-color: #00FFFF;
+    background-color: var(--pokedex-light-blue);
     color: #008080;
     font-weight: bolder;
     align-items: center;
