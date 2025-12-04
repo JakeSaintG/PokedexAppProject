@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { PokedexPreviewData } from '../../../types/pokdexPreviewData';
 import styles from './PokedexPreview.module.css';
 import { Link } from 'react-router-dom';
+import { displayPkmnName } from '../../../repositories/pokemonRepository';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
     previewData: PokedexPreviewData
@@ -24,17 +25,13 @@ export function PokedexPreview(props: Props) {
         setPreviewName(() => props.previewData.is_registered ? props.previewData.name : '???');
     }, [])
 
-    const capitalizeWords = (str: string) => {
-        return str
-            .split(' ')
-            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-    }
-
     return (
+        <section>
+
         <Link className={styles.pokedex_preview} to={`/pokedex/entry?id=${props.previewData.id}`}>
             <img src={imageSrc} alt={`Image of ${props.previewData.name}`} className={styles[`${registered}`]}/>
-            <span className={styles.preview_name}>{props.previewData.dex_no}. {capitalizeWords(previewName)}</span>
+            <span className={styles.preview_name}>{props.previewData.dex_no}. {displayPkmnName(previewName)}</span>
         </Link>
+        </section>
     );
 }

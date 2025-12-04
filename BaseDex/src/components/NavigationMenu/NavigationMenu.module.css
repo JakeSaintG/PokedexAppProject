@@ -42,7 +42,7 @@
 /* TODO: address the accessbility of the home home button on light blue */
 .home_button {
     border: solid black 2px;
-    background-color: #00ffff;
+    background-color: var(--pokedex-light-blue);
     border-radius: 50%;
 }
 

@@ -5,7 +5,8 @@ import {
     upsertPokemonSpeciesData, 
     getRegionCountData,
     getPokedexList,
-    getPokedexEntry
+    getPokedexEntry,
+    setPokedexRegistered
 } from "../postgres/data/pokemonData";
 import type { DateData } from "../types/dateData";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
@@ -21,24 +22,36 @@ import {
 } from "./pokeApiRepository";
 import { logInfo, logInfoVerbose, logInfoWithAttention } from "./logRepository";
 import type { PokedexPreviewData } from "../types/pokdexPreviewData";
+import type { PokedexEntryData } from "../types/pokedexEntryData";
 
-export const loadPokemonData = async (dbContext: PGliteWithLive, generationToLoad: DateData[], batchSize: number) => {
+export const loadPokemonData = async (
+    dbContext: PGliteWithLive,
+    generationToLoad: DateData[],
+    batchSize: number,
+    setLoadingText: (txt:string) => void
+) => {
     const blackList = await getObtainableList(dbContext, 'black');
     const whiteList = await getObtainableList(dbContext, 'white');
     
     for (const gen of generationToLoad) {
         logInfoWithAttention(dbContext, `Gen ${gen.generation_id} identified for update.`);
+        setLoadingText(`Loading Gen ${gen.generation_id}`);
 
         try {
             const [count, offset] = await getGenerationCountOffset(dbContext, gen.generation_id!);
 
             const fetchedPokemon = await fetchPkmnToLoad(count, (offset - 1));
-            await loadPokemon(dbContext, fetchedPokemon, whiteList, blackList, batchSize);
+
+            if (gen.generation_id) {
+                await loadPokemon(dbContext, fetchedPokemon, whiteList, blackList, batchSize, gen.generation_id, setLoadingText);
+            }
 
             updateLocalLastModified(dbContext, gen.generation_id!);
         } catch (error) {
             console.error(`Error updating gen ${gen.generation_id} due to: ${error}`)
         }
+
+        setLoadingText(`Done!`);
     }
 };
 
@@ -52,11 +65,25 @@ export const checkIfUpdatesNeeded = (dateData: DateData[], forceUpdate: boolean)
 
 // I still want to do something with batch size
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const loadPokemon = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon[], whiteList: string[], blackList: string[], batchSize: number) => {
+const loadPokemon = async (
+    dbContext: PGliteWithLive,
+    pokemonToLoad: Pokemon[],
+    whiteList: string[],
+    blackList: string[],
+    batchSize: number,
+    generationId: number,
+    setLoadingText: (txt:string) => void
+) => {
     // TODO: I still want to to try to be loading multiple pokemon at once...
     for (const pkmn of pokemonToLoad) {
         logInfo(dbContext, `Loading data for ${pkmn.name}.`)
+        setLoadingText(`Loading Gen ${generationId}: \r\n${pkmn.name}`);
+
         await startLoad(dbContext, pkmn, whiteList, blackList, new Date().toISOString());
+
+        // TODO: handle errors and retry at least once. 
+        // Move to next pkmn if there is a failure, increment a failure counter, and try the next pkmn
+        // If the next pkmn fails, break out of loop and send a failure message up the stack
     }
 }
 
@@ -142,8 +169,17 @@ export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<Pok
     return await getPokedexList(dbContext);
 }
 
-export const getEntryPageData = async (dbContext: PGliteWithLive) => {
+export const getEntryPageData = async (dbContext: PGliteWithLive, id: string): Promise<PokedexEntryData>  => {
     // TODO: handle error
 
-    return await getPokedexEntry(dbContext);
+    return await getPokedexEntry(dbContext, id);
+}
+
+export const registerPokemon = async (dbContext: PGliteWithLive, id: number) => {
+    setPokedexRegistered(dbContext, id);
+}
+
+export const displayPkmnName = (name: string) => {
+    //TODO: special names list like Mr. Mime
+    return name.charAt(0).toUpperCase() + name.slice(1);
 }
