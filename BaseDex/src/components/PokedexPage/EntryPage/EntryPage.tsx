@@ -32,6 +32,7 @@ export function EntryPage() {
     }
 
     const [pokedexEntryData, setPokedexEntryData] = useState(placeholderEntry);
+    // TODO: update this to be used in the css
     const [registered, setRegistered] = useState('not_registered');
     const [previewName, setPreviewName] = useState('not_registered');
     const [reloadEntry, setReloadEntry] = useState(0);
