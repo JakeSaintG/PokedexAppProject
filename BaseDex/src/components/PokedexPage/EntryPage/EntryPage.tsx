@@ -58,7 +58,7 @@ export function EntryPage() {
             return <></>;
         }
 
-        return <button onClick={() => registerPkmn(context, id)}>Register</button>;
+        return <button onClick={() => registerPkmn(context, id)} className={styles.register_button}>Register</button>;
     } 
 
     const registerPkmn = async (dbContext: PGliteWithLive, id: number) => {
@@ -76,17 +76,13 @@ export function EntryPage() {
         <div className={styles.entry}>
             <DexHeader/>
             <div className={styles.entry_display}>
-                <div className={styles.top_bar}>
-                    <Link className={styles.back} to={`../pokedex#${id}`}>
-                        <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img} height='38'/>
-                    </Link>
-                    {displayRegisterBtn(dbContext, pokedexEntryData.id)}
-                </div>
-
-                <h2>{previewName}</h2>
-                <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} />
+                {displayRegisterBtn(dbContext, pokedexEntryData.id)}
+                <Link className={styles.back} to={`../pokedex#${id}`}>
+                    <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img} height='38'/>
+                </Link>
+                <h2>{id}. {previewName}</h2>
+                <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} className={styles[`${registered}`]}/>
                 {parseFemaleImg()}
-                <p>{id}</p>
             </div>
             {/* TODO: back button instead */}
             <NavigationMenu activePage='entry'></NavigationMenu>
