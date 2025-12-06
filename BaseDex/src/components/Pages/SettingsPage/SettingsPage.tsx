@@ -1,6 +1,6 @@
 import styles from './SettingsPage.module.css';
-import { DexHeader } from "../DexHeader";
-import { NavigationMenu } from "../NavigationMenu";
+import { DexHeader } from "../../DexHeader";
+import { NavigationMenu } from "../../NavigationMenu";
 import { useNavigate } from 'react-router-dom';
 
 export function SettingsPage( ) {
