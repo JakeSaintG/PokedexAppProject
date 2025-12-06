@@ -1,4 +1,4 @@
-import { DexHeader } from '../DexHeader';
+import { DexHeader } from '../../DexHeader';
 import { useNavigate } from 'react-router-dom';
 import styles from './WelcomePage.module.css';
 import reactFont from '../../assets/reactfont.png'
