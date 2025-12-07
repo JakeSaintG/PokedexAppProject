@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { usePGlite } from "@electric-sql/pglite-react";
 import type { PGliteWithLive } from "@electric-sql/pglite/live";
-import { DexHeader } from "../../DexHeader";
-import { NavigationMenu } from "../../NavigationMenu";
-import backArrow from "../../../assets/icons/arrow-left-solid-full.svg";
-import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../repositories/pokemonRepository";
-import type { PokedexEntryData } from "../../../types/pokedexEntryData";
+import { DexHeader } from "../../../DexHeader";
+import { NavigationMenu } from "../../../NavigationMenu";
+import backArrow from "../../../../assets/icons/arrow-left-solid-full.svg";
+import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../../repositories/pokemonRepository";
+import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
 
 
 export function EntryPage() {
