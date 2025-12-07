@@ -1,10 +1,10 @@
 import { DexHeader } from '../../DexHeader';
 import { useNavigate } from 'react-router-dom';
 import styles from './WelcomePage.module.css';
-import reactFont from '../../assets/reactfont.png'
-import pokdexFont from '../../assets/pokedexfont.png'
-import reactSvg from '../../assets/react.svg'
-import dexCoverTriangle from '../../assets/dex_cover_triangle.svg'
+import reactFont from '../../../assets/reactfont.png'
+import pokdexFont from '../../../assets/pokedexfont.png'
+import reactSvg from '../../../assets/react.svg'
+import dexCoverTriangle from '../../../assets/dex_cover_triangle.svg'
 
 export function WelcomePage() {
     const navigate = useNavigate();

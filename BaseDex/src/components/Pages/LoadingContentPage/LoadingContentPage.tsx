@@ -2,19 +2,19 @@ import styles from "./LoadingContentPage.module.css";
 import { useEffect, useState } from "react";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { useNavigate } from "react-router-dom";
-import speakerIcon from "../../assets/icons/bars-solid-full.svg";
-import { DexHeader } from "../DexHeader";
-import { initPokemonDb } from "../../postgres/data/pokemonData";
-import { initConfigDb } from "../../postgres/data/configurationData";
-import type { ConfigurationData } from "../../types/configurationData";
+import speakerIcon from "../../../assets/icons/bars-solid-full.svg";
+import { DexHeader } from "../../DexHeader";
+import { initPokemonDb } from "../../../postgres/data/pokemonData";
+import { initConfigDb } from "../../../postgres/data/configurationData";
+import type { ConfigurationData } from "../../../types/configurationData";
 import {
     configApiPing,
     getLastLocalGenerationUpdate,
     getUpdatedAppConfiguration,
     updateConfiguration,
-} from "../../repositories/configurationRepository";
-import { checkIfUpdatesNeeded, loadPokemonData } from "../../repositories/pokemonRepository";
-import { pokeApiPing } from "../../repositories/pokeApiRepository";
+} from "../../../repositories/configurationRepository";
+import { checkIfUpdatesNeeded, loadPokemonData } from "../../../repositories/pokemonRepository";
+import { pokeApiPing } from "../../../repositories/pokeApiRepository";
 
 export function LoadingContentPage() {
     const forceUpdate = false;
