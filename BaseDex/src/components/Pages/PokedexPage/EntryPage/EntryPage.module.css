@@ -1,8 +1,13 @@
+.register_button {
+    margin: auto 5px 0 0;
+    height: 30px;
+}
+
 .entry_display {
     margin: auto;
     color: black;
-    padding-top: 80px;
     height: 100%;
+    margin-top: 80px;
 }
 
 /* .top_bar {
@@ -13,10 +18,11 @@
     width: 100%;
 } */
 
-.back {
+/* .back {
     color: black;
-    height: 30px;
-}
+    position: relative;
+    background-color: var(--pokedex-light-blue);
+} */
 
 .back img {
     height: 30px;

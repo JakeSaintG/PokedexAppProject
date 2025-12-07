@@ -75,14 +75,16 @@ export function EntryPage() {
 
         <div className={styles.entry}>
             <DexHeader/>
-            <div className={styles.entry_display}>
+            {/* <div className={styles.entry_menu}>
                 {displayRegisterBtn(dbContext, pokedexEntryData.id)}
-                <Link className={styles.back} to={`../pokedex#${id}`}>
-                    <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img} height='38'/>
-                </Link>
+            </div> */}
+            <div className={styles.entry_display}>
                 <h2>{id}. {previewName}</h2>
                 <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} className={styles[`${registered}`]}/>
                 {parseFemaleImg()}
+                {/* <Link className={styles.back} to={`../pokedex#${id}`}>
+                    <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img}/>
+                </Link> */}
             </div>
             {/* TODO: back button instead */}
             <NavigationMenu activePage='entry'></NavigationMenu>
