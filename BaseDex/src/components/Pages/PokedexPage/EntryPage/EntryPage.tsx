@@ -47,7 +47,7 @@ export function EntryPage() {
 
     const parseFemaleImg = () => {
         if (pokedexEntryData.has_gender_differences && pokedexEntryData.female_sprite_url) {
-            return <img src={pokedexEntryData.female_sprite_url} alt={`Image of female variant for ${pokedexEntryData.name}`} />
+            return <img src={pokedexEntryData.female_sprite_url} alt={`Image of female variant for ${pokedexEntryData.name}`} className={styles[`${registered}`]}/>
         }
 
         return <></>
@@ -75,19 +75,13 @@ export function EntryPage() {
 
         <div className={styles.entry}>
             <DexHeader/>
-            {/* <div className={styles.entry_menu}>
-                {displayRegisterBtn(dbContext, pokedexEntryData.id)}
-            </div> */}
             <div className={styles.entry_display}>
                 <h2>{id}. {previewName}</h2>
                 <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} className={styles[`${registered}`]}/>
                 {parseFemaleImg()}
-                {/* <Link className={styles.back} to={`../pokedex#${id}`}>
-                    <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img}/>
-                </Link> */}
             </div>
-            {/* TODO: back button instead */}
-            <NavigationMenu activePage='entry'></NavigationMenu>
+            {displayRegisterBtn(dbContext, pokedexEntryData.id)}
+            <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`}></NavigationMenu>
         </div>
     );
 }
