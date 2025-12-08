@@ -7,11 +7,14 @@ import gearSolid from "../../assets/icons/gear-solid.svg";
 import grassSolid from "../../assets/icons/grass.svg";
 import userSolid from "../../assets/icons/user-solid.svg";
 import houseSolid from "../../assets/icons/house-solid.svg";
+import backArrow from "../../assets/icons/arrow-left-solid-full.svg";
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
-    activePage: string
+    activePage: string,
+    backButtonOverride?: string,
+    backButtonLink?: string
 }
 
 export function NavigationMenu(props: Props) {
@@ -27,18 +30,50 @@ export function NavigationMenu(props: Props) {
     //TODO: WIP
     const showActiveNavLink = (active: string) => activeLink == active ? styles.active : styles.inactive;
 
+
+    const backButton = (backButtonLink: string) => {
+        return <Link className={styles.nav_link} to={backButtonLink}>
+            <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img}/>
+        </Link>
+    }
+
+    const navButton = (
+        buttonName: string,
+        buttonLink: string,
+        buttonImg: string,
+        buttonAltTxt: string,
+        backOverride: string | undefined,
+        backButtonLink: string | undefined
+    ) => {
+        if (backOverride != undefined && backButtonLink != undefined && backOverride.includes(buttonName)) return backButton(backButtonLink);
+
+        return <Link className={`${styles.nav_link} ${showActiveNavLink(buttonName)}`} to={buttonLink}>
+            <img src={buttonImg} alt={buttonAltTxt} className={styles.nav_img} height='38'/>
+        </Link>
+    }
+
     return (
         <nav className={styles.nav_menu}>
             <ul role="menubar">
                 <li role="menuitem">
-                    <Link className={`${styles.nav_link} ${showActiveNavLink('profile')}`} to={'../profile'}>
-                        <img src={userSolid} alt="user icon for profile" className={styles.nav_img} height='38'/>
-                    </Link>
+                    {navButton(
+                        'profile',
+                        '../profile',
+                        userSolid,
+                        'User image to go to profile page',
+                        props.backButtonOverride,
+                        props.backButtonLink
+                    )}
                 </li>
                 <li role="menuitem">
-                    <Link className={`${styles.nav_link} ${showActiveNavLink('tall_grass')}`} to={'../tall_grass'}>
-                        <img src={grassSolid} alt="grass icon for collecting pokemon" className={styles.nav_img} height='38'/>
-                    </Link>
+                    {navButton(
+                        'tall_grass',
+                        '../tall_grass',
+                        grassSolid,
+                        'Tall grass icon to catch Pokemon',
+                        props.backButtonOverride,
+                        props.backButtonLink
+                    )}
                 </li>
                 <li className={styles.home_button} role="menuitem">
                     <Link className={`${styles.nav_link} ${showActiveNavLink('home')}`} to={'../home'}>
@@ -46,14 +81,24 @@ export function NavigationMenu(props: Props) {
                     </Link>
                 </li>
                 <li role="menuitem">
-                    <Link className={`${styles.nav_link} ${showActiveNavLink('pokedex')}`} to={'../pokedex'}>
-                        <img src={listUlSolid} alt="list icon for pokedex list view" className={styles.nav_img} height='38'/>
-                    </Link>
+                    {navButton(
+                        'pokedex',
+                        '../pokedex',
+                        listUlSolid,
+                        'List icon to view registered Pokemon',
+                        props.backButtonOverride,
+                        props.backButtonLink
+                    )}
                 </li>
                 <li role="menuitem">
-                    <Link className={`${styles.nav_link} ${showActiveNavLink('settings')}`} to={'../settings'}>
-                        <img src={gearSolid} alt="gear icon for settings" className={styles.nav_img} height='38'/>
-                    </Link>
+                    {navButton(
+                        'settings',
+                        '../settings',
+                        gearSolid,
+                        'Gear icon to navigate to settings',
+                        props.backButtonOverride,
+                        props.backButtonLink
+                    )}
                 </li>
             </ul>
         </nav>
