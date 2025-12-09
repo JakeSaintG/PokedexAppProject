@@ -1,0 +1,18 @@
+.register_button {
+    margin: auto 5px 0 0;
+    height: 30px;
+}
+
+.entry_display {
+    margin: auto;
+    color: black;
+    margin-top: 80px;
+}
+
+.back img {
+    height: 30px;
+}
+
+.not_registered {
+    filter: contrast(0%) brightness(50%)
+}

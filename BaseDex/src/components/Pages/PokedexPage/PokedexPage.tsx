@@ -1,11 +1,11 @@
 import styles from './PokedexPage.module.css';
-import { DexHeader } from "../DexHeader";
-import { NavigationMenu } from "../NavigationMenu";
+import { DexHeader } from "../../DexHeader";
+import { NavigationMenu } from "../../NavigationMenu";
 import { PokedexPreview } from './PokedexPreview';
-import type { PokedexPreviewData } from '../../types/pokdexPreviewData';
+import type { PokedexPreviewData } from '../../../types/pokdexPreviewData';
 import { usePGlite } from "@electric-sql/pglite-react";
 import { useEffect, useState } from 'react';
-import { getPokedexPageData } from '../../repositories/pokemonRepository';
+import { getPokedexPageData } from '../../../repositories/pokemonRepository';
 
 export function PokedexPage( ) {
     const dbContext = usePGlite();

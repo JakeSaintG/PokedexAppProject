@@ -1,6 +1,6 @@
 import styles from "./HomePage.module.css";
-import { DexHeader } from "../DexHeader";
-import { NavigationMenu } from "../NavigationMenu";
+import { DexHeader } from "../../DexHeader";
+import { NavigationMenu } from "../../NavigationMenu";
 
 export function HomePage() {
     return (

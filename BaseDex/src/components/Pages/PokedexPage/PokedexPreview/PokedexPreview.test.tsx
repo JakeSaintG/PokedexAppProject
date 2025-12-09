@@ -1,7 +1,7 @@
 import { PokedexPreview } from '.';
 import { cleanup, render } from '@testing-library/react';
 import { test, expect, afterEach } from 'vitest';
-import type { PokedexPreviewData } from '../../../types/pokdexPreviewData';
+import type { PokedexPreviewData } from '../../../../types/pokdexPreviewData';
 // import { cleanup, render, screen } from '@testing-library/react';
 // import { describe, it, test, expect, afterEach } from 'vitest';
 

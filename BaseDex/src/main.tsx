@@ -2,14 +2,14 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 
-import { WelcomePage } from './components/WelcomePage';
-import { HomePage } from './components/HomePage';
-import { LoadingContentPage } from './components/LoadingContentPage';
-import { ProfilePage } from './components/ProfilePage';
-import { TallGrassPage } from './components/TallGrassPage/TallGrassPage';
-import { PokedexPage } from './components/PokedexPage';
-import { SettingsPage } from './components/SettingsPage';
-import { EntryPage } from './components/PokedexPage/EntryPage';
+import { WelcomePage } from './components/Pages/WelcomePage';
+import { HomePage } from './components/Pages/HomePage';
+import { LoadingContentPage } from './components/Pages/LoadingContentPage';
+import { ProfilePage } from './components/Pages/ProfilePage';
+import { TallGrassPage } from './components/Pages/TallGrassPage/TallGrassPage';
+import { PokedexPage } from './components/Pages/PokedexPage';
+import { SettingsPage } from './components/Pages/SettingsPage';
+import { EntryPage } from './components/Pages/PokedexPage/EntryPage';
 
 import './index.css'
 import App from './App';

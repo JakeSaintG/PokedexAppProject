@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { usePGlite } from "@electric-sql/pglite-react";
 import type { PGliteWithLive } from "@electric-sql/pglite/live";
-import { DexHeader } from "../../DexHeader";
-import { NavigationMenu } from "../../NavigationMenu";
-import backArrow from "../../../assets/icons/arrow-left-solid-full.svg";
-import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../repositories/pokemonRepository";
-import type { PokedexEntryData } from "../../../types/pokedexEntryData";
+import { DexHeader } from "../../../DexHeader";
+import { NavigationMenu } from "../../../NavigationMenu";
+import backArrow from "../../../../assets/icons/arrow-left-solid-full.svg";
+import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../../repositories/pokemonRepository";
+import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
 
 
 export function EntryPage() {
@@ -47,7 +47,7 @@ export function EntryPage() {
 
     const parseFemaleImg = () => {
         if (pokedexEntryData.has_gender_differences && pokedexEntryData.female_sprite_url) {
-            return <img src={pokedexEntryData.female_sprite_url} alt={`Image of female variant for ${pokedexEntryData.name}`} />
+            return <img src={pokedexEntryData.female_sprite_url} alt={`Image of female variant for ${pokedexEntryData.name}`} className={styles[`${registered}`]}/>
         }
 
         return <></>
@@ -58,7 +58,7 @@ export function EntryPage() {
             return <></>;
         }
 
-        return <button onClick={() => registerPkmn(context, id)}>Register</button>;
+        return <button onClick={() => registerPkmn(context, id)} className={styles.register_button}>Register</button>;
     } 
 
     const registerPkmn = async (dbContext: PGliteWithLive, id: number) => {
@@ -76,20 +76,12 @@ export function EntryPage() {
         <div className={styles.entry}>
             <DexHeader/>
             <div className={styles.entry_display}>
-                <div className={styles.top_bar}>
-                    <Link className={styles.back} to={`../pokedex#${id}`}>
-                        <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img} height='38'/>
-                    </Link>
-                    {displayRegisterBtn(dbContext, pokedexEntryData.id)}
-                </div>
-
-                <h2>{previewName}</h2>
-                <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} />
+                <h2>{id}. {previewName}</h2>
+                <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} className={styles[`${registered}`]}/>
                 {parseFemaleImg()}
-                <p>{id}</p>
             </div>
-            {/* TODO: back button instead */}
-            <NavigationMenu activePage='entry'></NavigationMenu>
+            {displayRegisterBtn(dbContext, pokedexEntryData.id)}
+            <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`}></NavigationMenu>
         </div>
     );
 }

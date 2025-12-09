@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import type { PokedexPreviewData } from '../../../types/pokdexPreviewData';
+import type { PokedexPreviewData } from '../../../../types/pokdexPreviewData';
 import styles from './PokedexPreview.module.css';
 import { Link } from 'react-router-dom';
-import { displayPkmnName } from '../../../repositories/pokemonRepository';
+import { displayPkmnName } from '../../../../repositories/pokemonRepository';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
     previewData: PokedexPreviewData
@@ -35,3 +35,4 @@ export function PokedexPreview(props: Props) {
         </section>
     );
 }
+

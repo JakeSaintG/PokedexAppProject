@@ -1,8 +1,8 @@
 import styles from "./TallGrassPage.module.css";
-import { DexHeader } from "../DexHeader";
-import { NavigationMenu } from "../NavigationMenu";
+import { DexHeader } from "../../DexHeader";
+import { NavigationMenu } from "../../NavigationMenu";
 import { useEffect, useState } from "react";
-import { getTallGrassPageData } from "../../repositories/pokemonRepository";
+import { getTallGrassPageData } from "../../../repositories/pokemonRepository";
 import { usePGlite } from "@electric-sql/pglite-react";
 
 const test_data = [
