@@ -95,6 +95,14 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
             'types' in data
             && Array.isArray(data['types'])
         )
+        && (
+            'weight' in data
+            && typeof data['weight'] === 'number'
+        )
+        && (
+            'height' in data
+            && typeof data['height'] === 'number'
+        )
     ) {
         if (typeof data.sprites.front_default !== 'string') {
             data.sprites.front_default = 'https://bulbapedia.bulbagarden.net/wiki/MissingNo.#/media/File:Missingno_RB.png';
@@ -110,6 +118,8 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
             img_path: `./imgs/dex_imgs/${data.id}`,
             type_1: '',
             type_2: undefined,
+            weight: data.weight,
+            height: data.height,
             has_forms: false,
             url: data.url,
             obtainable: false,

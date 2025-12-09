@@ -10,6 +10,8 @@ export interface PokemonBaseData {
     img_path: string,
     type_1: string,
     type_2?: string,
+    weight: number,
+    height: number,
     has_forms: boolean,
     url: string,
     obtainable: boolean,

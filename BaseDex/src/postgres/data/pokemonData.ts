@@ -33,6 +33,8 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
                 ,is_default BOOLEAN NOT NULL
                 ,type_1 TEXT NOT NULL
                 ,type_2 TEXT NULL
+                ,weight INT NULL
+                ,height INT NULL
                 ,img_path TEXT NOT NULL
                 ,has_forms BOOLEAN NOT NULL
                 ,male_sprite_url TEXT NOT NULL
@@ -198,6 +200,8 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                     ,has_forms
                     ,type_1
                     ,type_2
+                    ,weight
+                    ,height
                     ,is_registered
                     ,obtainable
                     ,regional_form
@@ -215,10 +219,12 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                     ,$9 -- pkmnData.has_forms
                     ,$10 -- pkmnData.type_1
                     ,$11 -- pkmnData.type_2
-                    ,$12 -- is_registered
-                    ,$13 -- obtainable
-                    ,$14 -- regional_form
-                    ,$15 -- new Date().toISOString()
+                    ,$12 -- pkmnData.weight
+                    ,$13 -- pkmnData.height
+                    ,$14 -- is_registered
+                    ,$15 -- obtainable
+                    ,$16 -- regional_form
+                    ,$17 -- new Date().toISOString()
                 )
                     ON CONFLICT(id) 
                     DO UPDATE SET 
@@ -233,9 +239,11 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                         ,has_forms = $9                     -- pkmnData.has_forms
                         ,type_1 = $10                       -- pkmnData.type_1
                         ,type_2 = $11                       -- pkmnData.type_2
-                        ,obtainable = $13                   -- obtainable
-                        ,regional_form = $14                -- regional_form
-                        ,last_modified_dts = $15            -- new Date().toISOString()
+                        ,weight = $12                       -- pkmnData.weight
+                        ,height = $13                       -- pkmnData.height
+                        ,obtainable = $15                   -- obtainable
+                        ,regional_form = $16                -- regional_form
+                        ,last_modified_dts = $17            -- new Date().toISOString()
             `,
             [
                 pkmnData.id,
@@ -249,6 +257,8 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                 pkmnData.has_forms,
                 pkmnData.type_1,
                 pkmnData.type_2,
+                pkmnData.weight,
+                pkmnData.height,
                 false,
                 pkmnData.obtainable,
                 pkmnData.regional_form,
@@ -491,6 +501,8 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
                 ,d.is_default
                 ,d.type_1
                 ,d.type_2
+                ,d.weight
+                ,d.height
                 ,d.has_forms
                 ,d.male_sprite_url
                 ,d.female_sprite_url

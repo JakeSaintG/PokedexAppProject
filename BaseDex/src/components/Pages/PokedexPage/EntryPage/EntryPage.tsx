@@ -1,11 +1,10 @@
 import styles from "./EntryPage.module.css";
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { usePGlite } from "@electric-sql/pglite-react";
 import type { PGliteWithLive } from "@electric-sql/pglite/live";
 import { DexHeader } from "../../../DexHeader";
 import { NavigationMenu } from "../../../NavigationMenu";
-import backArrow from "../../../../assets/icons/arrow-left-solid-full.svg";
 import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../../repositories/pokemonRepository";
 import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
 
@@ -65,6 +64,8 @@ export function EntryPage() {
         await registerPokemon(dbContext, id);
         setReloadEntry(1); 
     }   
+
+    console.log(pokedexEntryData)
 
     return (
         /*
