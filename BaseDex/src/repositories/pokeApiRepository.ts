@@ -1,7 +1,7 @@
 import type { FlavorTextEntry } from "../types/flavorText";
 import type { Pokemon } from "../types/pokemon";
 import type { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
-import type { pokemonType } from "../types/pokemonType";
+// import type { pokemonType } from "../types/pokemonType";
 import type { Variety } from "../types/varieties";
 
 export const fetchPkmnToLoad = async (limit: number, offset: number) => {
@@ -40,8 +40,6 @@ export const fetchPokeApiData = async (url: string) => {
 }
 
 export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) : Promise<PokemonBaseData> => {
-
-    
     if (
         typeof data === 'object' 
         && data !== null 
@@ -116,7 +114,7 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
             male_sprite_url: data.sprites.front_default as string,
             female_sprite_url: data.sprites.front_female,
             img_path: `./imgs/dex_imgs/${data.id}`,
-            type_1: '',
+            type_1: data.types[0].type.name,
             type_2: undefined,
             weight: data.weight,
             height: data.height,
@@ -128,14 +126,9 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
             last_modified_dts: ''
         };
     
-        if (data.forms.length > 1) {
-            parsedData.has_forms = true;
-        }
-    
-        data.types.forEach((t: pokemonType) => {
-            const type = `type_${t.slot}`;
-            if (type == 'type_2' || type == 'type_2') parsedData[type] = t.type.name;
-        });
+        if (data.forms.length > 1) parsedData.has_forms = true;
+
+        if (data.types[1] != undefined) parsedData.type_2 = data.types[1].type.name;
 
         if (parsedData.is_default) {
             parsedData.obtainable = true;

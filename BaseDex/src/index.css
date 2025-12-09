@@ -9,6 +9,25 @@
     --pokedex-red: #DC0A2D;
     --pokedex-light-blue: #00ffff;
     
+    --bug: #C3D21F;
+    --electric: #FEE844;
+    --fire: #FA5442;
+    --grass: #86D04C;
+    --normal: #B8B7A9;
+    --rock: #CEBD72;
+    --dark: #8D6855;
+    --fairy: #F9ADFF;
+    --flying: #79A3FF;
+    --ground: #F0CF5C;
+    --poison: #AA5DA1;
+    --steel: #C4C2D9;
+    --dragon: #8975FF;
+    --fighting: #A75545;
+    --ghost: #7975D7;
+    --ice: #96F1FF;
+    --psychic: #FA64B5;
+    --water: #56B0FF;
+
     color: rgba(255, 255, 255);
     
     /*TODO: remove some of these defaults*/
