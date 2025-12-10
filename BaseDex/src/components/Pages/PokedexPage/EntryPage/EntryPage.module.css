@@ -6,11 +6,17 @@
 .entry_display {
     margin: auto;
     color: black;
-    margin-top: 80px;
 }
 
-.back img {
-    height: 30px;
+.banner {
+    
+    padding-top: 80px;
+    display: grid;
+    border-radius: 2rem;
+}
+
+.banner h2 {
+    margin: 0;
 }
 
 .not_registered {

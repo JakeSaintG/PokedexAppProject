@@ -65,7 +65,7 @@ export function EntryPage() {
         setReloadEntry(1); 
     }   
 
-    console.log(pokedexEntryData)
+    const style = { backgroundColor: `var(--${pokedexEntryData.type_1})`} as React.CSSProperties;
 
     return (
         /*
@@ -77,8 +77,11 @@ export function EntryPage() {
         <div className={styles.entry}>
             <DexHeader/>
             <div className={styles.entry_display}>
-                <h2>{id}. {previewName}</h2>
-                <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} className={styles[`${registered}`]}/>
+                <div className={`${styles.banner}`} style={style}>
+                    <h2>No #{id}</h2>
+                    <img src={pokedexEntryData.male_sprite_url} alt={`Default Image of ${pokedexEntryData.name}`} className={styles[`${registered}`]}/>
+                    <h2>{previewName}</h2>
+                </div>
                 {parseFemaleImg()}
             </div>
             {displayRegisterBtn(dbContext, pokedexEntryData.id)}
