@@ -65,7 +65,7 @@ export function EntryPage() {
         setReloadEntry(1); 
     }   
 
-    const style = { backgroundColor: `var(--${pokedexEntryData.type_1})`} as React.CSSProperties;
+    const style = {backgroundColor: `var(--${pokedexEntryData.type_1})`} as React.CSSProperties;
 
     return (
         /*
