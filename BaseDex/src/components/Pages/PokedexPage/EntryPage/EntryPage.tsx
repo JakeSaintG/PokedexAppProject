@@ -79,24 +79,6 @@ export function EntryPage() {
         return <></>
     }
 
-    const displayFormChangeButton = (pokedexEntryData: PokedexEntryData) => {
-        if (pokedexEntryData.has_gender_differences && pokedexEntryData.female_sprite_url && pokedexEntryData.is_registered) {
-            let url: string;
-
-            if (dexImg == pokedexEntryData.male_sprite_url) {
-                url = pokedexEntryData.female_sprite_url
-            } else {
-                url = pokedexEntryData.male_sprite_url
-            }
-
-            return <button onClick={() => setDexImg(url)}>
-                <img src={swapArrow} alt="circular arrow icon for swapping between gendered images" className={styles.back_img}/>
-            </button>
-        }
-
-        return <></>
-    }
-
     const style = { backgroundColor: `var(--${pokedexEntryData.type_1})`} as React.CSSProperties;
 
     return (

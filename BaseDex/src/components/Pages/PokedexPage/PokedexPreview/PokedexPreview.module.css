@@ -1,7 +1,6 @@
 .pokedex_preview {
-    border: solid #008080 3px;
-    background-color: var(--pokedex-light-blue);
-    color: #008080;
+    border: solid black 2px;
+    color: black;
     font-weight: bolder;
     align-items: center;
     cursor: pointer;
@@ -24,5 +23,11 @@
 }
 
 .not_registered {
-    filter: contrast(0%) brightness(50%)
+    border: solid #008080 3px;
+    background-color: var(--pokedex-light-blue);
+    color: #008080;
+}
+
+.not_registered img {
+    filter: contrast(0%) brightness(50%);
 }
