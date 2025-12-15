@@ -10,12 +10,10 @@ import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../../
 import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
 
 export function EntryPage() {
-    const missingNoImg = 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png';
-    
-    const dbContext = usePGlite();
-
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id")!;
+    const missingNoImg = 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png';
+    const dbContext = usePGlite();
 
     const placeholderEntry: PokedexEntryData = {
         id: 0,
@@ -79,7 +77,7 @@ export function EntryPage() {
         return <></>
     }
 
-    const style = { backgroundColor: `var(--${pokedexEntryData.type_1})`} as React.CSSProperties;
+    const displaySecondType = (type_2: string | undefined) => (type_2 != undefined) ? <p style={{backgroundColor: `var(--${type_2})`}}>{type_2}</p> : <></>;
 
     return (
         /*
@@ -91,7 +89,7 @@ export function EntryPage() {
         <div className={styles.entry}>
             <DexHeader/>
             <div className={styles.entry_display}>
-                <div className={`${styles.banner}`} style={style}>
+                <div className={`${styles.banner}`} style={{backgroundColor: `var(--${pokedexEntryData.type_1})`}}>
                     <p className={styles.dex_no}>No #{id}</p>
                     <img src={dexImg} alt={`Default Image of ${pokedexEntryData.name}`} className={`${styles[`${registered}`]} ${styles.dex_img}`}/>
                     <p className={styles.dex_name}>{previewName}</p>
@@ -101,6 +99,10 @@ export function EntryPage() {
                 </div>
             </div>
             {displayRegisterBtn(dbContext, pokedexEntryData.id)}
+            <div className={styles.types}>
+                <p style={{backgroundColor: `var(--${pokedexEntryData.type_1})`}}>{pokedexEntryData.type_1}</p>
+                {displaySecondType(pokedexEntryData.type_2)}
+            </div>
             <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`}></NavigationMenu>
         </div>
     );

@@ -61,3 +61,15 @@
 .not_registered {
     filter: contrast(0%) brightness(50%)
 }
+
+.types {
+    color: black;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.types p {
+    border: 1px solid black;
+    padding: .25rem;
+}
