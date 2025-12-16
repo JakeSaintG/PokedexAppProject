@@ -8,6 +8,8 @@ export interface PokedexEntryData {
     is_default: boolean
     type_1: string
     type_2?: string
+    height: number,
+    weight: number,
     has_forms: boolean
     male_sprite_url: string
     female_sprite_url: string | null
