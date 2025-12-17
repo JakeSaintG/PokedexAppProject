@@ -12,7 +12,6 @@ import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
 export function EntryPage() {
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id")!;
-    const missingNoImg = 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png';
     const dbContext = usePGlite();
 
     const placeholderEntry: PokedexEntryData = {
@@ -27,13 +26,13 @@ export function EntryPage() {
         height: 0,
         weight: 0,
         has_forms: false,
-        male_sprite_url: missingNoImg,
+        male_sprite_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
         female_sprite_url: null,
         is_registered: true,
     }
 
     const [pokedexEntryData, setPokedexEntryData] = useState(placeholderEntry);
-    const [dexImg, setDexImg] = useState(missingNoImg);
+    const [dexImg, setDexImg] = useState(placeholderEntry.male_sprite_url);
     const [registered, setRegistered] = useState('not_registered');
     const [previewName, setPreviewName] = useState('not_registered');
     const [reloadEntry, setReloadEntry] = useState(0);

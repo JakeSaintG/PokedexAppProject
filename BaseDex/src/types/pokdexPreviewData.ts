@@ -5,5 +5,5 @@ export interface PokedexPreviewData {
     id: number
     img_url: string
     is_registered: boolean
-    img_data: Blob
+    img_data?: Blob
 }

@@ -25,21 +25,20 @@ export function PokedexPreview(props: Props) {
         setPreviewName(() => props.previewData.is_registered ? props.previewData.name : '???');
     }, [])
 
-    let style: React.CSSProperties;
+    let style: React.CSSProperties = {};
 
-    if (props.previewData.is_registered) {
+    if (props.previewData.is_registered && props.previewData.primary_type != 'none') {
         style = {backgroundColor: `var(--${props.previewData.primary_type})`} as React.CSSProperties;
-    } else {
-        style = {} as React.CSSProperties;
+    } else if (props.previewData.primary_type == 'none') {
+        style = {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
     }
 
     return (
         <section>
-
-        <Link className={`${styles.pokedex_preview} ${styles[`${registered}`]}`} style={style} to={`/pokedex/entry?id=${props.previewData.id}`}>
-            <img src={imageSrc} alt={`Image of ${props.previewData.name}`}/>
-            <span className={styles.preview_name}>{props.previewData.dex_no}. {displayPkmnName(previewName)}</span>
-        </Link>
+            <Link className={`${styles.pokedex_preview} ${styles[`${registered}`]}`} style={style} to={`/pokedex/entry?id=${props.previewData.id}`}>
+                <img src={imageSrc} alt={`Image of ${props.previewData.name}`}/>
+                <span className={styles.preview_name}>{props.previewData.dex_no}. {displayPkmnName(previewName)}</span>
+            </Link>
         </section>
     );
 }
