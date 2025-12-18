@@ -165,14 +165,10 @@ export const getTallGrassPageData = async (dbContext: PGliteWithLive) => {
 }
 
 export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {
-    // TODO: handle error
-
     return await getPokedexList(dbContext);
 }
 
 export const getEntryPageData = async (dbContext: PGliteWithLive, id: string): Promise<PokedexEntryData>  => {
-    // TODO: handle error
-
     return await getPokedexEntry(dbContext, id);
 }
 

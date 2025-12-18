@@ -421,22 +421,38 @@ export const getRegionCountData = async (dbContext: PGliteWithLive) => {
 }
 
 export const getPokedexList = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {
-    const results = await dbContext.query(`
-            SELECT 
-                d.id
-                ,s.dex_no
-                ,s.name
-                ,i.default_img_data
-                ,d.type_1
-                ,d.male_sprite_url
-                ,d.is_registered
-            FROM pokemon_species_data s
-            JOIN pokemon_base_data d
-                ON d.id = s.dex_no
-            JOIN pokemon_images i
-                on d.id = i.id;
-        `
-    )
+    let results;
+
+    try {        
+        results = await dbContext.query(`
+                SELECT 
+                    d.id
+                    ,s.dex_no
+                    ,s.name
+                    ,i.default_img_data
+                    ,d.type_1
+                    ,d.male_sprite_url
+                    ,d.is_registered
+                FROM pokemon_species_data s
+                JOIN pokemon_base_data d
+                    ON d.id = s.dex_no
+                JOIN pokemon_images i
+                    on d.id = i.id;
+            `
+        )
+    } catch {
+        console.log('Error reading from database');
+
+        return [{
+            name: 'MissingNo',
+            primary_type: 'none',
+            dex_no: 0,
+            id: 0,
+            img_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
+            is_registered: true,
+        }]
+    }
+    
 
     const data = results.rows;
 
@@ -496,34 +512,57 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
 }
 
 export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Promise<PokedexEntryData> => {
-    const results = await dbContext.query(`
-            SELECT 
-                d.id
-                ,s.name
-                ,s.dex_no
-                ,s.habitat
-                ,s.has_gender_differences
-                ,s.generation
-                ,d.is_default
-                ,d.type_1
-                ,d.type_2
-                ,d.weight
-                ,d.height
-                ,d.has_forms
-                ,d.male_sprite_url
-                ,d.female_sprite_url
-                ,d.is_registered
-                ,i.default_img_data
-                ,i.female_img_data
-            FROM pokemon_species_data s
-            JOIN pokemon_base_data d
-                ON d.id = s.dex_no
-            JOIN pokemon_images i
-                on d.id = i.id
-            WHERE d.id = $1
-            LIMIT 1;
-        `, [id]
-    )
+    let results;
+    
+    try {
+        results = await dbContext.query(`
+                SELECT 
+                    d.id
+                    ,s.name
+                    ,s.dex_no
+                    ,s.habitat
+                    ,s.has_gender_differences
+                    ,s.generation
+                    ,d.is_default
+                    ,d.type_1
+                    ,d.type_2
+                    ,d.weight
+                    ,d.height
+                    ,d.has_forms
+                    ,d.male_sprite_url
+                    ,d.female_sprite_url
+                    ,d.is_registered
+                    ,i.default_img_data
+                    ,i.female_img_data
+                FROM pokemon_species_data s
+                JOIN pokemon_base_data d
+                    ON d.id = s.dex_no
+                JOIN pokemon_images i
+                    on d.id = i.id
+                WHERE d.id = $1
+                LIMIT 1;
+            `, [id]
+        )
+    } catch {
+        console.log('Error reading from database.')
+        
+        return {
+            id: 0,
+            name: "MissingNo",
+            dex_no: 0,
+            habitat: "Shoreline",
+            has_gender_differences: false,
+            generation: "i",
+            is_default: false,
+            type_1: "Ň̷̨ȕ̷͕l̷͇̑l̸̠̏",
+            height: 0,
+            weight: 0,
+            has_forms: false,
+            male_sprite_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
+            female_sprite_url: null,
+            is_registered: true,
+        }
+    }
 
     const data = results.rows[0];
 
