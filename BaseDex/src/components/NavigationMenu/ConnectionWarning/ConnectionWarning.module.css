@@ -1,3 +1,11 @@
 .con_warn {
+    background-color: rgb(251, 232, 21);
     color: black;
+    height: 70px;
+}
+
+.con_warn p:first-child {
+    font-size: large;
+    font-weight: bolder;
+    
 }
