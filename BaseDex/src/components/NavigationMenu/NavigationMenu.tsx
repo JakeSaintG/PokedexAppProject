@@ -10,6 +10,7 @@ import houseSolid from "../../assets/icons/house-solid.svg";
 import backArrow from "../../assets/icons/arrow-left-solid-full.svg";
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { ConnectionWarning } from './ConnectionWarning';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
     activePage: string,
@@ -53,54 +54,57 @@ export function NavigationMenu(props: Props) {
     }
 
     return (
-        <nav className={styles.nav_menu}>
-            <ul role="menubar">
-                <li role="menuitem">
-                    {navButton(
-                        'profile',
-                        '../profile',
-                        userSolid,
-                        'User image to go to profile page',
-                        props.backButtonOverride,
-                        props.backButtonLink
-                    )}
-                </li>
-                <li role="menuitem">
-                    {navButton(
-                        'tall_grass',
-                        '../tall_grass',
-                        grassSolid,
-                        'Tall grass icon to catch Pokemon',
-                        props.backButtonOverride,
-                        props.backButtonLink
-                    )}
-                </li>
-                <li className={styles.home_button} role="menuitem">
-                    <Link className={`${styles.nav_link} ${showActiveNavLink('home')}`} to={'../home'}>
-                        <img src={houseSolid} alt="house icon for returning to home page" className={styles.nav_img} height='38'/>
-                    </Link>
-                </li>
-                <li role="menuitem">
-                    {navButton(
-                        'pokedex',
-                        '../pokedex',
-                        listUlSolid,
-                        'List icon to view registered Pokemon',
-                        props.backButtonOverride,
-                        props.backButtonLink
-                    )}
-                </li>
-                <li role="menuitem">
-                    {navButton(
-                        'settings',
-                        '../settings',
-                        gearSolid,
-                        'Gear icon to navigate to settings',
-                        props.backButtonOverride,
-                        props.backButtonLink
-                    )}
-                </li>
-            </ul>
-        </nav>
+        <div className={styles.nav}>
+            <ConnectionWarning></ConnectionWarning>
+            <nav className={styles.nav_menu}>
+                <ul role="menubar">
+                    <li role="menuitem">
+                        {navButton(
+                            'profile',
+                            '../profile',
+                            userSolid,
+                            'User image to go to profile page',
+                            props.backButtonOverride,
+                            props.backButtonLink
+                        )}
+                    </li>
+                    <li role="menuitem">
+                        {navButton(
+                            'tall_grass',
+                            '../tall_grass',
+                            grassSolid,
+                            'Tall grass icon to catch Pokemon',
+                            props.backButtonOverride,
+                            props.backButtonLink
+                        )}
+                    </li>
+                    <li className={styles.home_button} role="menuitem">
+                        <Link className={`${styles.nav_link} ${showActiveNavLink('home')}`} to={'../home'}>
+                            <img src={houseSolid} alt="house icon for returning to home page" className={styles.nav_img} height='38'/>
+                        </Link>
+                    </li>
+                    <li role="menuitem">
+                        {navButton(
+                            'pokedex',
+                            '../pokedex',
+                            listUlSolid,
+                            'List icon to view registered Pokemon',
+                            props.backButtonOverride,
+                            props.backButtonLink
+                        )}
+                    </li>
+                    <li role="menuitem">
+                        {navButton(
+                            'settings',
+                            '../settings',
+                            gearSolid,
+                            'Gear icon to navigate to settings',
+                            props.backButtonOverride,
+                            props.backButtonLink
+                        )}
+                    </li>
+                </ul>
+            </nav>
+        </div>
     );
 }

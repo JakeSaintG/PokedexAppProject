@@ -1,3 +1,7 @@
+.nav {
+    border: solid red 1px;
+}
+
 .nav_menu {
     border-top: solid black 2px;
     background-color: var(--pokedex-red);
