@@ -1,9 +1,10 @@
 .profile {
     display: flex;
-    height: 100%;
+    height: calc(100vh - 68px);
 }
 
 .profile p {
-    margin: auto;
+    /* margin: auto; */
     color: black;
+    height: calc(100vh - 168px);
 }

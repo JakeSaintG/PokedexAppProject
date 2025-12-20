@@ -1,15 +1,12 @@
-.nav {
-    position: fixed;
-    bottom: 0;
-    height: 140px;
-    width: 100%;
-}
-
 .nav_menu {
+    bottom: 0;
+    left: 0;
+    position: fixed;
     border-top: solid black 2px;
     background-color: var(--pokedex-red);
     max-width: var(--max-mobile-width);
     height: 70px;
+    width: 100%;
 }
 
 .nav_menu ul {

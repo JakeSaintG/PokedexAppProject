@@ -55,7 +55,7 @@ export function NavigationMenu(props: Props) {
 
     return (
         <div className={styles.nav}>
-            <ConnectionWarning></ConnectionWarning>
+            <ConnectionWarning noConnection={true}></ConnectionWarning>
             <nav className={styles.nav_menu}>
                 <ul role="menubar">
                     <li role="menuitem">
