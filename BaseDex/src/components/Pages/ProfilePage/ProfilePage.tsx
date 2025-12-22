@@ -6,7 +6,7 @@ export function ProfilePage( ) {
     return (
         <div className={styles.profile}>
             <DexHeader/>
-            <p>PROFILE</p>
+            <p className={styles.placeholder}>PROFILE</p>
             <NavigationMenu activePage='profile'></NavigationMenu>
         </div>
     );

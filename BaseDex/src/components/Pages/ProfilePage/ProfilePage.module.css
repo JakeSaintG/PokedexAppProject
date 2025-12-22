@@ -1,10 +1,11 @@
 .profile {
-    display: flex;
     height: calc(100vh - 68px);
 }
 
-.profile p {
-    /* margin: auto; */
+.placeholder {
+    margin: auto;
     color: black;
-    height: calc(100vh - 168px);
+    background-color: aqua;
+    width: 100px;
+    margin-top: 80px;
 }

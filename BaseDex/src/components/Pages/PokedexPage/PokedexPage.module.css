@@ -1,12 +1,12 @@
 .pokedex {
-    display: flex;
     height: calc(100vh - 70px);
+    width: 100%;
 }
 
 .dex_previews {
     padding: calc(80px + 1rem) 1rem 0 1rem ;
     overflow-y: scroll;
-    width: 100%;
+    /* width: calc(100vw - 2rem); */
     color: black;
     display: flex;
     flex-wrap: wrap;
