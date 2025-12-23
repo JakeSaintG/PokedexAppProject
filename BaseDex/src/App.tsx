@@ -12,7 +12,7 @@ const dbContext = await PGlite.create({
 export default function App() {
     return (
         /*
-            Restricting myself to mobile-only views since this the whole point of 
+            Restricting app to mobile-only views since this the whole point of 
             this is to stub-out making a mobile application.
         */
         <PGliteProvider db={dbContext}>

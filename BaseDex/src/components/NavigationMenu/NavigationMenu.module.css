@@ -1,6 +1,5 @@
 .nav_menu {
     bottom: 0;
-    left: 0;
     position: fixed;
     border-top: solid black 2px;
     background-color: var(--pokedex-red);

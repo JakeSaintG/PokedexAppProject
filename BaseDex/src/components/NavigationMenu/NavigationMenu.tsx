@@ -54,7 +54,7 @@ export function NavigationMenu(props: Props) {
     }
 
     return (
-        <div className={styles.nav}>
+        <>
             <ConnectionWarning noConnection={false}></ConnectionWarning>
             <nav className={styles.nav_menu}>
                 <ul role="menubar">
@@ -105,6 +105,6 @@ export function NavigationMenu(props: Props) {
                     </li>
                 </ul>
             </nav>
-        </div>
+        </>
     );
 }
