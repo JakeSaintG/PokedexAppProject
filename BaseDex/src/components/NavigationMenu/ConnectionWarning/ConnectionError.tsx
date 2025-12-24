@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import styles from './ConnectionWarning.module.css';
+import styles from './ConnectionError.module.css';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
     noConnection: boolean,
 }
 
-export function ConnectionWarning(props: Props) {
+export function ConnectionError(props: Props) {
     if (props.noConnection) {
         return (
             <div className={styles.con_warn}>

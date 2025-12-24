@@ -10,7 +10,7 @@ import houseSolid from "../../assets/icons/house-solid.svg";
 import backArrow from "../../assets/icons/arrow-left-solid-full.svg";
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ConnectionWarning } from './ConnectionWarning';
+import { ConnectionError } from './ConnectionWarning';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
     activePage: string,
@@ -56,7 +56,7 @@ export function NavigationMenu(props: Props) {
 
     return (
         <>
-            <ConnectionWarning noConnection={props.connectionError}></ConnectionWarning>
+            <ConnectionError noConnection={props.connectionError}></ConnectionError>
             <nav className={styles.nav_menu}>
                 <ul role="menubar">
                     <li role="menuitem">

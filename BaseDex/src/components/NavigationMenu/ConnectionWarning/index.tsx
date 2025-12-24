@@ -1,1 +1,1 @@
-export { ConnectionWarning } from './ConnectionWarning';
+export { ConnectionError } from './ConnectionError';
