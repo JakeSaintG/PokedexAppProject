@@ -11,6 +11,35 @@ export const initConfigDb = async (dbContext: PGliteWithLive) => {
     logInfo(dbContext, 'Prepared Pokemon database.');
 }
 
+export const connectionError = async (dbContext: PGliteWithLive): Promise<boolean> => {
+    return await dbContext.query(
+        `
+            SELECT id FROM supported_generations LIMIT 1;
+        `,
+    )
+    .then((r) => {
+        const idCheck = r.rows[0];
+        if (
+            typeof idCheck === 'object' 
+            && idCheck !== null 
+            && (
+                'id' in idCheck
+                && typeof idCheck['id'] === 'number'
+            )
+        ) {
+            // Connection looks good to go! No errors here.
+            return false;
+        }
+
+        // Something came back and it wasn't what we expected so return that we are in an error state
+        return true;
+    })
+    .catch ( () =>
+        // return that we are in an error state
+        true
+    );
+}
+
 const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
     console.log('Creating config tables...');
     

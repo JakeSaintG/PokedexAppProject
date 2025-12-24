@@ -1,8 +1,19 @@
 import styles from "./HomePage.module.css";
 import { DexHeader } from "../../DexHeader";
 import { NavigationMenu } from "../../NavigationMenu";
+import { useEffect, useState } from "react";
+import { connectionCheck } from "../../../repositories/configurationRepository";
+import { usePGlite } from "@electric-sql/pglite-react";
+
 
 export function HomePage() {
+    const dbContext = usePGlite();
+    const [dbError, setDbError] = useState(false);
+    
+    useEffect(() => {
+        connectionCheck(dbContext).then((d: boolean) => setDbError(d));
+    },[]);
+
     return (
         <>
             <DexHeader />
@@ -17,7 +28,7 @@ export function HomePage() {
                 show a button here to try again */}
                 <button>try again</button>
             </div>
-            <NavigationMenu activePage="home"></NavigationMenu>
+            <NavigationMenu activePage="home" connectionError={dbError}></NavigationMenu>
         </>
     );
 }

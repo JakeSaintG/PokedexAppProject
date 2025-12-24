@@ -7,7 +7,8 @@ import {
     setLocalLastModifiedDate,
     upsertConfigurationData,
     upsertObtainableData,
-    selectObtainableList
+    selectObtainableList,
+    connectionError
 } from '../postgres/data/configurationData';
 import type { ConfigurationData, Obtainable, SupportedGeneration } from '../types/configurationData';
 import type { DateData } from '../types/dateData';
@@ -16,6 +17,11 @@ import { logInfo } from './logRepository';
 export const configApiPing = () => {
     return true;
 };
+
+export const connectionCheck = async (dbContext: PGliteWithLive): Promise<boolean> => {
+    return await connectionError(dbContext);
+
+}
 
 // Call out for new configuration
 export const getUpdatedAppConfiguration = async () => {

@@ -14,6 +14,7 @@ import { ConnectionWarning } from './ConnectionWarning';
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
     activePage: string,
+    connectionError: boolean,
     backButtonOverride?: string,
     backButtonLink?: string
 }
@@ -55,7 +56,7 @@ export function NavigationMenu(props: Props) {
 
     return (
         <>
-            <ConnectionWarning noConnection={false}></ConnectionWarning>
+            <ConnectionWarning noConnection={props.connectionError}></ConnectionWarning>
             <nav className={styles.nav_menu}>
                 <ul role="menubar">
                     <li role="menuitem">
