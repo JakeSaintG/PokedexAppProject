@@ -10,9 +10,7 @@ import { getPokedexPageData } from '../../../repositories/pokemonRepository';
 export function PokedexPage( ) {
     const dbContext = usePGlite();
 
-    const dexTile: PokedexPreviewData[] = [
-
-    ];
+    const dexTile: PokedexPreviewData[] = [];
 
     const [pokedexPreviewData, setPokedexPreviewData] = useState(dexTile);
     
