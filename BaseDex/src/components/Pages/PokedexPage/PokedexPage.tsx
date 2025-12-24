@@ -6,18 +6,19 @@ import type { PokedexPreviewData } from '../../../types/pokdexPreviewData';
 import { usePGlite } from "@electric-sql/pglite-react";
 import { useEffect, useState } from 'react';
 import { getPokedexPageData } from '../../../repositories/pokemonRepository';
+import { connectionCheck } from '../../../repositories/configurationRepository';
 
 export function PokedexPage( ) {
-    const dbContext = usePGlite();
-
     const dexTile: PokedexPreviewData[] = [];
+    let key = 0;
 
+    const dbContext = usePGlite();
+    const [dbError, setDbError] = useState(false);
     const [pokedexPreviewData, setPokedexPreviewData] = useState(dexTile);
     
-    let key = 0;
-    
     useEffect(() => {
-            getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));
+        connectionCheck(dbContext).then((d: boolean) => setDbError(d));
+        getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));
     }, []);
     
     return (
@@ -28,7 +29,7 @@ export function PokedexPage( ) {
                         <PokedexPreview previewData={pkmn} key={key++}></PokedexPreview>
                 ))}
             </div>
-            <NavigationMenu activePage='pokedex'></NavigationMenu>
+            <NavigationMenu activePage='pokedex' connectionError={dbError}></NavigationMenu>
         </div>
     );
 }

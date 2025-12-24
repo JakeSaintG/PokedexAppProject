@@ -2,9 +2,18 @@ import styles from './SettingsPage.module.css';
 import { DexHeader } from "../../DexHeader";
 import { NavigationMenu } from "../../NavigationMenu";
 import { useNavigate } from 'react-router-dom';
+import { connectionCheck } from '../../../repositories/configurationRepository';
+import { useEffect, useState } from 'react';
+import { usePGlite } from '@electric-sql/pglite-react';
 
 export function SettingsPage( ) {
     const navigate = useNavigate();
+    const dbContext = usePGlite();
+    const [dbError, setDbError] = useState(false);
+    
+    useEffect(() => {
+        connectionCheck(dbContext).then((d: boolean) => setDbError(d));
+    },[]);
 
     // TODO: set verbose logging
     // TODO: view logs or dump to file
@@ -24,7 +33,7 @@ export function SettingsPage( ) {
                     <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
                 </div>
             </div>
-            <NavigationMenu activePage='settings'></NavigationMenu>
+            <NavigationMenu activePage='settings' connectionError={dbError}></NavigationMenu>
         </div>
     );
 }

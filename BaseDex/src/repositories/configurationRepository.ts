@@ -18,10 +18,7 @@ export const configApiPing = () => {
     return true;
 };
 
-export const connectionCheck = async (dbContext: PGliteWithLive): Promise<boolean> => {
-    return await connectionError(dbContext);
-
-}
+export const connectionCheck = async (dbContext: PGliteWithLive): Promise<boolean> => await connectionError(dbContext);
 
 // Call out for new configuration
 export const getUpdatedAppConfiguration = async () => {

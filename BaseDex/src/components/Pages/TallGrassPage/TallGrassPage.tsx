@@ -4,6 +4,7 @@ import { NavigationMenu } from "../../NavigationMenu";
 import { useEffect, useState } from "react";
 import { getTallGrassPageData } from "../../../repositories/pokemonRepository";
 import { usePGlite } from "@electric-sql/pglite-react";
+import { connectionCheck } from "../../../repositories/configurationRepository";
 
 const test_data = [
     { region: "kanto", registered: 2, total: 3 },
@@ -20,14 +21,15 @@ const test_data = [
 
 export function TallGrassPage() {
     const dbContext = usePGlite();
+    const [dbError, setDbError] = useState(false);
+    
     let key = 0;
-
+    
     const [generationData, setGenerationData] = useState('');
     
     useEffect(() => {
-        
-        setGenerationData('beep');
-
+        connectionCheck(dbContext).then((d: boolean) => setDbError(d));
+        setGenerationData('beep'); // TODO: Uhhh...what?
         getTallGrassPageData(dbContext);
     }, [])
 
@@ -45,7 +47,7 @@ export function TallGrassPage() {
                     </div>
                 ))}
             </div>
-            <NavigationMenu activePage="tall_grass"></NavigationMenu>
+            <NavigationMenu activePage="tall_grass" connectionError={dbError}></NavigationMenu>
         </div>
     );
 }

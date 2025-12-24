@@ -8,6 +8,7 @@ import { NavigationMenu } from "../../../NavigationMenu";
 import swapArrow from "../../../../assets/icons/arrows-rotate-solid-full.svg";
 import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../../repositories/pokemonRepository";
 import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
+import { connectionCheck } from "../../../../repositories/configurationRepository";
 
 export function EntryPage() {
     const [searchParams] = useSearchParams();
@@ -36,8 +37,10 @@ export function EntryPage() {
     const [registered, setRegistered] = useState('not_registered');
     const [previewName, setPreviewName] = useState('not_registered');
     const [reloadEntry, setReloadEntry] = useState(0);
-
+    const [dbError, setDbError] = useState(false);
+    
     useEffect(() => {
+        connectionCheck(dbContext).then((d: boolean) => setDbError(d));
         getEntryPageData(dbContext, id).then((d: PokedexEntryData) => setPokedexEntryData(d))
     }, [reloadEntry]);
 
@@ -83,7 +86,6 @@ export function EntryPage() {
             return {backgroundColor: `var(--${pokedexEntryData.type_1})`} as React.CSSProperties;
         }
         return {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
-
     }
 
     return (
@@ -110,7 +112,7 @@ export function EntryPage() {
                 <p style={displayPrimaryType(pokedexEntryData.type_1)}>{pokedexEntryData.type_1}</p>
                 {displaySecondType(pokedexEntryData.type_2)}
             </div>
-            <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`}></NavigationMenu>
+            <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`} connectionError={dbError}></NavigationMenu>
         </div>
     );
 }
