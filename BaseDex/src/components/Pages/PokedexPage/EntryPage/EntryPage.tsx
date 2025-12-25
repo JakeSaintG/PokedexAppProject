@@ -115,8 +115,10 @@ export function EntryPage() {
                 {displaySecondType(pokedexEntryData.type_2)}
             </div>
             <div className={styles.dex_details}>
-                <p>{pokedexEntryData.height} height</p>
-                <p>{pokedexEntryData.weight} weight</p>
+                <p>{pokedexEntryData.height} height</p> 
+                {/* TODO: don't forget units! */}
+                <p>{pokedexEntryData.weight} weight</p> 
+                {/* TODO: don't forget units! */}
             </div>
             <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`} connectionError={dbError}></NavigationMenu>
         </div>

@@ -82,4 +82,8 @@
 
 .dex_details {
     color: black;
+    display: flex;
+    justify-content: space-around;
+    max-width: 400px;
+    margin: 0 auto;
 }
