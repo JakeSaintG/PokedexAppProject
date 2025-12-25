@@ -114,6 +114,10 @@ export function EntryPage() {
                 <p style={displayPrimaryType(pokedexEntryData.type_1)}>{pokedexEntryData.type_1}</p>
                 {displaySecondType(pokedexEntryData.type_2)}
             </div>
+            <div className={styles.dex_details}>
+                <p>{pokedexEntryData.height} height</p>
+                <p>{pokedexEntryData.weight} weight</p>
+            </div>
             <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`} connectionError={dbError}></NavigationMenu>
         </div>
     );

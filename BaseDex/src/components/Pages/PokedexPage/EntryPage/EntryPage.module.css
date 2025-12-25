@@ -48,7 +48,7 @@
 }
 
 .dex_description {
-    grid-area: dex_description;
+    grid-area: dex_desc;
     text-align: center;
 }
 
@@ -61,7 +61,7 @@
         ". . dex_no"
         ". dex_img ."
         ". dex_name change_form"
-        "dex_description dex_description dex_description";
+        "dex_desc dex_desc dex_desc";
 }
 
 .not_registered {
@@ -78,4 +78,8 @@
 .types p {
     border: 1px solid black;
     padding: .25rem;
+}
+
+.dex_details {
+    color: black;
 }
