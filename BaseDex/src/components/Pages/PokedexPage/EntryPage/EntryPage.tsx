@@ -102,12 +102,14 @@ export function EntryPage() {
                     <p className={styles.dex_no}>No #{id}</p>
                     <img src={dexImg} alt={`Default Image of ${pokedexEntryData.name}`} className={`${styles[`${registered}`]} ${styles.dex_img}`}/>
                     <p className={styles.dex_name}>{previewName}</p>
+                    <p className={styles.dex_description}>The ____ Pokémon</p>
                     <div className={styles.change_form}>
                         {displayFormChangeButton(pokedexEntryData)}
                     </div>
                 </div>
             </div>
-            {displayRegisterBtn(dbContext, pokedexEntryData.id)}
+            {/* TODO: move this register button somewhere...also only show it if debug is on */}
+            {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
             <div className={styles.types}>
                 <p style={displayPrimaryType(pokedexEntryData.type_1)}>{pokedexEntryData.type_1}</p>
                 {displaySecondType(pokedexEntryData.type_2)}

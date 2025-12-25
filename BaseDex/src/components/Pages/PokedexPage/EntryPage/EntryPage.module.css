@@ -44,7 +44,12 @@
     text-align: center;
     font-size: x-large;
     font-weight: bold;
-    margin: 1rem;
+    margin: 1rem 1rem 0 1rem;
+}
+
+.dex_description {
+    grid-area: dex_description;
+    text-align: center;
 }
 
 .banner {
@@ -55,7 +60,8 @@
     grid-template-areas: 
         ". . dex_no"
         ". dex_img ."
-        ". dex_name change_form";
+        ". dex_name change_form"
+        "dex_description dex_description dex_description";
 }
 
 .not_registered {
