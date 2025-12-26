@@ -60,6 +60,7 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
                 ,habitat TEXT NOT NULL
                 ,has_gender_differences BOOLEAN NULL
                 ,generation TEXT NOT NULL
+                ,genera TEXT NOT NULL
                 ,evo_chain_url TEXT NOT NULL
                 ,last_modified_dts TEXT NOT NULL
             )
@@ -325,6 +326,7 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
             ,has_gender_differences
             ,habitat
             ,generation
+            ,genera
             ,evo_chain_url
             ,last_modified_dts
         ) 
@@ -337,6 +339,7 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
             ,$6
             ,$7
             ,$8
+            ,$9
         )
             ON CONFLICT(id) 
             DO UPDATE SET 
@@ -346,8 +349,9 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
                 ,has_gender_differences = $4
                 ,habitat = $5
                 ,generation = $6
-                ,evo_chain_url = $7
-                ,last_modified_dts = $8
+                ,genera = $7
+                ,evo_chain_url = $8
+                ,last_modified_dts = $9
     `;
 
     try {
@@ -358,6 +362,7 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
             pkmnSpecData.has_gender_differences,
             pkmnSpecData.habitat,
             pkmnSpecData.generation,
+            pkmnSpecData.genera,
             pkmnSpecData.evo_chain_url,
             new Date().toISOString()
         ]))
@@ -523,6 +528,7 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
                     ,s.habitat
                     ,s.has_gender_differences
                     ,s.generation
+                    ,s.genera
                     ,d.is_default
                     ,d.type_1
                     ,d.type_2
@@ -544,7 +550,7 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
             `, [id]
         )
     } catch {
-        console.log('Error reading from database.')
+        console.log('Error reading from database.');
         
         return {
             id: 0,
@@ -553,6 +559,7 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
             habitat: "Shoreline",
             has_gender_differences: false,
             generation: "i",
+            genera: "UNIDENTIFIABLE",
             is_default: false,
             type_1: "Ň̷̨ȕ̷͕l̷͇̑l̸̠̏",
             height: 0,
@@ -592,6 +599,10 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
         && (
             'generation' in data
             && typeof data['generation'] === 'string'
+        )
+        && (
+            'genera' in data
+            && typeof data['genera'] === 'string'
         )
         && (
             'is_default' in data

@@ -102,7 +102,7 @@ export function EntryPage() {
                     <p className={styles.dex_no}>No. {id}</p>
                     <img src={dexImg} alt={`Default Image of ${pokedexEntryData.name}`} className={`${styles[`${registered}`]} ${styles.dex_img}`}/>
                     <p className={styles.dex_name}>{previewName}</p>
-                    <p className={styles.dex_description}>The ____ Pokémon</p>
+                    <p className={styles.dex_description}>The {pokedexEntryData.genera}</p>
                     <div className={styles.change_form}>
                         {displayFormChangeButton(pokedexEntryData)}
                     </div>

@@ -144,6 +144,8 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
 }
 
 export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]): Promise<[PokemonSpeciesData, Variety[]]> => {
+    
+    
     if (
         typeof data === 'object' 
         && data !== null 
@@ -176,6 +178,10 @@ export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]
             && typeof data['generation'] === 'object'    
         )
         && (
+            'genera' in data
+            && Array.isArray(data['genera'])
+        )
+        && (
             'name' in data.generation! 
             && typeof data.generation!['name'] === 'string'    
         )
@@ -203,6 +209,7 @@ export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]
             has_gender_differences: data.has_gender_differences,
             habitat: data.habitat.name,
             generation: data.generation.name,
+            genera: data.genera.find(e => e.language.name === 'en').genus,
             evo_chain_url: data.evolution_chain.url,
             flavor_texts: [],
             last_modified_dts: ''

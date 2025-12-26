@@ -27,6 +27,7 @@ export interface PokemonSpeciesData {
     has_gender_differences: boolean,
     habitat: string,
     generation: string,
+    genera: string,
     evo_chain_url: string,
     flavor_texts: FlavorTextEntry[],
     last_modified_dts: string,

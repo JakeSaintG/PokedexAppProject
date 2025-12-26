@@ -5,6 +5,7 @@ export interface PokedexEntryData {
     habitat: string
     has_gender_differences: boolean
     generation: string
+    genera: string
     is_default: boolean
     type_1: string
     type_2?: string
