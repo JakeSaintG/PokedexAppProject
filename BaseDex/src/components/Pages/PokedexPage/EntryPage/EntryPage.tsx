@@ -10,6 +10,8 @@ import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../../
 import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
 import { connectionCheck } from "../../../../repositories/configurationRepository";
 
+
+// TODO: next up, need to work though defaults and ensuring ??? when not registered
 export function EntryPage() {
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id")!;
@@ -22,6 +24,7 @@ export function EntryPage() {
         habitat: "Shoreline",
         has_gender_differences: false,
         generation: "i",
+        genera: "UNIDENTIFIABLE",
         is_default: false,
         type_1: "Ň̷̨ȕ̷͕l̷͇̑l̸̠̏",
         height: 0,
