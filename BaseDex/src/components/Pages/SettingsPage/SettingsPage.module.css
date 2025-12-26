@@ -6,7 +6,6 @@
 
 .settings h2 {
     padding: calc(80px + 1rem) 1rem 0 1rem;
-    color: black;
     margin: 0;
 }
 
@@ -17,7 +16,6 @@
     padding: 1rem 2rem 1rem 2rem;
     margin: 0 auto 68px auto;
     gap: 1rem;
-    color: black;
 }
 
 /* TODO: Make a button component... */

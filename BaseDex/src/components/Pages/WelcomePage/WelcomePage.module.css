@@ -20,25 +20,26 @@
     margin: auto;
 }
 
-.font_image {
-    margin-bottom: .5rem;
-}
-
 .react_logo {
     width: 60%;
     margin: 4rem auto;
+}
+
+.font_image {
+    margin-bottom: .5rem;
 }
 
 .welcome p {
     font-size: large;
     font-weight: bolder;
     text-align: center;
+    color: white;
     margin: 0;
 }
 
 .dex_triangle {
     width: 60px;
-    margin: auto 1rem auto auto;
+    margin-right: 1rem;
     position: absolute;
     right: 1px;
     top: 50%;

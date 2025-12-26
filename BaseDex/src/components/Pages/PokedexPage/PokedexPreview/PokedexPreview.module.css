@@ -1,6 +1,5 @@
 .pokedex_preview {
-    border: solid black 2px;
-    color: black;
+    border: solid black 3px;
     font-weight: bolder;
     align-items: center;
     cursor: pointer;

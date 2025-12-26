@@ -15,11 +15,11 @@ export function WelcomePage() {
             <DexHeader/>
             <div className={styles.welcome}>
                 <div>
-                    <img className={`${styles.font_image} ${styles.react_logo}`}src={reactSvg} alt='React Logo of a blue atom with three orbits.'/>
-                    <img className={styles.font_image}src={reactFont} alt='Stylized font of the word "react".'/>
-                    <img className={styles.font_image}src={pokdexFont} alt='Stylized font of the word "PokéDex".'/>
+                    <img className={styles.react_logo} src={reactSvg} alt='React Logo of a blue atom with three orbits.'/>
+                    <img className={styles.font_image} src={reactFont} alt='Stylized font of the word "react".'/>
+                    <img className={styles.font_image} src={pokdexFont} alt='Stylized font of the word "PokéDex".'/>
                 </div>
-                <img className={styles.dex_triangle}src={dexCoverTriangle} alt='stylized font of the word "PokéDex"'/>
+                <img className={styles.dex_triangle} src={dexCoverTriangle} alt='stylized font of the word "PokéDex"'/>
                 <p>Touch to begin!</p>
             </div>
         </div>
