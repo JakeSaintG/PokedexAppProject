@@ -99,7 +99,7 @@ export function EntryPage() {
             <DexHeader/>
             <div className={styles.entry_display}>
                 <div className={`${styles.banner}`} style={displayPrimaryType(pokedexEntryData.type_1)}>
-                    <p className={styles.dex_no}>No #{id}</p>
+                    <p className={styles.dex_no}>No. {id}</p>
                     <img src={dexImg} alt={`Default Image of ${pokedexEntryData.name}`} className={`${styles[`${registered}`]} ${styles.dex_img}`}/>
                     <p className={styles.dex_name}>{previewName}</p>
                     <p className={styles.dex_description}>The ____ Pokémon</p>
@@ -108,18 +108,22 @@ export function EntryPage() {
                     </div>
                 </div>
             </div>
-            {/* TODO: move this register button somewhere...also only show it if debug is on */}
-            {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
             <div className={styles.types}>
                 <p style={displayPrimaryType(pokedexEntryData.type_1)}>{pokedexEntryData.type_1}</p>
                 {displaySecondType(pokedexEntryData.type_2)}
             </div>
             <div className={styles.dex_details}>
-                <p>{pokedexEntryData.height} height</p> 
-                {/* TODO: don't forget units! */}
-                <p>{pokedexEntryData.weight} weight</p> 
-                {/* TODO: don't forget units! */}
+                <div className={styles.dex_details_group}>
+                    <p>Height</p>
+                    <p>{pokedexEntryData.height / 10} meters</p> 
+                </div>
+                <div className={styles.dex_details_group}>
+                    <p>Weight</p>
+                    <p>{pokedexEntryData.weight / 10} kg</p> 
+                </div>
             </div>
+            {/* TODO: move this register button somewhere...also only show it if debug is on */}
+            {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
             <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`} connectionError={dbError}></NavigationMenu>
         </div>
     );
