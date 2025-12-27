@@ -22,9 +22,8 @@ export function SettingsPage( ) {
     return (
         <div className={styles.settings}>
             <DexHeader/>
+            <h2 className={styles.title}>Settings</h2>
             <div className={styles.settings}>
-                <h2>SETTINGS</h2>
-
                 <div className={styles.settings_menu}>
                     <button onClick={() => navigate('../loading')}>Reload Data</button>
                     <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>

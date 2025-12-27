@@ -34,11 +34,9 @@ export function TallGrassPage() {
     }, [])
 
     return (
-        
-        
         <div className={styles.tall_grass}>
             <DexHeader />
-            <h2>tall grass!</h2>
+            <h2 className={styles.title}>Tall Grass!</h2>
             <div className={styles.regions}>
                 {test_data.map((r) => (
                     <div className={styles.region} key={key++}>

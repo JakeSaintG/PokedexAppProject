@@ -1,12 +1,12 @@
+.title {
+    margin: 3rem 1rem 0 auto;
+    width: fit-content;
+}
+
 .settings {
     display: flex;
     flex-direction: column;
     height: 100%;
-}
-
-.settings h2 {
-    padding: calc(80px + 1rem) 1rem 0 1rem;
-    margin: 0;
 }
 
 .settings_menu {
