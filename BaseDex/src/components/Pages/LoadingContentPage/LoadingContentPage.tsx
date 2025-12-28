@@ -82,7 +82,7 @@ export function LoadingContentPage() {
 
     return (
         <>
-            <DexHeader />
+            <DexHeader remove_white_space={true}/>
             <div className={styles.loading_page}>
                 <div className={styles.dex_display_frame}>
                     <div className={styles.top_decoration}></div>

@@ -12,7 +12,7 @@ export function WelcomePage() {
 
     return (
         <div onClick={loadData} className={styles.load}>
-            <DexHeader/>
+            <DexHeader remove_white_space={true}/>
             <div className={styles.welcome}>
                 <div>
                     <img className={styles.react_logo} src={reactSvg} alt='React Logo of a blue atom with three orbits.'/>
