@@ -1,8 +1,3 @@
-.title {
-    margin: 3rem 1rem 0 auto;
-    width: fit-content;
-}
-
 .home {
     display: flex;
     flex-direction: column;

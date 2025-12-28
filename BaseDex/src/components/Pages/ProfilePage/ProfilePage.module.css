@@ -1,6 +1,5 @@
 .profile {
     display: flex;
-    height: calc(100vh - 68px);
     width: 100%;
 }
 

@@ -1,16 +1,4 @@
-.title {
-    margin: 3rem 1rem 0 auto;
-    width: fit-content;
-}
-
-.settings {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
 .settings_menu {
-    height: 100%;
     width: 100%;
     display: grid;
     padding: 1rem 2rem 1rem 2rem;
@@ -20,7 +8,6 @@
 
 /* TODO: Make a button component... */
 .settings_menu button {
-
     height: 100px;
 }
 

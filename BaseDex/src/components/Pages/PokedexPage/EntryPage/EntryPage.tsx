@@ -98,8 +98,8 @@ export function EntryPage() {
             the pokedex page with the section id so that it is scrolled to roughly where they left off.
         */
 
-        <div className={styles.entry}>
-            <DexHeader/>
+        <>
+            <DexHeader remove_white_space={true}/>
             <div className={styles.entry_display}>
                 <div className={`${styles.banner}`} style={displayPrimaryType(pokedexEntryData.type_1)}>
                     <p className={styles.dex_no}>No. {id}</p>
@@ -128,6 +128,6 @@ export function EntryPage() {
             {/* TODO: move this register button somewhere...also only show it if debug is on */}
             {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
             <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`} connectionError={dbError}></NavigationMenu>
-        </div>
+        </>
     );
 }

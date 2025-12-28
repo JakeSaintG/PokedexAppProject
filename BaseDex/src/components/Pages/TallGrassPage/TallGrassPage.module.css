@@ -1,21 +1,9 @@
-.title {
-    margin: 3rem 1rem 0 auto;
-    width: fit-content;
-}
-
-.tall_grass {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow-y: scroll;
-}
-
 .regions {
     height: 100%;
-    width: 100%;
+    /* width: 100%; */
     display: grid;
-    padding: 1rem 2rem 1rem 2rem;
-    margin: 0 auto 68px auto;
+    padding: 1rem 1rem calc(70px + 1rem) 1rem;
+    /* margin: 0 auto 68px auto; */
     gap: 1rem;
 }
 
