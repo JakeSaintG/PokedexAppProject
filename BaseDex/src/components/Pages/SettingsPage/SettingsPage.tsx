@@ -20,19 +20,16 @@ export function SettingsPage( ) {
     // TODO: Make this look a little better
     
     return (
-        <div className={styles.settings}>
-            <DexHeader/>
-            <h2 className={styles.title}>Settings</h2>
-            <div className={styles.settings}>
-                <div className={styles.settings_menu}>
-                    <button onClick={() => navigate('../loading')}>Reload Data</button>
-                    <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
-                    <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
-                    <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
-                    <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
-                </div>
+        <>
+            <DexHeader title='Settings'/>
+            <div className={styles.settings_menu}>
+                <button onClick={() => navigate('../loading')}>Reload Data</button>
+                <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
+                <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
+                <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
+                <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
             </div>
             <NavigationMenu activePage='settings' connectionError={dbError}></NavigationMenu>
-        </div>
+        </>
     );
 }

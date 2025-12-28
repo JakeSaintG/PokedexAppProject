@@ -22,14 +22,14 @@ export function PokedexPage( ) {
     }, []);
     
     return (
-        <div className={styles.pokedex}>
-            <DexHeader/>
+        <>
+            <DexHeader title='Pokédex'/>
             <div className={styles.dex_previews}>
                 {pokedexPreviewData.map((pkmn) => (
                         <PokedexPreview previewData={pkmn} key={key++}></PokedexPreview>
                 ))}
             </div>
             <NavigationMenu activePage='pokedex' connectionError={dbError}></NavigationMenu>
-        </div>
+        </>
     );
 }

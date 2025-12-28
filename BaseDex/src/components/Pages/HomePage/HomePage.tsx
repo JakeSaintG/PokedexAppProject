@@ -16,8 +16,7 @@ export function HomePage() {
 
     return (
         <>
-            <DexHeader />
-            <h2 className={styles.title}>Home</h2>
+            <DexHeader title="Home"/>
             <div className={styles.home}>
                 <div className={styles.stats}>
                     <p>

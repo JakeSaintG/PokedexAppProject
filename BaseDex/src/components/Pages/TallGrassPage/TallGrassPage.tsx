@@ -34,9 +34,8 @@ export function TallGrassPage() {
     }, [])
 
     return (
-        <div className={styles.tall_grass}>
-            <DexHeader />
-            <h2 className={styles.title}>Tall Grass!</h2>
+        <>
+            <DexHeader title="Tall Grass!"/>
             <div className={styles.regions}>
                 {test_data.map((r) => (
                     <div className={styles.region} key={key++}>
@@ -46,6 +45,6 @@ export function TallGrassPage() {
                 ))}
             </div>
             <NavigationMenu activePage="tall_grass" connectionError={dbError}></NavigationMenu>
-        </div>
+        </>
     );
 }

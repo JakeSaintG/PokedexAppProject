@@ -14,10 +14,12 @@ export function ProfilePage( ) {
     },[]);
     
     return (
-        <div className={styles.profile}>
-            <DexHeader/>
-            <p className={styles.placeholder}>PROFILE</p>
+        <>
+            <DexHeader title='Profile'/>
+                <div className={styles.profile}>
+                    <p className={styles.placeholder}>PROFILE</p>
+                </div>
             <NavigationMenu activePage='profile' connectionError={dbError}></NavigationMenu>
-        </div>
+        </>
     );
 }
