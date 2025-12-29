@@ -10,14 +10,14 @@
 .dex_no {
     grid-area: dex_no;
     text-align: right;
-    margin-right: 1rem;
+    margin: 1.2rem 1rem 0 0;
     font-size: larger;
 }
 
 .dex_img {
     grid-area: dex_img;
     margin: auto;
-    width: 150px;
+    width: 160px;
 }
 
 .change_form {
@@ -31,7 +31,7 @@
     background-color:transparent;
     cursor: pointer;
     padding: .5rem;
-    margin: .5rem;
+    /* margin: .5rem; */
 }
 
 .change_form img {
@@ -43,11 +43,12 @@
     text-align: center;
     font-size: x-large;
     font-weight: bold;
-    margin: 1rem 1rem 0 1rem;
+    margin: auto 1rem;
 }
 
 .dex_description {
     grid-area: dex_desc;
+    margin-top: 0;
     text-align: center;
 }
 

@@ -8,6 +8,8 @@
     padding: 1rem;
     height: 160px;
     width: 160px;
+    color: black;
+    text-decoration: none;
 }
 
 .preview_name {
