@@ -31,7 +31,6 @@
     background-color:transparent;
     cursor: pointer;
     padding: .5rem;
-    /* margin: .5rem; */
 }
 
 .change_form img {
@@ -65,7 +64,7 @@
 }
 
 .not_registered {
-    filter: contrast(0%) brightness(50%);
+    filter: contrast(0%) brightness(50%) invert(100%);
 }
 
 .types {

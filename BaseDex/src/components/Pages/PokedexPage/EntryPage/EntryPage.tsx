@@ -21,14 +21,14 @@ export function EntryPage() {
         id: 0,
         name: "MissingNo",
         dex_no: 0,
-        habitat: "Shoreline",
+        habitat: "UNIDENTIFIABLE",
         has_gender_differences: false,
         generation: "i",
         genera: "UNIDENTIFIABLE",
         is_default: false,
         type_1: "Ň̷̨ȕ̷͕l̷͇̑l̸̠̏",
-        height: 0,
-        weight: 0,
+        height: -1,
+        weight: -1,
         has_forms: false,
         male_sprite_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
         female_sprite_url: null,
@@ -82,13 +82,19 @@ export function EntryPage() {
         return <></>
     }
 
-    const displaySecondType = (type_2: string | undefined) => (type_2 != undefined) ? <p style={{backgroundColor: `var(--${type_2})`}}>{type_2}</p> : <></>;
-
     const displayPrimaryType = (type_1: string) => {
-        if (type_1 != 'Ň̷̨ȕ̷͕l̷͇̑l̸̠̏') {
+        if (type_1 != 'Ň̷̨ȕ̷͕l̷͇̑l̸̠̏' && type_1 != '???') {
             return {backgroundColor: `var(--${pokedexEntryData.type_1})`} as React.CSSProperties;
         }
         return {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
+    }
+
+    const displaySecondType = (type_2: string | undefined) => (type_2 != undefined) ? <p style={{backgroundColor: `var(--${type_2})`}}>{type_2}</p> : <></>;
+
+    const displayMeasurement = (measurement: number): string => {
+        if (measurement == -1) return '???';
+
+        return (measurement / 10).toString();
     }
 
     return (
@@ -118,11 +124,11 @@ export function EntryPage() {
             <div className={styles.dex_details}>
                 <div className={styles.dex_details_group}>
                     <p>Height</p>
-                    <p>{pokedexEntryData.height / 10} meters</p> 
+                    <p>{displayMeasurement(pokedexEntryData.height)} meters</p> 
                 </div>
                 <div className={styles.dex_details_group}>
                     <p>Weight</p>
-                    <p>{pokedexEntryData.weight / 10} kg</p> 
+                    <p>{displayMeasurement(pokedexEntryData.weight)} kg</p> 
                 </div>
             </div>
             {/* TODO: move this register button somewhere...also only show it if debug is on */}

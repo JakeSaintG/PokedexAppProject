@@ -169,7 +169,18 @@ export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<Pok
 }
 
 export const getEntryPageData = async (dbContext: PGliteWithLive, id: string): Promise<PokedexEntryData>  => {
-    return await getPokedexEntry(dbContext, id);
+    const data = await getPokedexEntry(dbContext, id);
+    
+    // Strip away some details in this "API Layer"
+    if (!data.is_registered){
+        data.height = -1;
+        data.weight = -1;
+        data.type_1 = "???";
+        data.type_2 = undefined;
+        data.genera = "??? Pokémon"
+    }
+
+    return data;
 }
 
 export const registerPokemon = async (dbContext: PGliteWithLive, id: number) => {
