@@ -1,9 +1,7 @@
 .regions {
     height: 100%;
-    /* width: 100%; */
     display: grid;
     padding: 1rem 1rem calc(70px + 1rem) 1rem;
-    /* margin: 0 auto 68px auto; */
     gap: 1rem;
 }
 
@@ -11,14 +9,15 @@
     max-width: 250px;
     width: 100%;
     height: 100px;
-    transform: skew(-20deg);
-    background: rgb(93, 93, 252);
     display: flex;
     margin: 0 auto;
+
+    border: solid #008080 3px;
+    background-color: var(--pokedex-light-blue);
+    color: #008080;
 }
 
 .region p {
-    transform: skew(20deg);
     margin: auto;
 }
 

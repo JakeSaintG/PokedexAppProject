@@ -35,7 +35,7 @@ export function TallGrassPage() {
 
     return (
         <>
-            <DexHeader title="Tall Grass!"/>
+            <DexHeader title="Tall Grass"/>
             <div className={styles.regions}>
                 {test_data.map((r) => (
                     <div className={styles.region} key={key++}>
