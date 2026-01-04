@@ -1,11 +1,19 @@
 .profile {
     display: flex;
+    flex-direction: column;
     width: 100%;
+    text-align: center;
 }
 
-.placeholder {
+.profile h3 {
+
+}
+
+.profile img {
+    width: 150px;
     margin: auto;
-    background-color: aqua;
-    width: 100px;
-    margin-top: 80px;
+}
+
+.profile_bio {
+
 }
