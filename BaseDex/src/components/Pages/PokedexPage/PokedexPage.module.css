@@ -1,10 +1,13 @@
 .dex_previews {
     width: 100%;
+    /* height: fit-content; */
+    background-color: var(--pokedex-background);
     padding: 1rem 0 calc(80px + 1rem) 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
+    overflow-y: scroll;
 }
 
 @media only screen and (min-width: 430px) {

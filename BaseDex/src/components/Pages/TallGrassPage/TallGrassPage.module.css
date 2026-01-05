@@ -1,4 +1,6 @@
 .regions {
+    background-color: var(--pokedex-background);
+
     height: 100%;
     display: grid;
     padding: 1rem 1rem calc(70px + 1rem) 1rem;

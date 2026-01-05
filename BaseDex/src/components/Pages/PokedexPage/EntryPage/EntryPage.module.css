@@ -5,6 +5,7 @@
 
 .entry_display {
     margin: auto;
+    background-color: var(--pokedex-background);
 }
 
 .dex_no {

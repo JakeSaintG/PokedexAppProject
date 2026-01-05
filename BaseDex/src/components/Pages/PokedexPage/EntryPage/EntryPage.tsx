@@ -116,23 +116,23 @@ export function EntryPage() {
                         {displayFormChangeButton(pokedexEntryData)}
                     </div>
                 </div>
-            </div>
-            <div className={styles.types}>
-                <p style={displayPrimaryType(pokedexEntryData.type_1)}>{pokedexEntryData.type_1}</p>
-                {displaySecondType(pokedexEntryData.type_2)}
-            </div>
-            <div className={styles.dex_details}>
-                <div className={styles.dex_details_group}>
-                    <p>Height</p>
-                    <p>{displayMeasurement(pokedexEntryData.height)} meters</p> 
+                <div className={styles.types}>
+                    <p style={displayPrimaryType(pokedexEntryData.type_1)}>{pokedexEntryData.type_1}</p>
+                    {displaySecondType(pokedexEntryData.type_2)}
                 </div>
-                <div className={styles.dex_details_group}>
-                    <p>Weight</p>
-                    <p>{displayMeasurement(pokedexEntryData.weight)} kg</p> 
+                <div className={styles.dex_details}>
+                    <div className={styles.dex_details_group}>
+                        <p>Height</p>
+                        <p>{displayMeasurement(pokedexEntryData.height)} meters</p> 
+                    </div>
+                    <div className={styles.dex_details_group}>
+                        <p>Weight</p>
+                        <p>{displayMeasurement(pokedexEntryData.weight)} kg</p> 
+                    </div>
                 </div>
+                {/* TODO: move this register button somewhere...also only show it if debug is on */}
+                {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
             </div>
-            {/* TODO: move this register button somewhere...also only show it if debug is on */}
-            {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
             <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`} connectionError={dbError}></NavigationMenu>
         </>
     );

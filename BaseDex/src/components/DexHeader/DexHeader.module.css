@@ -1,7 +1,10 @@
 .page_title {
-    margin: 44px 1rem 0 auto;
-    width: fit-content;
+    margin: 0;
+    padding: 47px 1rem 0 0;
+    width: 100%;
+    text-align: right;
     color: black;
+    background-color: var(--pokedex-background);
 }
 
 .dex_header_white_space {
