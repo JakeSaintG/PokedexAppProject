@@ -1,3 +1,4 @@
+/* TODO: Use a button component */
 .register_button {
     margin: auto 5px 0 0;
     height: 30px;
@@ -6,6 +7,7 @@
 .entry_display {
     margin: auto;
     background-color: var(--pokedex-background);
+    height: 100%;
 }
 
 .dex_no {
@@ -65,7 +67,7 @@
 }
 
 .not_registered {
-    filter: contrast(0%) brightness(50%) invert(100%);
+    filter: contrast(0%) brightness(50%) invert();
 }
 
 .types {

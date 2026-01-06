@@ -46,10 +46,6 @@
     border-radius: 50%;
 }
 
-.home_button img {
-    filter: invert();
-}
-
 .home_button img:active {
     filter: none;
 }

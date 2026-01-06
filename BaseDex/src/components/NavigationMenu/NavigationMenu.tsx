@@ -6,7 +6,7 @@ import listUlSolid from "../../assets/icons/list-ul-solid.svg";
 import gearSolid from "../../assets/icons/gear-solid.svg";
 import grassSolid from "../../assets/icons/grass.svg";
 import userSolid from "../../assets/icons/user-solid.svg";
-import houseSolid from "../../assets/icons/house-solid.svg";
+import house from "../../assets/icons/house-modified.svg";
 import backArrow from "../../assets/icons/arrow-left-solid-full.svg";
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -81,7 +81,7 @@ export function NavigationMenu(props: Props) {
                     </li>
                     <li className={styles.home_button} role="menuitem">
                         <Link className={`${styles.nav_link} ${showActiveNavLink('home')}`} to={'../home'}>
-                            <img src={houseSolid} alt="house icon for returning to home page" className={styles.nav_img} height='38'/>
+                            <img src={house} alt="house icon for returning to home page" className={styles.nav_img} height='38'/>
                         </Link>
                     </li>
                     <li role="menuitem">
