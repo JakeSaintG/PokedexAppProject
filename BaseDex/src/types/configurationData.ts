@@ -4,9 +4,19 @@ export interface ConfigurationData {
 }
 
 export interface SupportedGeneration {
-    id: number, 
-    generation_name: string,
+    id: number,
+    starting_dex_no: number,
+    count: number,
+    active: boolean | undefined | null,
+    stale_by_dts: null | string,
+    last_modified_dts: string
+}
+
+export interface AppendedSupportedGeneration {
+    id: number,
     description: string,
+    generation_name: string,
+    main_region_name: string,
     starting_dex_no: number, 
     count: number,
     active: boolean | undefined | null,

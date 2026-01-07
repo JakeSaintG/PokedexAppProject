@@ -1,5 +1,5 @@
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
-import type { Obtainable, SupportedGeneration } from '../../types/configurationData';
+import type { AppendedSupportedGeneration, Obtainable, SupportedGeneration } from '../../types/configurationData';
 import type { DateData } from '../../types/dateData';
 import type { LogData } from '../../types/logData';
 import { logError, logInfo } from '../../repositories/logRepository';
@@ -59,6 +59,7 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
             CREATE TABLE IF NOT EXISTS supported_generations (
                 id INT PRIMARY KEY NOT NULL
                 ,generation_name TEXT NOT NULL
+                ,main_region_name TEXT NOT NULL
                 ,description TEXT NOT NULL
                 ,starting_dex_no INT NOT NULL
                 ,count INT NOT NULL
@@ -122,7 +123,7 @@ export const upsertObtainableData = async (dbContext: PGliteWithLive, obtainable
     }
 }
 
-export const upsertConfigurationData = async (dbContext: PGliteWithLive, configData: SupportedGeneration) => {
+export const upsertConfigurationData = async (dbContext: PGliteWithLive, configData: AppendedSupportedGeneration) => {
     /*
     Insert configuration data. If configuration data is already there, set it with
     the exception of the "active" field. Perserve the active value in case a user
@@ -136,6 +137,7 @@ export const upsertConfigurationData = async (dbContext: PGliteWithLive, configD
                 INSERT INTO supported_generations (
                     id
                     ,generation_name
+                    ,main_region_name
                     ,description
                     ,starting_dex_no
                     ,count
@@ -148,28 +150,42 @@ export const upsertConfigurationData = async (dbContext: PGliteWithLive, configD
                 VALUES (
                     $1      -- id
                     ,$2     -- generation_name
-                    ,$3     -- description
-                    ,$4     -- starting_dex_no
-                    ,$5     -- count
-                    ,$6     -- stale_by_dts
-                    ,$7     -- active
-                    ,$8     -- last_modified_dts
-                    ,$9     -- source_last_modified_dts
-                    ,$10    -- local_last_modified_dts
+                    ,$3     -- main_region_name
+                    ,$4     -- description
+                    ,$5     -- starting_dex_no
+                    ,$6     -- count
+                    ,$7     -- stale_by_dts
+                    ,$8     -- active
+                    ,$9     -- last_modified_dts
+                    ,$10    -- source_last_modified_dts
+                    ,$11    -- local_last_modified_dts
                 )
                 ON CONFLICT(id) 
                 DO UPDATE SET 
                     id = $1
                     ,generation_name = $2
-                    ,description = $3
-                    ,starting_dex_no = $4
-                    ,count = $5
-                    ,stale_by_dts = $6
-                    ,last_modified_dts = $8
-                    ,source_last_modified_dts = $9
-                    ,local_last_modified_dts = $10
+                    ,main_region_name = $3
+                    ,description = $4
+                    ,starting_dex_no = $5
+                    ,count = $6
+                    ,stale_by_dts = $7
+                    ,last_modified_dts = $9
+                    ,source_last_modified_dts = $10
+                    ,local_last_modified_dts = $11
             `,
-            [configData.id ,configData.generation_name ,configData.description ,configData.starting_dex_no ,configData.count ,configData.stale_by_dts ,configData.active ,new Date().toISOString() ,configData.last_modified_dts ,'']
+            [
+                configData.id,
+                configData.generation_name,
+                configData.main_region_name,
+                configData.description,
+                configData.starting_dex_no,
+                configData.count,
+                configData.stale_by_dts,
+                configData.active,
+                new Date().toISOString(),
+                configData.last_modified_dts,
+                ''
+            ]
         ));
     } catch (error) {
         if (error instanceof Error) {
