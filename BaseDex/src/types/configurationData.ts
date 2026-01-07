@@ -28,3 +28,8 @@ export interface Obtainable {
     form: string,
     list: string
 }
+
+export interface VersionGroup {
+    name: string,
+    url: string,
+}

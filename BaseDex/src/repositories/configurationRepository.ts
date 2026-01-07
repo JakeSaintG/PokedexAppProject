@@ -10,7 +10,7 @@ import {
     selectObtainableList,
     connectionError
 } from '../postgres/data/configurationData';
-import type { AppendedSupportedGeneration, ConfigurationData, Obtainable, SupportedGeneration } from '../types/configurationData';
+import type { AppendedSupportedGeneration, ConfigurationData, Obtainable, SupportedGeneration, VersionGroup } from '../types/configurationData';
 import type { DateData } from '../types/dateData';
 import { logInfo } from './logRepository';
 import { fetchPokeApiData } from './pokeApiRepository';
@@ -114,9 +114,11 @@ export const updateSupportedGenerations = async (dbContext: PGliteWithLive, supp
             
             const additionalConfig = await fetchPokeApiData(`https://pokeapi.co/api/v2/generation/${generation.id}`);
 
+            const desc = additionalConfig.version_groups.map((v: VersionGroup) => v.name);
+
             const genAppended: AppendedSupportedGeneration = {
                 id: generation.id,
-                description: 'desc',
+                description: desc.join(','),
                 generation_name: additionalConfig.name,
                 main_region_name: additionalConfig.main_region.name,
                 starting_dex_no: generation.starting_dex_no,
