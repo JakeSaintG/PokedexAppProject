@@ -144,8 +144,6 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
 }
 
 export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]): Promise<[PokemonSpeciesData, Variety[]]> => {
-    
-    
     if (
         typeof data === 'object' 
         && data !== null 

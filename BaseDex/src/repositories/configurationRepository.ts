@@ -10,9 +10,10 @@ import {
     selectObtainableList,
     connectionError
 } from '../postgres/data/configurationData';
-import type { ConfigurationData, Obtainable, SupportedGeneration } from '../types/configurationData';
+import type { AppendedSupportedGeneration, ConfigurationData, Obtainable, SupportedGeneration, VersionGroup } from '../types/configurationData';
 import type { DateData } from '../types/dateData';
 import { logInfo } from './logRepository';
+import { fetchPokeApiData } from './pokeApiRepository';
 
 export const configApiPing = () => {
     return true;
@@ -33,8 +34,6 @@ export const getUpdatedAppConfiguration = async () => {
         supported_generations: [
             {
                 id: 1,
-                generation_name: 'generation1',
-                description: 'Red, Green, Blue, and Yellow.',
                 starting_dex_no: 1,
                 count: 25, //151
                 active: true,
@@ -43,11 +42,9 @@ export const getUpdatedAppConfiguration = async () => {
             },
             {
                 id: 2,
-                generation_name: 'generation2',
-                description: 'Gold, Silver, and Crystal.',
                 starting_dex_no: 152, //152,
                 count: 9, // 100
-                active: null,//null,
+                active: null, //null,
                 stale_by_dts: placeHolderStaleByDate,
                 last_modified_dts: '2025-05-08T22:01:16.299Z', // new Date().toISOString()
             },
@@ -101,7 +98,7 @@ const updateObtainablity = (dbContext: PGliteWithLive, obtainableList: Obtainabl
     obtainableList.forEach((obtainable) => upsertObtainableData(dbContext, obtainable))
 }
 
-export const updateSupportedGenerations = (dbContext: PGliteWithLive, supported_generations: SupportedGeneration[]) => {
+export const updateSupportedGenerations = async (dbContext: PGliteWithLive, supported_generations: SupportedGeneration[]) => {
     supported_generations.forEach(async (generation: SupportedGeneration) => {
         const generationDateData: DateData | undefined = await getGenerationUpdateData(dbContext, generation.id);
 
@@ -113,9 +110,27 @@ export const updateSupportedGenerations = (dbContext: PGliteWithLive, supported_
             // Update if the data is considered stale
             Date.parse(generationDateData.stale_by_dts!) < Date.parse(generationDateData.last_modified_dts)
         ) {
-            logInfo(dbContext, `Updating configuration data for ${generation.generation_name}`);
             // console.log(`Updating configuration data for ${generation.generation_name}`);
-            upsertConfigurationData(dbContext, generation);
+            
+            const additionalConfig = await fetchPokeApiData(`https://pokeapi.co/api/v2/generation/${generation.id}`);
+
+            const desc = additionalConfig.version_groups.map((v: VersionGroup) => v.name);
+
+            const genAppended: AppendedSupportedGeneration = {
+                id: generation.id,
+                description: desc.join(','),
+                generation_name: additionalConfig.name,
+                main_region_name: additionalConfig.main_region.name,
+                starting_dex_no: generation.starting_dex_no,
+                count: generation.count,
+                active: generation.active,
+                stale_by_dts: generation.stale_by_dts,
+                last_modified_dts: generation.last_modified_dts
+            }
+
+            logInfo(dbContext, `Updating configuration data for ${genAppended.generation_name}`);
+            
+            upsertConfigurationData(dbContext, genAppended);
         }
     });
 };
