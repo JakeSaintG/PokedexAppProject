@@ -377,29 +377,20 @@ export const getRegionCountData = async (dbContext: PGliteWithLive) => {
 
     const results = await dbContext.query(`
             SELECT 
-                DISTINCT(s.generation)
+                s.generation AS generation
+                ,g.main_region_name AS region_name
                 ,COUNT(b.id) AS total
                 ,COUNT(b.id) AS registered -- need to make this actually count registered mons
             FROM pokemon_species_data s
             JOIN pokemon_base_data b ON s.id = b.id
-            GROUP BY s.generation;
+            JOIN supported_generations g ON g.generation_name = s.generation
+            GROUP BY s.generation, g.main_region_name;
         `, [/*id*/]
     )
 
     const countData = results.rows;
 
     console.log(countData)
-
-    const foo = await dbContext.query(`
-            SELECT 
-                *
-            FROM pokemon_species_data
-        `, [/*id*/]
-    )
-
-    const bar = foo.rows;
-
-    console.log(bar)
 
     // if (
     //     typeof countData === 'object' 

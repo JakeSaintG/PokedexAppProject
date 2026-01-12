@@ -30,7 +30,8 @@ export function TallGrassPage() {
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
         setGenerationData('beep'); // TODO: Uhhh...what?
-        getTallGrassPageData(dbContext);
+
+        console.log(getTallGrassPageData(dbContext));
     }, [])
 
     return (

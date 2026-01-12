@@ -1,5 +1,5 @@
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
-import type { AppendedSupportedGeneration, Obtainable, SupportedGeneration } from '../../types/configurationData';
+import type { AppendedSupportedGeneration, Obtainable } from '../../types/configurationData';
 import type { DateData } from '../../types/dateData';
 import type { LogData } from '../../types/logData';
 import { logError, logInfo } from '../../repositories/logRepository';
