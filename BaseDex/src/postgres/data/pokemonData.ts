@@ -372,24 +372,26 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
 
 // TODO: need to refactor most data<=>repository functions to be more like this in structure
 export const getRegionCountData = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
-    // TODO: need to get is_registered once its added...
     // TODO: return count(*) from base_data joined on pokedex_entries grouped by generation
     // I don't want to return megas...or gmaxes...but I do want regional variations. I may need go back to the drawing board with my data
 
-    return await dbContext.query(`
+    return await dbContext.query(
+        `
             SELECT 
-                s.generation AS generation
+                g.id
+                ,s.generation AS generation
                 ,g.main_region_name AS region_name
                 ,COUNT(b.id) AS total
-                ,COUNT(b.id) AS registered -- need to make this actually count registered mons
+                ,COUNT(CASE WHEN b.is_registered = true THEN 0 END) AS registered
             FROM pokemon_species_data s
             JOIN pokemon_base_data b ON s.id = b.id
             JOIN supported_generations g ON g.generation_name = s.generation
-            GROUP BY s.generation, g.main_region_name;
-        `, [/*id*/]
+            GROUP BY s.generation, g.main_region_name, g.id
+            ORDER BY g.id;
+        `
     )
-    .then( r => r.rows)
-    .catch( c => { 
+    .then(r =>  r.rows)
+    .catch(c => { 
         throw `Unable to retrieve data from supported_generations table: ${c}`;
     });
 }

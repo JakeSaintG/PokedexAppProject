@@ -8,12 +8,12 @@ import { connectionCheck } from "../../../repositories/configurationRepository";
 import type { TallGrassRegion } from "../../../types/tallGrassRegion";
 
 export function TallGrassPage() {
-    const defaultTallGrassRegionData: TallGrassRegion[] = [];
+    const defaultRegionData: TallGrassRegion[] = [];
     let key = 0;
 
     const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
-    const [generationData, setGenerationData] = useState(defaultTallGrassRegionData);
+    const [generationData, setGenerationData] = useState(defaultRegionData);
     
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));

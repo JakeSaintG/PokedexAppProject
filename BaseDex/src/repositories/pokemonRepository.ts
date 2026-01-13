@@ -170,6 +170,10 @@ export const getTallGrassPageData = async (dbContext: PGliteWithLive): Promise<T
                 typeof r === 'object' 
                 && r !== null
                 && (
+                    'id' in r
+                    && typeof r['id'] === 'number'
+                )
+                && (
                     'generation' in r
                     && typeof r['generation'] === 'string'
                 )
@@ -186,7 +190,7 @@ export const getTallGrassPageData = async (dbContext: PGliteWithLive): Promise<T
                     && typeof r['registered'] === 'number'
                 )
             ) {
-                return r 
+                return r;
             }
         }) as TallGrassRegion[]
     }
