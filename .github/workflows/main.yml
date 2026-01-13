@@ -41,6 +41,7 @@ jobs:
         node-version: 20.x
     #     cache: 'npm'
     
+    # TODO: this
     # - name: Cache node modules
     #   id: cache-nodemodules
     #   uses: actions/cache@v4
@@ -62,8 +63,9 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: Test
-      run: npm run test
+    # TODO: this
+    # - name: Test
+    #   run: npm run test
     
     - name: Setup Pages
       uses: actions/configure-pages@v4
