@@ -30,7 +30,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./BaseDEx
+        working-directory: BaseDex
 
     steps:
     - uses: actions/checkout@v3
