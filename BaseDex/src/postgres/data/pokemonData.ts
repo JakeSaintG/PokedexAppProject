@@ -386,32 +386,39 @@ export const getRegionCountData = async (dbContext: PGliteWithLive) => {
             JOIN supported_generations g ON g.generation_name = s.generation
             GROUP BY s.generation, g.main_region_name;
         `, [/*id*/]
-    )
+    ).then( r => r.rows);
 
-    const countData = results.rows;
+    if (
+        Array.isArray(results)
+        && typeof results[0] === 'object' 
+        && results[0] !== null
+        && (
+            'generation' in results[0]
+            && typeof results[0]['generation'] === 'string'
+        )
+        && (
+            'region_name' in results[0]
+            && typeof results[0]['region_name'] === 'string'
+        )
+        && (
+            'total' in results[0]
+            && typeof results[0]['total'] === 'number'
+        )
+        && (
+            'registered' in results[0]
+            && typeof results[0]['registered'] === 'number'
+        )
+    ) {
+        console.log('returning')
+        return {
+            generation: results.generation,
+            main_region_name: results.region_name,
+            total: results.total,
+            registered: results.registered
+        }
+    }
 
-    console.log(countData)
-
-    // if (
-    //     typeof countData === 'object' 
-    //     && countData !== null 
-    //     && (
-    //         'id' in countData
-    //         && typeof countData['id'] === 'number'
-    //     )
-    //     && (
-    //         'count' in countData
-    //         && typeof countData['count'] === 'number'
-    //     )
-    //     && (
-    //         'starting_dex_no' in countData
-    //         && typeof countData['starting_dex_no'] === 'number'
-    //     )
-    // ) {
-    //     return [countData.count, countData.starting_dex_no]
-    // }
-
-    // throw "Unable to retrieve data from supported_generations table.";
+    throw "Unable to retrieve data from supported_generations table.";
 }
 
 export const getPokedexList = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {
