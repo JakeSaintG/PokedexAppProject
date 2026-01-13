@@ -5,7 +5,7 @@ import { test, expect, afterEach } from 'vitest';
 // import { describe, it, test, expect, afterEach } from 'vitest';
 
 test('renders HTML section', () => {
-    render(<NavigationMenu activePage='here'></NavigationMenu>);
+    render(<NavigationMenu connectionError={false} activePage='here'></NavigationMenu>);
     expect(true).toBeTruthy();
 });
 

@@ -9,6 +9,7 @@ const test_data: PokedexPreviewData = {
     name: "pikachu",
     dex_no: 25,
     id: 25,
+    primary_type: 'string',
     img_url: "string",
     is_registered: false,
     img_data: new Blob
