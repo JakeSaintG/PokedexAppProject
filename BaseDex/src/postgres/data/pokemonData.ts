@@ -370,12 +370,13 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
     }
 }
 
-export const getRegionCountData = async (dbContext: PGliteWithLive) => {
+// TODO: need to refactor most data<=>repository functions to be more like this in structure
+export const getRegionCountData = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
     // TODO: need to get is_registered once its added...
     // TODO: return count(*) from base_data joined on pokedex_entries grouped by generation
     // I don't want to return megas...or gmaxes...but I do want regional variations. I may need go back to the drawing board with my data
 
-    const results = await dbContext.query(`
+    return await dbContext.query(`
             SELECT 
                 s.generation AS generation
                 ,g.main_region_name AS region_name
@@ -386,39 +387,11 @@ export const getRegionCountData = async (dbContext: PGliteWithLive) => {
             JOIN supported_generations g ON g.generation_name = s.generation
             GROUP BY s.generation, g.main_region_name;
         `, [/*id*/]
-    ).then( r => r.rows);
-
-    if (
-        Array.isArray(results)
-        && typeof results[0] === 'object' 
-        && results[0] !== null
-        && (
-            'generation' in results[0]
-            && typeof results[0]['generation'] === 'string'
-        )
-        && (
-            'region_name' in results[0]
-            && typeof results[0]['region_name'] === 'string'
-        )
-        && (
-            'total' in results[0]
-            && typeof results[0]['total'] === 'number'
-        )
-        && (
-            'registered' in results[0]
-            && typeof results[0]['registered'] === 'number'
-        )
-    ) {
-        console.log('returning')
-        return {
-            generation: results.generation,
-            main_region_name: results.region_name,
-            total: results.total,
-            registered: results.registered
-        }
-    }
-
-    throw "Unable to retrieve data from supported_generations table.";
+    )
+    .then( r => r.rows)
+    .catch( c => { 
+        throw `Unable to retrieve data from supported_generations table: ${c}`;
+    });
 }
 
 export const getPokedexList = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {
