@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build-gh": "ng build --deploy-url /PokedexAppProject/ --base-href /PokedexAppProject/",
     "lint": "eslint .",
     "preview": "vite preview"
   },
