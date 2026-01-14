@@ -30,7 +30,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: BaseDex
+        working-directory: ./BaseDex
 
     steps:
     - uses: actions/checkout@v3
@@ -39,20 +39,20 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 20.x
-        cache: 'npm'
+        # cache: 'npm'
     
-    - name: Cache node modules
-      id: cache-nodemodules
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: node_modules 
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+    # - name: Cache node modules
+    #   id: cache-nodemodules
+    #   uses: actions/cache@v4
+    #   env:
+    #     cache-name: cache-node-modules
+    #   with:
+    #     path: node_modules 
+    #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-build-${{ env.cache-name }}-
+    #       ${{ runner.os }}-build-
+    #       ${{ runner.os }}-
 
     - name: Install Dependencies
       if:
@@ -72,7 +72,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v4
       with:
-        path: './dist'
+        path: './BaseDex/dist'
     
     - name: Deploy to GitHub Pages
       id: deployment
