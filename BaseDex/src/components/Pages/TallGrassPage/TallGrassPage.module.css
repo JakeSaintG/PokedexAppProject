@@ -1,6 +1,5 @@
 .regions {
     background-color: var(--pokedex-background);
-
     height: 100%;
     display: grid;
     padding: 1rem 1rem calc(70px + 1rem) 1rem;
@@ -13,10 +12,10 @@
     height: 100px;
     display: flex;
     margin: 0 auto;
-
     border: solid #008080 3px;
     background-color: var(--pokedex-light-blue);
     color: #008080;
+    text-decoration: none;
 }
 
 .region p {

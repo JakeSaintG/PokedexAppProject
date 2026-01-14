@@ -6,6 +6,7 @@ import { getTallGrassPageData } from "../../../repositories/pokemonRepository";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { connectionCheck } from "../../../repositories/configurationRepository";
 import type { TallGrassRegion } from "../../../types/tallGrassRegion";
+import { Link } from "react-router-dom";
 
 export function TallGrassPage() {
     const defaultRegionData: TallGrassRegion[] = [];
@@ -25,10 +26,10 @@ export function TallGrassPage() {
             <DexHeader title="Tall Grass"/>
             <div className={styles.regions}>
                 {generationData.map((r) => (
-                    <div className={styles.region} key={key++}>
+                    <Link className={styles.region} key={key++} to={'/habitat_select'}>
                         <p>{r.region_name}</p>
                         <p>{`${r.registered}/${r.total} Registered`}</p>
-                    </div>
+                    </Link>
                 ))}
             </div>
             <NavigationMenu activePage="tall_grass" connectionError={dbError}></NavigationMenu>

@@ -13,6 +13,7 @@ import { EntryPage } from './components/Pages/PokedexPage/EntryPage';
 
 import './index.css'
 import App from './App';
+import { HabitatSelect } from './components/Pages/TallGrassPage/HabitatSelect';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
           <Route path="pokedex" element={<PokedexPage />} />
           <Route path="pokedex/entry" element={<EntryPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="habitat_select" element={<HabitatSelect />} />
       </Route>
   )
 );
