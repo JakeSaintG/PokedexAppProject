@@ -29,10 +29,6 @@ jobs:
     
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./BaseDex
-
     steps:
     - uses: actions/checkout@v5
 
@@ -40,17 +36,19 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version: lts/*
-        # cache: 'npm'
 
     - name: Install Dependencies
       run: npm ci
+      working-directory: ./BaseDex
     
     - name: Build
       run: npm run build
+      working-directory: ./BaseDex
 
     # TODO: this
     # - name: Test
     #   run: npm run test
+    #   working-directory: ./BaseDex
     
     - name: Setup Pages
       uses: actions/configure-pages@v5

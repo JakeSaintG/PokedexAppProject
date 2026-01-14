@@ -22,10 +22,8 @@ const router = createBrowserRouter(
           <Route path="loading" element={<LoadingContentPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="tall_grass" element={<TallGrassPage />} />
-
           <Route path="pokedex" element={<PokedexPage />} />
           <Route path="pokedex/entry" element={<EntryPage />} />
-
           <Route path="settings" element={<SettingsPage />} />
       </Route>
   )
