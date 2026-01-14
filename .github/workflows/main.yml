@@ -69,6 +69,8 @@ jobs:
     - name: Setup Pages
       uses: actions/configure-pages@v4
     
+    - run: ls
+
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v4
       with:
