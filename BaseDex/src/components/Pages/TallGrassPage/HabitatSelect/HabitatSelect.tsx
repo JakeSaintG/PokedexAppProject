@@ -7,18 +7,23 @@ import { useEffect, useState } from "react";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { getHabitatPageData } from "../../../../repositories/pokemonRepository";
 import type { Habitat } from "../../../../types/tallGrassRegion";
+import { useSearchParams } from "react-router-dom";
 
 export function HabitatSelect() {
     let key = 0;
-    const defaultHabitatData: Habitat[] = [];
 
+    const [searchParams] = useSearchParams();
+    const regionId = searchParams.get("id")!;
+    
     const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
+
+    const defaultHabitatData: Habitat[] = [];
     const [habitatData, setHabitatData] = useState(defaultHabitatData);
 
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
-        getHabitatPageData(dbContext).then(r => setHabitatData(r));
+        getHabitatPageData(dbContext, regionId).then(r => setHabitatData(r));
     }, [])
 
     return (
@@ -39,6 +44,7 @@ export function HabitatSelect() {
                     </div>
                 ))}
             </div>
+            {/* TODO: override for back arrow */}
             <NavigationMenu activePage="tall_grass" connectionError={dbError}></NavigationMenu>
         </>
     );

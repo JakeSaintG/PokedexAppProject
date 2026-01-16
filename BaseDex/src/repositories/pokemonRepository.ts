@@ -199,10 +199,8 @@ export const getTallGrassPageData = async (dbContext: PGliteWithLive): Promise<T
     throw "Unable to parse data for tall grass region."
 }
 
-export const getHabitatPageData = async (dbContext: PGliteWithLive) => {
-    const results = await getHabitatData(dbContext);
-
-    console.log(results);
+export const getHabitatPageData = async (dbContext: PGliteWithLive, regionId: string) => {
+    const results = await getHabitatData(dbContext, regionId);
 
     if (Array.isArray(results)) {
         return results.filter((r) => {

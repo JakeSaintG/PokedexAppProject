@@ -26,7 +26,7 @@ export function TallGrassPage() {
             <DexHeader title="Tall Grass"/>
             <div className={styles.contents}>
                 {generationData.map((r) => (
-                    <Link className={styles.tile} key={key++} to={'/habitat_select'}>
+                    <Link className={styles.tile} key={key++} to={`/habitat_select?id=${r.generation}`}>
                         <p>{r.region_name}</p>
                         <p>{`${r.registered}/${r.total} Registered`}</p>
                     </Link>

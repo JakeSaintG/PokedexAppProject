@@ -396,13 +396,14 @@ export const getRegionCountData = async (dbContext: PGliteWithLive): Promise<unk
     });
 }
 
-export const getHabitatData = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
+export const getHabitatData = async (dbContext: PGliteWithLive, regionId: string): Promise<unknown[]> => {
     return await dbContext.query(
         `
             SELECT DISTINCT(habitat)
             FROM pokemon_species_data
-            -- WHERE ;
-        `
+            WHERE generation = $1;
+        `,
+        [regionId]
     )
     .then(r =>  r.rows)
     .catch(c => { 
