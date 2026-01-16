@@ -1,37 +1,43 @@
-import styles from "./HabitatSelect.module.css";
+// import Habitatstyles from "./HabitatSelect.module.css";
+import TallGrassStyles from "../TallGrassPage.module.css";
 import { DexHeader } from "../../../DexHeader";
 import { NavigationMenu } from "../../../NavigationMenu";
-import { useState } from "react";
-// import { usePGlite } from "@electric-sql/pglite-react";
+import { connectionCheck } from "../../../../repositories/configurationRepository";
+import { useEffect, useState } from "react";
+import { usePGlite } from "@electric-sql/pglite-react";
+import { getHabitatPageData } from "../../../../repositories/pokemonRepository";
+import type { Habitat } from "../../../../types/tallGrassRegion";
 
 export function HabitatSelect() {
-    // let key = 0;
+    let key = 0;
+    const defaultHabitatData: Habitat[] = [];
 
-    // const dbContext = usePGlite();
+    const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
+    const [habitatData, setHabitatData] = useState(defaultHabitatData);
+
+    useEffect(() => {
+        connectionCheck(dbContext).then((d: boolean) => setDbError(d));
+        getHabitatPageData(dbContext).then(r => setHabitatData(r));
+    }, [])
 
     return (
         <>
             <DexHeader title="Tall Grass"/>
-            <div className={styles.regions}>
-                <p>TODO</p>
-                <ul>
-                    <li>
-                        Work in progress! Here I will show a list of Pokemon habitats for the user to select from.
-                    </li>
-                    <li>
-                        The user will select the habitat, the page will SELECT * FROM base_data WHERE habitat = 'habitat';
-                        <ul>
-                            <li>
-                                Also, calcuate a small change that a random legendary/mytical will appear regardless of habitat. Just for fun.
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        The user will then be greeted with a grassy grid that they can click on until a pkmn appears.
-                    </li>
-                </ul>
-                
+            <div className={TallGrassStyles.contents}>
+                {/* 
+                    TODO: need to handle 'rare' for legendaries
+                    calcuate a small change that a random legendary/mytical will appear regardless of habitat. Just for fun.
+                */}
+                {habitatData.map((r) => (
+                    // TODO: link - user will then be greeted with a grassy grid that they can click on until a pkmn appears.
+                    <div className={TallGrassStyles.tile} key={key++}>
+                        <p>img</p>
+                        <p>
+                            {r.habitat.replace('-', ' ')}
+                        </p>
+                    </div>
+                ))}
             </div>
             <NavigationMenu activePage="tall_grass" connectionError={dbError}></NavigationMenu>
         </>

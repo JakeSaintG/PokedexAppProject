@@ -6,7 +6,8 @@ import {
     getRegionCountData,
     getPokedexList,
     getPokedexEntry,
-    setPokedexRegistered
+    setPokedexRegistered,
+    getHabitatData
 } from "../postgres/data/pokemonData";
 import type { DateData } from "../types/dateData";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
@@ -23,7 +24,7 @@ import {
 import { logInfo, logInfoVerbose, logInfoWithAttention } from "./logRepository";
 import type { PokedexPreviewData } from "../types/pokdexPreviewData";
 import type { PokedexEntryData } from "../types/pokedexEntryData";
-import type { TallGrassRegion } from "../types/tallGrassRegion";
+import type { Habitat, TallGrassRegion } from "../types/tallGrassRegion";
 
 export const loadPokemonData = async (
     dbContext: PGliteWithLive,
@@ -196,6 +197,29 @@ export const getTallGrassPageData = async (dbContext: PGliteWithLive): Promise<T
     }
 
     throw "Unable to parse data for tall grass region."
+}
+
+export const getHabitatPageData = async (dbContext: PGliteWithLive) => {
+    const results = await getHabitatData(dbContext);
+
+    console.log(results);
+
+    if (Array.isArray(results)) {
+        return results.filter((r) => {
+            if (
+                typeof r === 'object' 
+                && r !== null
+                && (
+                    'habitat' in r
+                    && typeof r['habitat'] === 'string'
+                )
+            ) {
+                return r;
+            }
+        }) as Habitat[]
+    }
+
+    throw "Unable to parse data for habitat."
 }
 
 export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {

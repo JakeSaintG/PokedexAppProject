@@ -396,6 +396,20 @@ export const getRegionCountData = async (dbContext: PGliteWithLive): Promise<unk
     });
 }
 
+export const getHabitatData = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
+    return await dbContext.query(
+        `
+            SELECT DISTINCT(habitat)
+            FROM pokemon_species_data
+            -- WHERE ;
+        `
+    )
+    .then(r =>  r.rows)
+    .catch(c => { 
+        throw `Unable to retrieve data from supported_generations table: ${c}`;
+    });
+}
+
 export const getPokedexList = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {
     let results;
 

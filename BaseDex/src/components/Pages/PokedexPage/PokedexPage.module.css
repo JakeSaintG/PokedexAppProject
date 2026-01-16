@@ -2,7 +2,7 @@
     width: 100%;
     /* height: fit-content; */
     background-color: var(--pokedex-background);
-    padding: 1rem 0 calc(80px + 1rem) 0;
+    padding: 1rem 1rem calc(80px + 1rem) 1rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

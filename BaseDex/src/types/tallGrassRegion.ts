@@ -5,3 +5,7 @@ export interface TallGrassRegion {
     total: number
     registered: number
 }
+
+export interface Habitat {
+    habitat: string
+}
