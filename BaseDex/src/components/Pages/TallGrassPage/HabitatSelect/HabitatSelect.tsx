@@ -45,6 +45,10 @@ export function HabitatSelect() {
                 ))}
             </div>
             {/* TODO: override for back arrow */}
+            {/* 
+                TODO: apparently -1 will go back? That would work great on the entry page as well. Needs testing
+                https://bobbyhadz.com/blog/react-router-go-back-to-previous-page
+            */}
             <NavigationMenu activePage="tall_grass" connectionError={dbError}></NavigationMenu>
         </>
     );
