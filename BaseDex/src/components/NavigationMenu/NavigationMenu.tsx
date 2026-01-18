@@ -16,7 +16,7 @@ interface Props extends React.HTMLAttributes<HTMLElement>{
     activePage: string,
     connectionError: boolean,
     backButtonOverride?: string,
-    backButtonLink?: string
+    backButtonLink?: string | number
 }
 
 export function NavigationMenu(props: Props) {

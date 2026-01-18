@@ -133,7 +133,7 @@ export function EntryPage() {
                 {/* TODO: move this register button somewhere...also only show it if debug is on */}
                 {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
             </div>
-            <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={`../pokedex#${id}`} connectionError={dbError}></NavigationMenu>
+            <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={-1} connectionError={dbError}></NavigationMenu>
         </>
     );
 }
