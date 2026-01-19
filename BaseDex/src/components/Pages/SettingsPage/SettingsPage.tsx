@@ -2,7 +2,7 @@ import styles from './SettingsPage.module.css';
 import { DexHeader } from "../../DexHeader";
 import { NavigationMenu } from "../../NavigationMenu";
 import { useNavigate } from 'react-router-dom';
-import { connectionCheck } from '../../../repositories/configurationRepository';
+import { connectionCheck, getSettings } from '../../../repositories/configurationRepository';
 import { useEffect, useState } from 'react';
 import { usePGlite } from '@electric-sql/pglite-react';
 
@@ -10,6 +10,8 @@ export function SettingsPage( ) {
     const navigate = useNavigate();
     const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
+    
+    const [settings, setSettings] = useState('');
 
     const [debugActivation, setDebugActivation] = useState(false);
     const [debugCounter, setDebugCounter] = useState(0);
@@ -18,6 +20,7 @@ export function SettingsPage( ) {
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
 
+        getSettings(dbContext);
     },[]);
     
     useEffect(() => {
@@ -37,20 +40,17 @@ export function SettingsPage( ) {
         if (debugActivation) {
             return <div className={styles.debug_options}>
                 <h3>Debug</h3>
-                <button onClick={() => console.log('not yet implemented')}>activate debug options(wip)</button>
                 <button onClick={() => navigate('../loading')}>Reload Data</button>
                 <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>load all dex data(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
+                <button onClick={() => console.log('not yet implemented')}>export logs(wip)</button>
             </div>
         }
 
         return <></>
     }
 
-    // TODO: set verbose logging
-    // TODO: view logs or dump to file
-    
     return (
         <>
             <DexHeader title='Settings'/>
@@ -59,7 +59,7 @@ export function SettingsPage( ) {
                 <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>other(wip)</button>
 
-                {/* Warn that this may take some of the fun out of the app */}
+                {/* TODO: Warn that this may take some of the fun out of the app */}
                 {displayDebugOptions()}
 
                 <p onClick={() => setDebugCounter(debugCounter + 1)} className={styles[debugClass]} >JakeSaintG</p>

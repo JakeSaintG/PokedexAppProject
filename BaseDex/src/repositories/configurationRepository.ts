@@ -8,7 +8,8 @@ import {
     upsertConfigurationData,
     upsertObtainableData,
     selectObtainableList,
-    connectionError
+    connectionError,
+    selectAppSettings
 } from '../postgres/data/configurationData';
 import type { AppendedSupportedGeneration, ConfigurationData, Obtainable, SupportedGeneration, VersionGroup } from '../types/configurationData';
 import type { DateData } from '../types/dateData';
@@ -79,6 +80,10 @@ export const getUpdatedAppConfiguration = async () => {
 
     return simulatedResult;
 };
+
+export const getSettings = async (dbContext: PGliteWithLive) => {
+    await selectAppSettings(dbContext);
+}
 
 export const updateConfiguration = (dbContext: PGliteWithLive, configuration: ConfigurationData) => {
     updateSupportedGenerations(dbContext, configuration.supported_generations);
