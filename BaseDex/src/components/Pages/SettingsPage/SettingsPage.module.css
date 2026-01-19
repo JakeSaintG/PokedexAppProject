@@ -2,7 +2,7 @@
     width: 100%;
     background-color: var(--pokedex-background);
     display: grid;
-    padding: 1rem 2rem 1rem 2rem;
+    padding: 1rem 2rem calc(70px + 1rem) 2rem;
     margin: 0 auto 68px auto;
     gap: 1rem;
 }
@@ -12,3 +12,37 @@
     height: 100px;
 }
 
+.settings_menu p {
+    margin: 0;
+    text-align: center;
+    user-select: none;
+    cursor: pointer;
+}
+
+.debug_options {
+    display: grid;
+    gap: 1rem;
+}
+
+.debug_two {
+    color: red;
+    font-weight: 600;
+}
+
+.debug_three {
+    color: orange;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    font-weight: 700;
+}
+
+.debug_four {
+    color: yellow;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    font-weight: 800;
+}
+
+.debug_five {
+    color: green;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    font-weight: 900;
+}

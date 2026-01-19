@@ -10,14 +10,46 @@ export function SettingsPage( ) {
     const navigate = useNavigate();
     const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
-    
+
+    const [debugActivation, setDebugActivation] = useState(false);
+    const [debugCounter, setDebugCounter] = useState(0);
+    const [debugClass, setDebugClass] = useState('debug_zero');
+
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
+
     },[]);
+    
+    useEffect(() => {
+        if (debugCounter == 1) setDebugClass('debug_one');
+        if (debugCounter == 2) setDebugClass('debug_two');
+        if (debugCounter == 3) setDebugClass('debug_three');
+        if (debugCounter == 4) setDebugClass('debug_four');
+        if (debugCounter == 5) {
+            setDebugActivation(true);
+            setDebugClass('debug_five');
+        }
+        if (debugCounter > 5) setDebugCounter(5);
+    },[debugCounter]);
+
+    const displayDebugOptions = () => {
+        // TODO: pivot to db call
+        if (debugActivation) {
+            return <div className={styles.debug_options}>
+                <h3>Debug</h3>
+                <button onClick={() => console.log('not yet implemented')}>activate debug options(wip)</button>
+                <button onClick={() => navigate('../loading')}>Reload Data</button>
+                <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
+                <button onClick={() => console.log('not yet implemented')}>load all dex data(wip)</button>
+                <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
+            </div>
+        }
+
+        return <></>
+    }
 
     // TODO: set verbose logging
     // TODO: view logs or dump to file
-    // TODO: Make this look a little better
     
     return (
         <>
@@ -26,13 +58,11 @@ export function SettingsPage( ) {
                 <h3>Appearance</h3>
                 <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>other(wip)</button>
-                <h3>Debug</h3>
+
                 {/* Warn that this may take some of the fun out of the app */}
-                <button onClick={() => console.log('not yet implemented')}>activate debug options(wip)</button>
-                <button onClick={() => navigate('../loading')}>Reload Data</button>
-                <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
-                <button onClick={() => console.log('not yet implemented')}>load all dex data(wip)</button>
-                <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
+                {displayDebugOptions()}
+
+                <p onClick={() => setDebugCounter(debugCounter + 1)} className={styles[debugClass]} >JakeSaintG</p>
             </div>
             <NavigationMenu activePage='settings' connectionError={dbError}></NavigationMenu>
         </>
