@@ -74,6 +74,19 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         );
 
     dbContext
+        .prepare(`
+            CREATE TABLE IF NOT EXISTS settings (
+                id SERIAL PRIMARY KEY
+                ,debug_on INT NULL -- boolean
+                ,light_mode INT NULL -- boolean
+                ,register_from_dex INT NULL -- boolean
+                ,last_updated_dts STRING NOT NULL
+            )
+        `)
+        .run();
+    setDefaultSettings(dbContext)
+
+    dbContext
         .exec(`
             CREATE TABLE IF NOT EXISTS logs (
                 id SERIAL PRIMARY KEY
@@ -86,6 +99,28 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         `).then ( () => 
             console.log('logs table created')
         );
+}
+
+const setDefaultSettings = async (dbContext: PGliteWithLive) => {
+    try {
+        await dbContext.transaction(async (transaction) => transaction.query(
+            `
+                --trucate table
+                -- insert into
+            `,
+            []
+        ));
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(
+                logError(dbContext, `Failed to... This is a terminating error.\r\n${error.message}`, true)
+            )
+        }
+    }
+}
+
+export const selectAppSettings = async (dbContext: PGliteWithLive) => {
+
 }
 
 export const upsertObtainableData = async (dbContext: PGliteWithLive, obtainable: Obtainable) => {
