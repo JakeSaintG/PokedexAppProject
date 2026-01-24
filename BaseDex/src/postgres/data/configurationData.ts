@@ -74,16 +74,18 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         );
 
     dbContext
-        .prepare(`
+        .exec(`
             CREATE TABLE IF NOT EXISTS settings (
                 id SERIAL PRIMARY KEY
                 ,debug_on INT NULL -- boolean
                 ,light_mode INT NULL -- boolean
                 ,register_from_dex INT NULL -- boolean
+                ,tutorial_active INT NULL -- boolean
                 ,last_updated_dts STRING NOT NULL
             )
-        `)
-        .run();
+        `).then ( () => 
+            console.log('settings table created')
+        );
     setDefaultSettings(dbContext)
 
     dbContext
@@ -103,11 +105,15 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
 
 const setDefaultSettings = async (dbContext: PGliteWithLive) => {
     try {
+
+        // The goal is that there's only ever one row in this table
+        // Better to truncate than be sorry later
         await dbContext.transaction(async (transaction) => transaction.query(
-            `
-                --trucate table
-                -- insert into
-            `,
+            `TRUNCATE TABLE settings;`
+        ));
+
+        await dbContext.transaction(async (transaction) => transaction.query(
+            `-- INSERT INTO settings;`,
             []
         ));
     } catch (error) {

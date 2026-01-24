@@ -57,7 +57,8 @@ export function SettingsPage( ) {
             <div className={styles.settings_menu}>
                 <h3>Appearance</h3>
                 <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
-                <button onClick={() => console.log('not yet implemented')}>other(wip)</button>
+                <button onClick={() => console.log('not yet implemented')}>Bring tutorial back(wip)</button>
+                <button onClick={() => console.log('not yet implemented')}>Restore default settings(wip)</button>
 
                 {/* TODO: Warn that this may take some of the fun out of the app */}
                 {displayDebugOptions()}
