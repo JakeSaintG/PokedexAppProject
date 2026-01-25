@@ -3,6 +3,7 @@ import type { AppendedSupportedGeneration, Obtainable } from '../../types/config
 import type { DateData } from '../../types/dateData';
 import type { LogData } from '../../types/logData';
 import { logError, logInfo } from '../../repositories/logRepository';
+import type { Settings } from '../../types/settings';
 // import { setLogRetentionDays } from '../repositories/logRepository';
 
 export const initConfigDb = async (dbContext: PGliteWithLive) => {
@@ -77,16 +78,16 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         .exec(`
             CREATE TABLE IF NOT EXISTS settings (
                 id SERIAL PRIMARY KEY
-                ,debug_on INT NULL -- boolean
-                ,light_mode INT NULL -- boolean
-                ,register_from_dex INT NULL -- boolean
-                ,tutorial_active INT NULL -- boolean
-                ,last_updated_dts STRING NOT NULL
+                ,debug_active BOOLEAN NOT NULL
+                ,light_mode BOOLEAN NOT NULL
+                ,register_from_dex BOOLEAN NOT NULL
+                ,tutorial_active BOOLEAN NOT NULL
+                ,last_updated_dts TEXT NOT NULL
             )
         `).then ( () => 
             console.log('settings table created')
         );
-    setDefaultSettings(dbContext)
+    setDefaultSettings(dbContext);
 
     dbContext
         .exec(`
@@ -103,9 +104,8 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         );
 }
 
-const setDefaultSettings = async (dbContext: PGliteWithLive) => {
+export const setDefaultSettings = async (dbContext: PGliteWithLive) => {
     try {
-
         // The goal is that there's only ever one row in this table
         // Better to truncate than be sorry later
         await dbContext.transaction(async (transaction) => transaction.query(
@@ -113,20 +113,85 @@ const setDefaultSettings = async (dbContext: PGliteWithLive) => {
         ));
 
         await dbContext.transaction(async (transaction) => transaction.query(
-            `-- INSERT INTO settings;`,
-            []
+            `
+                INSERT INTO settings (
+                    debug_active
+                    ,light_mode
+                    ,register_from_dex
+                    ,tutorial_active
+                    ,last_updated_dts
+                )
+                VALUES (
+                    false
+                    ,true
+                    ,false
+                    ,true
+                    ,$1
+                )
+            `,
+            [new Date().toISOString()]
         ));
+        console.log('Default settings applied.');
     } catch (error) {
         if (error instanceof Error) {
             console.error(
-                logError(dbContext, `Failed to... This is a terminating error.\r\n${error.message}`, true)
+                logError(dbContext, `Failed to restore default settings. This is a terminating error.\r\n${error.message}`, true)
             )
         }
     }
 }
 
-export const selectAppSettings = async (dbContext: PGliteWithLive) => {
+export const selectAppSettings = async (dbContext: PGliteWithLive): Promise<unknown> => {
+    return await dbContext.query(
+        `
+            SELECT 
+                id
+                ,debug_active
+                ,light_mode
+                ,register_from_dex
+                ,tutorial_active
+                ,last_updated_dts
+            FROM settings
+            LIMIT 1;
+        `
+    )
+    .then(r =>  {
+        return r.rows[0]})
+    .catch(c => { 
+        throw `Unable to retrieve data from settings table: ${c}`;
+    });
+}
 
+export const truncateInsertSettings = async (dbContext: PGliteWithLive, settings: Settings) => {
+    await dbContext.transaction(async (transaction) => transaction.query(
+        `TRUNCATE TABLE settings;`
+    ));
+
+    await dbContext.transaction(async (transaction) => transaction.query(
+        `
+            INSERT INTO settings (
+                debug_active
+                ,light_mode
+                ,register_from_dex
+                ,tutorial_active
+                ,last_updated_dts
+            )
+            VALUES (
+                $1
+                ,$2
+                ,$3
+                ,$4
+                ,$5
+            )
+        `,
+        [
+            settings.debug_active,
+            settings.light_mode,
+            settings.register_from_dex,
+            settings.tutorial_active,
+            new Date().toISOString()
+        ]
+    ));
 }
 
 export const upsertObtainableData = async (dbContext: PGliteWithLive, obtainable: Obtainable) => {

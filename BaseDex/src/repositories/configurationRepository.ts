@@ -9,12 +9,15 @@ import {
     upsertObtainableData,
     selectObtainableList,
     connectionError,
-    selectAppSettings
+    selectAppSettings,
+    truncateInsertSettings,
+    setDefaultSettings
 } from '../postgres/data/configurationData';
 import type { AppendedSupportedGeneration, ConfigurationData, Obtainable, SupportedGeneration, VersionGroup } from '../types/configurationData';
 import type { DateData } from '../types/dateData';
 import { logInfo } from './logRepository';
 import { fetchPokeApiData } from './pokeApiRepository';
+import type { Settings } from '../types/settings';
 
 export const configApiPing = () => {
     return true;
@@ -81,8 +84,52 @@ export const getUpdatedAppConfiguration = async () => {
     return simulatedResult;
 };
 
-export const getSettings = async (dbContext: PGliteWithLive) => {
-    await selectAppSettings(dbContext);
+export const getSettings = async (dbContext: PGliteWithLive): Promise<Settings> => {
+    const result = await selectAppSettings(dbContext);
+
+    if (
+        typeof result === 'object' 
+        && result !== null
+        && (
+            'id' in result
+            && typeof result['id'] === 'number'
+        )
+        && (
+            'debug_active' in result
+            && typeof result['debug_active'] === 'boolean'
+        )
+        && (
+            'light_mode' in result
+            && typeof result['light_mode'] === 'boolean'
+        )
+        && (
+            'register_from_dex' in result
+            && typeof result['register_from_dex'] === 'boolean'
+        )
+        && (
+            'tutorial_active' in result
+            && typeof result['tutorial_active'] === 'boolean'
+        )
+        && (
+            'last_updated_dts' in result
+            && typeof result['last_updated_dts'] === 'string'
+        )
+    ) {
+        return result as Settings;
+    }
+
+    throw "Unable to parse data for settings.";
+}
+
+export const updateSettings = async (dbContext: PGliteWithLive, settings: Settings) => {
+    /*Updates existing settings and return a Settings object.*/
+
+    await truncateInsertSettings(dbContext, settings);
+    return await getSettings(dbContext);
+}
+
+export const restoreDefaultSettings = async (dbContext: PGliteWithLive) => {
+    await setDefaultSettings(dbContext);
 }
 
 export const updateConfiguration = (dbContext: PGliteWithLive, configuration: ConfigurationData) => {
