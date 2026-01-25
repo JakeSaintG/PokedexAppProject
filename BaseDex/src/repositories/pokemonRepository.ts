@@ -196,7 +196,7 @@ export const getTallGrassPageData = async (dbContext: PGliteWithLive): Promise<T
         }) as TallGrassRegion[]
     }
 
-    throw "Unable to parse data for tall grass region."
+    throw "Unable to parse data for tall grass region.";
 }
 
 export const getHabitatPageData = async (dbContext: PGliteWithLive, regionId: string) => {
