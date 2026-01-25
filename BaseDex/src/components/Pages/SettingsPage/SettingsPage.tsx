@@ -2,7 +2,7 @@ import styles from './SettingsPage.module.css';
 import { DexHeader } from "../../DexHeader";
 import { NavigationMenu } from "../../NavigationMenu";
 import { useNavigate } from 'react-router-dom';
-import { connectionCheck, getSettings, restoreDefaultSettings, updateSettings } from '../../../repositories/configurationRepository';
+import { connectionCheck, getSettings, restoreDefaultSettings, toggleTutorial, updateSettings } from '../../../repositories/configurationRepository';
 import { useEffect, useState } from 'react';
 import { usePGlite } from '@electric-sql/pglite-react';
 import type { Settings } from '../../../types/settings';
@@ -59,9 +59,10 @@ export function SettingsPage( ) {
         <>
             <DexHeader title='Settings'/>
             <div className={styles.settings_menu}>
+                {/* Screw it...these should be slider/checkboxes... */}
                 <h3>Appearance</h3>
                 <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
-                <button onClick={() => console.log('not yet implemented')}>Bring tutorial back(wip)</button>
+                <button onClick={() => toggleTutorial(dbContext)}>Restore Tutorial</button>
                 <button onClick={() => setDefault(dbContext)}>Restore default settings</button>
 
                 {/* TODO: Warn that this may take some of the fun out of the app */}

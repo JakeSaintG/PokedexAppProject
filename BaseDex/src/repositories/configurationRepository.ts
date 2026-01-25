@@ -128,6 +128,10 @@ export const updateSettings = async (dbContext: PGliteWithLive, settings: Settin
     return await getSettings(dbContext);
 }
 
+export const toggleTutorial = async (dbContext: PGliteWithLive) => {
+    
+}
+
 export const restoreDefaultSettings = async (dbContext: PGliteWithLive) => {
     await setDefaultSettings(dbContext);
 }
