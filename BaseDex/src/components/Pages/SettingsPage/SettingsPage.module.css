@@ -24,24 +24,24 @@
     gap: 1rem;
 }
 
-.debug_two {
+.debug_2 {
     color: red;
     font-weight: 600;
 }
 
-.debug_three {
+.debug_3 {
     color: orange;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
     font-weight: 700;
 }
 
-.debug_four {
+.debug_4 {
     color: yellow;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
     font-weight: 800;
 }
 
-.debug_five {
+.debug_5 {
     color: green;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
     font-weight: 900;
