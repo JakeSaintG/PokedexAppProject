@@ -32,7 +32,6 @@ export function NavigationMenu(props: Props) {
     //TODO: WIP
     const showActiveNavLink = (active: string) => activeLink == active ? styles.active : styles.inactive;
 
-
     const backButton = (backButtonLink: string) => {
         return <Link className={styles.nav_link} to={backButtonLink}>
             <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img}/>
@@ -45,7 +44,7 @@ export function NavigationMenu(props: Props) {
         buttonImg: string,
         buttonAltTxt: string,
         backOverride: string | undefined,
-        backButtonLink: string | undefined
+        backButtonLink: string | number | undefined
     ) => {
         if (backOverride != undefined && backButtonLink != undefined && backOverride.includes(buttonName)) return backButton(backButtonLink);
 

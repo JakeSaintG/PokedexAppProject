@@ -372,7 +372,6 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
 
 // TODO: need to refactor most data<=>repository functions to be more like this in structure
 export const getRegionCountData = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
-    // TODO: return count(*) from base_data joined on pokedex_entries grouped by generation
     // I don't want to return megas...or gmaxes...but I do want regional variations. I may need go back to the drawing board with my data
 
     return await dbContext.query(

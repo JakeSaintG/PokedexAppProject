@@ -13,6 +13,8 @@ export function SettingsPage( ) {
     const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
 
+    // TODO: I'm going to be getting settings a lot...should probably
+    // look into react's ContextApi or Signals
     const [settings, setSettings] = useState({} as Settings);
     const [debugCounter, setDebugCounter] = useState(0);
 
