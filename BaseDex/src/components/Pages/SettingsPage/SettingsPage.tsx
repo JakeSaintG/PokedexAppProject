@@ -64,7 +64,7 @@ export function SettingsPage( ) {
                 {/* Screw it...these should be slider/checkboxes... */}
                 <h3>Appearance</h3>
                 <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
-                <button onClick={() => toggleTutorial(dbContext)}>Restore Tutorial</button>
+                <button onClick={() => toggleTutorial(dbContext, settings).then((s: Settings) => setSettings(s))}>Restore Tutorial</button>
                 <button onClick={() => setDefault(dbContext)}>Restore default settings</button>
 
                 {/* TODO: Warn that this may take some of the fun out of the app */}

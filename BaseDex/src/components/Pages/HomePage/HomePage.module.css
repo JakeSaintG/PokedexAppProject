@@ -5,3 +5,11 @@
     padding: 0 1rem;
 
 }
+
+.tutorial {
+    border: solid #008080 3px;
+    background-color: var(--pokedex-light-blue);
+    color: #008080;
+    padding: 0 1rem;
+    font-weight: bold;
+}

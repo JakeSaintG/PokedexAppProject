@@ -121,15 +121,16 @@ export const getSettings = async (dbContext: PGliteWithLive): Promise<Settings> 
     throw "Unable to parse data for settings.";
 }
 
-export const updateSettings = async (dbContext: PGliteWithLive, settings: Settings) => {
+export const updateSettings = async (dbContext: PGliteWithLive, settings: Settings): Promise<Settings> => {
     /*Updates existing settings and return a Settings object.*/
 
     await truncateInsertSettings(dbContext, settings);
     return await getSettings(dbContext);
 }
 
-export const toggleTutorial = async (dbContext: PGliteWithLive) => {
-    
+export const toggleTutorial = async (dbContext: PGliteWithLive, settings: Settings): Promise<Settings> => {
+    settings.tutorial_active = !settings.tutorial_active;
+    return await updateSettings(dbContext, settings);
 }
 
 export const restoreDefaultSettings = async (dbContext: PGliteWithLive) => {
