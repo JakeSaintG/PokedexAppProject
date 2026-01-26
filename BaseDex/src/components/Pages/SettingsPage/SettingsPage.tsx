@@ -61,12 +61,13 @@ export function SettingsPage( ) {
         <>
             <DexHeader title='Settings'/>
             <div className={styles.settings_menu}>
-                {/* Screw it...these should be slider/checkboxes... */}
+                {/* These should be slider/checkboxes... */}
                 <h3>Appearance</h3>
+                <button onClick={() => toggleTutorial(dbContext, settings).then((s: Settings) => setSettings(s))}>
+                    {settings.tutorial_active ? 'Hide tutorial' : 'Restore tutorial'}
+                </button>
                 <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
-                <button onClick={() => toggleTutorial(dbContext, settings).then((s: Settings) => setSettings(s))}>Restore Tutorial</button>
                 <button onClick={() => setDefault(dbContext)}>Restore default settings</button>
-
                 {/* TODO: Warn that this may take some of the fun out of the app */}
                 {displayDebugOptions()}
 
