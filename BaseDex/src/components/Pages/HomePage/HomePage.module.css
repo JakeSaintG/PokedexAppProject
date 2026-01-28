@@ -3,7 +3,6 @@
     flex-direction: column;
     background-color: var(--pokedex-background);
     padding: 0 1rem;
-
 }
 
 .tutorial {
@@ -12,4 +11,15 @@
     color: #008080;
     padding: 0 1rem;
     font-weight: bold;
+}
+
+.tutorial button {
+    margin-bottom: 1rem;
+    width: 100%;
+    font-weight: bold;
+    font-size: medium;
+    padding: 0.25rem 0;
+    border: solid 2px #008080;
+    background-color: #00a4a4;
+    color: #00FFFF;
 }
