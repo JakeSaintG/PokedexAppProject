@@ -5,12 +5,28 @@
     padding: 0 1rem;
 }
 
+.total_registered,
 .tutorial {
     border: solid #008080 3px;
     background-color: var(--pokedex-light-blue);
     color: #008080;
-    padding: 0 1rem;
     font-weight: bold;
+}
+
+.total_registered {
+    text-align: center;
+}
+
+.total_registered p:first-child {
+    background-color: #00a4a4;
+    color: #00FFFF;
+    padding: .5rem;
+    margin: 0;
+}
+
+.tutorial {
+    padding: 0 1rem;
+    margin-bottom: 1rem;
 }
 
 .tutorial button {

@@ -84,7 +84,11 @@ export function EntryPage() {
 
     const displayPrimaryType = (type_1: string) => {
         if (type_1 != 'Ň̷̨ȕ̷͕l̷͇̑l̸̠̏' && type_1 != '???') {
-            return {backgroundColor: `var(--${pokedexEntryData.type_1})`} as React.CSSProperties;
+            return {
+                // backgroundColor: `var(--${pokedexEntryData.type_1})`
+
+                background: `linear-gradient(0deg, var(--${pokedexEntryData.type_1}) 0%, var(--${pokedexEntryData.type_2}) 100%)`
+            } as React.CSSProperties;
         }
         return {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
     }
