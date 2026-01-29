@@ -55,9 +55,11 @@
 }
 
 .banner {
+    /* margin-top: 55px; */
     padding-top: 30px;
     display: grid;
-    border-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas: 
         ". . dex_no"

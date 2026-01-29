@@ -82,18 +82,24 @@ export function EntryPage() {
         return <></>
     }
 
+    // TODO: the gradient is neat and all but I borked the ??? type icon and borked single type pkmn...
     const displayPrimaryType = (type_1: string) => {
         if (type_1 != 'Ň̷̨ȕ̷͕l̷͇̑l̸̠̏' && type_1 != '???') {
             return {
-                // backgroundColor: `var(--${pokedexEntryData.type_1})`
-
-                background: `linear-gradient(0deg, var(--${pokedexEntryData.type_1}) 0%, var(--${pokedexEntryData.type_2}) 100%)`
+                background: `
+                    linear-gradient(
+                        180deg, 
+                        var(--${pokedexEntryData.type_1}) 10%,
+                        var(--${pokedexEntryData.type_1}) 45%,
+                        var(--${pokedexEntryData.type_2}) 65%
+                    )
+                `
             } as React.CSSProperties;
         }
         return {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
     }
 
-    const displaySecondType = (type_2: string | undefined) => (type_2 != undefined) ? <p style={{backgroundColor: `var(--${type_2})`}}>{type_2}</p> : <></>;
+    const displaySecondaryType = (type_2: string | undefined) => (type_2 != undefined) ? <p style={{backgroundColor: `var(--${type_2})`}}>{type_2}</p> : <></>;
 
     const displayMeasurement = (measurement: number): string => {
         if (measurement == -1) return '???';
@@ -115,8 +121,8 @@ export function EntryPage() {
                     </div>
                 </div>
                 <div className={styles.types}>
-                    <p style={displayPrimaryType(pokedexEntryData.type_1)}>{pokedexEntryData.type_1}</p>
-                    {displaySecondType(pokedexEntryData.type_2)}
+                    <p style={{backgroundColor: `var(--${pokedexEntryData.type_1})`}}>{pokedexEntryData.type_1}</p>
+                    {displaySecondaryType(pokedexEntryData.type_2)}
                 </div>
                 <div className={styles.dex_details}>
                     <div className={styles.dex_details_group}>
@@ -128,7 +134,7 @@ export function EntryPage() {
                         <p>{displayMeasurement(pokedexEntryData.weight)} kg</p> 
                     </div>
                 </div>
-                {/* TODO: move this register button somewhere...also only show it if debug is on */}
+                {/* TODO: only show it if debug is on */}
                 {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
             </div>
             <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={-1} connectionError={dbError}></NavigationMenu>
