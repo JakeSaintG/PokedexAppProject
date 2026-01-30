@@ -82,20 +82,26 @@ export function EntryPage() {
         return <></>
     }
 
-    // TODO: the gradient is neat and all but I borked the ??? type icon and borked single type pkmn...
-    const displayPrimaryType = (type_1: string) => {
+    const displayPrimaryType = (type_1: string, type_2?: string): React.CSSProperties => {
         if (type_1 != 'Ň̷̨ȕ̷͕l̷͇̑l̸̠̏' && type_1 != '???') {
+            // I don't love these nested ifs but I think I'd rather not
+            // have the browser draw the gradient if it doesn't have to.
+            if (type_2 == undefined) {
+                return {background: `var(--${type_1})`} as React.CSSProperties;
+            }
+            
             return {
                 background: `
                     linear-gradient(
                         180deg, 
-                        var(--${pokedexEntryData.type_1}) 10%,
-                        var(--${pokedexEntryData.type_1}) 45%,
-                        var(--${pokedexEntryData.type_2}) 65%
+                        var(--${type_1}) 10%,
+                        var(--${type_1}) 45%,
+                        var(--${type_2}) 65%
                     )
                 `
             } as React.CSSProperties;
         }
+
         return {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
     }
 
@@ -111,7 +117,7 @@ export function EntryPage() {
         <>
             <DexHeader remove_white_space={true}/>
             <div className={styles.entry_display}>
-                <div className={`${styles.banner}`} style={displayPrimaryType(pokedexEntryData.type_1)}>
+                <div className={`${styles.banner}`} style={displayPrimaryType(pokedexEntryData.type_1, pokedexEntryData.type_2)}>
                     <p className={styles.dex_no}>No. {id}</p>
                     <img src={dexImg} alt={`Default Image of ${pokedexEntryData.name}`} className={`${styles[`${registered}`]} ${styles.dex_img}`}/>
                     <p className={styles.dex_name}>{previewName}</p>
@@ -121,7 +127,7 @@ export function EntryPage() {
                     </div>
                 </div>
                 <div className={styles.types}>
-                    <p style={{backgroundColor: `var(--${pokedexEntryData.type_1})`}}>{pokedexEntryData.type_1}</p>
+                    <p style={displayPrimaryType(pokedexEntryData.type_1)}>{pokedexEntryData.type_1}</p>
                     {displaySecondaryType(pokedexEntryData.type_2)}
                 </div>
                 <div className={styles.dex_details}>
