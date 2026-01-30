@@ -1,0 +1,24 @@
+.con_warn {
+    bottom: 70px;
+    position: fixed;
+    background-color: rgb(251, 232, 21);
+    max-width: var(--max-mobile-width);
+    height: 90px;
+    width: 100%;
+}
+
+.con_warn p:first-child {
+    background-color: rgb(251, 166, 8);
+    font-size: large;
+    font-weight: bolder;
+    margin: 0;
+}
+
+.con_warn p:nth-child(2) {
+    margin: 0;
+}
+
+.con_warn * {
+    padding: .25rem;
+    width: 100%;
+}

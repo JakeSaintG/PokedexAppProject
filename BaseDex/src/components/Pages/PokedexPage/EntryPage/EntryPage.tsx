@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { usePGlite } from "@electric-sql/pglite-react";
 import type { PGliteWithLive } from "@electric-sql/pglite/live";
-import { DexHeader } from "../../../DexHeader";
-import { NavigationMenu } from "../../../NavigationMenu";
+import { DexHeader, NavigationMenu } from "../../../PageElements";
 import swapArrow from "../../../../assets/icons/arrows-rotate-solid-full.svg";
 import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../../repositories/pokemonRepository";
 import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
@@ -105,13 +104,7 @@ export function EntryPage() {
         return {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
     }
 
-    const displaySecondaryType = (type_2: string | undefined) => (type_2 != undefined) ? <p style={{backgroundColor: `var(--${type_2})`}}>{type_2}</p> : <></>;
-
-    const displayMeasurement = (measurement: number): string => {
-        if (measurement == -1) return '???';
-
-        return (measurement / 10).toString();
-    }
+    const displaySecondaryType = (type_2?: string) => (type_2 != undefined) ? <p style={{backgroundColor: `var(--${type_2})`}}>{type_2}</p> : <></>;
 
     return (
         <>
@@ -133,11 +126,11 @@ export function EntryPage() {
                 <div className={styles.dex_details}>
                     <div className={styles.dex_details_group}>
                         <p>Height</p>
-                        <p>{displayMeasurement(pokedexEntryData.height)} meters</p> 
+                        <p>{pokedexEntryData.height == -1 ? '???' : (pokedexEntryData.height / 10).toString()} meters</p> 
                     </div>
                     <div className={styles.dex_details_group}>
                         <p>Weight</p>
-                        <p>{displayMeasurement(pokedexEntryData.weight)} kg</p> 
+                        <p>{pokedexEntryData.weight == -1 ? '???' : (pokedexEntryData.weight / 10).toString()} kg</p> 
                     </div>
                 </div>
                 {/* TODO: only show it if debug is on */}
