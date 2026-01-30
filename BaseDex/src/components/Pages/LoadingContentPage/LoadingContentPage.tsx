@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { useNavigate } from "react-router-dom";
 import speakerIcon from "../../../assets/icons/bars-solid-full.svg";
-import { DexHeader } from "../../DexHeader";
+import { DexHeader} from "../../PageElements";
 import { initPokemonDb } from "../../../postgres/data/pokemonData";
 import { initConfigDb } from "../../../postgres/data/configurationData";
 import type { ConfigurationData } from "../../../types/configurationData";
