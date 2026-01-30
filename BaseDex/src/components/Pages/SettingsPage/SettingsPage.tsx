@@ -1,6 +1,5 @@
 import styles from './SettingsPage.module.css';
-import { DexHeader } from "../../DexHeader";
-import { NavigationMenu } from "../../NavigationMenu";
+import { DexHeader, NavigationMenu } from "../../PageElements";
 import { useNavigate } from 'react-router-dom';
 import { connectionCheck, getSettings, restoreDefaultSettings, toggleTutorial, updateSettings } from '../../../repositories/configurationRepository';
 import { useEffect, useState } from 'react';

@@ -1,5 +1,5 @@
 import styles from './DexHeader.module.css';
-import dexHeaderLeft from "../../assets/dexheader/dexheader_left.svg";
+import dexHeaderLeft from "../../../assets/dexheader/dexheader_left.svg";
 
 interface Props extends React.HTMLAttributes<HTMLElement>{
     title?: string

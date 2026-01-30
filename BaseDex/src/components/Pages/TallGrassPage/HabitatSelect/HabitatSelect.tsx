@@ -1,7 +1,6 @@
 // import Habitatstyles from "./HabitatSelect.module.css";
 import TallGrassStyles from "../TallGrassPage.module.css";
-import { DexHeader } from "../../../DexHeader";
-import { NavigationMenu } from "../../../NavigationMenu";
+import { DexHeader, NavigationMenu } from "../../../PageElements";
 import { connectionCheck } from "../../../../repositories/configurationRepository";
 import { useEffect, useState } from "react";
 import { usePGlite } from "@electric-sql/pglite-react";

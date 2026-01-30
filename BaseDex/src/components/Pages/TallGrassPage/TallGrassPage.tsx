@@ -1,6 +1,5 @@
 import styles from "./TallGrassPage.module.css";
-import { DexHeader } from "../../DexHeader";
-import { NavigationMenu } from "../../NavigationMenu";
+import { DexHeader, NavigationMenu } from "../../PageElements";
 import { useEffect, useState } from "react";
 import { getTallGrassPageData } from "../../../repositories/pokemonRepository";
 import { usePGlite } from "@electric-sql/pglite-react";

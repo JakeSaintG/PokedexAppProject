@@ -1,6 +1,5 @@
 import styles from './PokedexPage.module.css';
-import { DexHeader } from "../../DexHeader";
-import { NavigationMenu } from "../../NavigationMenu";
+import { DexHeader, NavigationMenu } from "../../PageElements";
 import { PokedexPreview } from './PokedexPreview';
 import type { PokedexPreviewData } from '../../../types/pokdexPreviewData';
 import { usePGlite } from "@electric-sql/pglite-react";

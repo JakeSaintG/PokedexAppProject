@@ -1,6 +1,5 @@
 import styles from "./HomePage.module.css";
-import { DexHeader } from "../../DexHeader";
-import { NavigationMenu } from "../../NavigationMenu";
+import { DexHeader, NavigationMenu } from "../../PageElements";
 import { useEffect, useState } from "react";
 import { connectionCheck, getSettings, toggleTutorial } from "../../../repositories/configurationRepository";
 import { usePGlite } from "@electric-sql/pglite-react";

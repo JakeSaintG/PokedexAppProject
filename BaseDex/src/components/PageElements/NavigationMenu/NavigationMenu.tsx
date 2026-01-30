@@ -2,12 +2,12 @@ import styles from './NavigationMenu.module.css';
 
 // svgs below are courtesy of font awesome (free)
 // downloading the svgs directly is likely safer and decreases the number of packages needed
-import listUlSolid from "../../assets/icons/list-ul-solid.svg";
-import gearSolid from "../../assets/icons/gear-solid.svg";
-import grassSolid from "../../assets/icons/grass.svg";
-import userSolid from "../../assets/icons/user-solid.svg";
-import house from "../../assets/icons/house-modified.svg";
-import backArrow from "../../assets/icons/arrow-left-solid-full.svg";
+import listUlSolid from "../../../assets/icons/list-ul-solid.svg";
+import gearSolid from "../../../assets/icons/gear-solid.svg";
+import grassSolid from "../../../assets/icons/grass.svg";
+import userSolid from "../../../assets/icons/user-solid.svg";
+import house from "../../../assets/icons/house-modified.svg";
+import backArrow from "../../../assets/icons/arrow-left-solid-full.svg";
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ConnectionError } from './ConnectionWarning';
