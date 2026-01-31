@@ -15,6 +15,7 @@ export function PokedexPage( ) {
     const [dbError, setDbError] = useState(false);
     const [pokedexPreviewData, setPokedexPreviewData] = useState(dexTile);
     
+    // todo: finish gradient on preview; data is here now
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
         getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));

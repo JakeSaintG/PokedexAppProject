@@ -33,6 +33,8 @@ export function PokedexPreview(props: Props) {
         style = {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
     }
 
+    // console.log(props.previewData)
+
     return (
         <section>
             <Link className={`${styles.pokedex_preview} ${styles[`${registered}`]}`} style={style} to={`/pokedex/entry?id=${props.previewData.id}`}>

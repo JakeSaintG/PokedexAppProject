@@ -421,6 +421,7 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
                     ,s.name
                     ,i.default_img_data
                     ,d.type_1
+                    ,d.type_2
                     ,d.male_sprite_url
                     ,d.is_registered
                 FROM pokemon_species_data s
@@ -437,6 +438,7 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
             name: 'MissingNo',
             primary_type: 'none',
             dex_no: 0,
+            secondary_type: undefined,
             id: 0,
             img_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
             is_registered: true,
@@ -471,6 +473,13 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
                         && typeof d['type_1'] === 'string'
                     )
                     && (
+                        'type_2' in d
+                        && (
+                            typeof d['type_2'] === 'string' 
+                            || d['type_2'] === null
+                        )
+                    )
+                    && (
                         'male_sprite_url' in d
                         && typeof d['male_sprite_url'] === 'string'
                     )
@@ -487,6 +496,7 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
                     id: d.id,
                     name: d.name,
                     primary_type: d.type_1,
+                    secondary_type: d.type_2,
                     dex_no: d.dex_no,
                     img_url: d.male_sprite_url,
                     is_registered: d.is_registered,
