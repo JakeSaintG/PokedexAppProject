@@ -25,19 +25,32 @@ export function PokedexPreview(props: Props) {
         setPreviewName(() => props.previewData.is_registered ? props.previewData.name : '???');
     }, [])
 
-    let style: React.CSSProperties = {};
-
-    if (props.previewData.is_registered && props.previewData.primary_type != 'none') {
-        style = {backgroundColor: `var(--${props.previewData.primary_type})`} as React.CSSProperties;
-    } else if (props.previewData.primary_type == 'none') {
-        style = {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
+    const displayPreviewBackground = (previewData: PokedexPreviewData) => {
+        if (previewData.is_registered && previewData.primary_type != 'none') {
+            // I don't love these nested ifs but I think I'd rather not
+            // have the browser draw the gradient if it doesn't have to.
+            if (previewData.secondary_type == undefined) {
+                return {background: `var(--${previewData.primary_type})`} as React.CSSProperties;
+            }
+            
+            return {
+                background: `
+                    linear-gradient(
+                        180deg, 
+                        var(--${previewData.primary_type}) 10%,
+                        var(--${previewData.primary_type}) 45%,
+                        var(--${previewData.secondary_type}) 65%
+                    )
+                `
+            } as React.CSSProperties;
+        } else if (previewData.primary_type == 'none') {
+            return {backgroundColor: `rgba(29, 29, 29, 1)`, color: `white`} as React.CSSProperties;
+        }
     }
-
-    // console.log(props.previewData)
 
     return (
         <section>
-            <Link className={`${styles.pokedex_preview} ${styles[`${registered}`]}`} style={style} to={`/pokedex/entry?id=${props.previewData.id}`}>
+            <Link className={`${styles.pokedex_preview} ${styles[`${registered}`]}`} style={displayPreviewBackground(props.previewData)} to={`/pokedex/entry?id=${props.previewData.id}`}>
                 <img src={imageSrc} alt={`Image of ${props.previewData.name}`}/>
                 <span className={styles.preview_name}>{props.previewData.dex_no}. {displayPkmnName(previewName)}</span>
             </Link>
