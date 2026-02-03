@@ -1,4 +1,4 @@
-export interface TallGrassRegion {
+export interface RegionCountData {
     id: number
     generation: string
     region_name: string

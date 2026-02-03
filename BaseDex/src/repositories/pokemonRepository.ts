@@ -24,7 +24,7 @@ import {
 import { logInfo, logInfoVerbose, logInfoWithAttention } from "./logRepository";
 import type { PokedexPreviewData } from "../types/pokdexPreviewData";
 import type { PokedexEntryData } from "../types/pokedexEntryData";
-import type { Habitat, TallGrassRegion } from "../types/tallGrassRegion";
+import type { Habitat, RegionCountData } from "../types/regionCountData";
 
 export const loadPokemonData = async (
     dbContext: PGliteWithLive,
@@ -162,7 +162,7 @@ const loadPokemonImages = async (dbContext: PGliteWithLive, pkmnImgdata: Pokemon
     upsertPokemonImage(dbContext, pkmnImgdata);
 }
 
-export const getTallGrassPageData = async (dbContext: PGliteWithLive): Promise<TallGrassRegion[]> => {
+export const getPokemonCountData = async (dbContext: PGliteWithLive): Promise<RegionCountData[]> => {
     const results = await getRegionCountData(dbContext);    
 
     if (Array.isArray(results)) {
@@ -193,7 +193,7 @@ export const getTallGrassPageData = async (dbContext: PGliteWithLive): Promise<T
             ) {
                 return r;
             }
-        }) as TallGrassRegion[]
+        }) as RegionCountData[]
     }
 
     throw "Unable to parse data for tall grass region.";

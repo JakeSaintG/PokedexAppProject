@@ -1,14 +1,14 @@
 import styles from "./TallGrassPage.module.css";
 import { DexHeader, NavigationMenu } from "../../PageElements";
 import { useEffect, useState } from "react";
-import { getTallGrassPageData } from "../../../repositories/pokemonRepository";
+import { getPokemonCountData } from "../../../repositories/pokemonRepository";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { connectionCheck } from "../../../repositories/configurationRepository";
-import type { TallGrassRegion } from "../../../types/tallGrassRegion";
+import type { RegionCountData } from "../../../types/regionCountData";
 import { Link } from "react-router-dom";
 
 export function TallGrassPage() {
-    const defaultRegionData: TallGrassRegion[] = [];
+    const defaultRegionData: RegionCountData[] = [];
     let key = 0;
 
     const dbContext = usePGlite();
@@ -17,7 +17,7 @@ export function TallGrassPage() {
     
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
-        getTallGrassPageData(dbContext).then(t => setGenerationData(t));
+        getPokemonCountData(dbContext).then(t => setGenerationData(t));
     }, [])
 
     return (

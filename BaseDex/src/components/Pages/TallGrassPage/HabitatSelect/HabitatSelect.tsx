@@ -5,7 +5,7 @@ import { connectionCheck } from "../../../../repositories/configurationRepositor
 import { useEffect, useState } from "react";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { getHabitatPageData } from "../../../../repositories/pokemonRepository";
-import type { Habitat } from "../../../../types/tallGrassRegion";
+import type { Habitat } from "../../../../types/regionCountData";
 import { useSearchParams } from "react-router-dom";
 
 export function HabitatSelect() {

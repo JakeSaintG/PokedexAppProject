@@ -5,19 +5,37 @@ import { connectionCheck, getSettings, toggleTutorial } from "../../../repositor
 import { usePGlite } from "@electric-sql/pglite-react";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
 import type { Settings } from "../../../types/settings";
+import { getPokemonCountData } from "../../../repositories/pokemonRepository";
+import type { RegionCountData } from "../../../types/regionCountData";
 
 
 export function HomePage() {
     const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
+    const defaultRegionData: RegionCountData = {};
 
     // TODO: I'm going to be getting settings a lot...should probably
     // look into react's ContextApi or Signals
     const [settings, setSettings] = useState({} as Settings);
+    const [generationData, setGenerationData] = useState(defaultRegionData);
     
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
         getSettings(dbContext).then((r: Settings) => setSettings(r));
+
+        getPokemonCountData(dbContext).then((b: RegionCountData[]) => {
+        
+
+            console.log(b)
+            return {
+                generation: "all",
+                id: 1,
+                region_name: "combined",
+                registered: 1,
+                total: 25
+            } as RegionCountData
+        })
+        .then(t => setGenerationData((t)));
     },[]);
 
     const displayTutorial = (dbContext: PGliteWithLive) => {
