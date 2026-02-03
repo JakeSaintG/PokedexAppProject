@@ -40,7 +40,6 @@ export function SettingsPage( ) {
             return <div className={styles.debug_options}>
                 <h3>Debug</h3>
                 <button onClick={() => setDebugCounter(-1)}>Hide Debug Settings(wip)</button>
-                <button onClick={() => navigate('../loading')}>Reload Data</button>
                 <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>load all dex data(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
@@ -62,6 +61,8 @@ export function SettingsPage( ) {
             <div className={styles.settings_menu}>
                 {/* These should be slider/checkboxes... */}
                 <h3>Appearance</h3>
+                {/* The reload data button needs to not be debug in the web based version */}
+                <button onClick={() => navigate('../loading')}>Reload Data</button>
                 <button onClick={() => toggleTutorial(dbContext, settings).then((s: Settings) => setSettings(s))}>
                     {settings.tutorial_active ? 'Hide tutorial' : 'Restore tutorial'}
                 </button>
