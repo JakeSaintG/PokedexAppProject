@@ -12,12 +12,11 @@ import type { RegionCountData } from "../../../types/regionCountData";
 export function HomePage() {
     const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
-    const defaultRegionData: RegionCountData = {};
 
     // TODO: I'm going to be getting settings a lot...should probably
     // look into react's ContextApi or Signals
     const [settings, setSettings] = useState({} as Settings);
-    const [generationData, setGenerationData] = useState(defaultRegionData);
+    const [generationData, setGenerationData] = useState({});
     
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
@@ -25,14 +24,19 @@ export function HomePage() {
 
         getPokemonCountData(dbContext).then((b: RegionCountData[]) => {
         
+            let sumRegistered = 0;
+            let sumTotal = 0;
+            b.forEach(b => {
+                sumRegistered += b.registered
+                sumTotal += b.total
+            })
 
-            console.log(b)
             return {
                 generation: "all",
                 id: 1,
                 region_name: "combined",
-                registered: 1,
-                total: 25
+                registered: sumRegistered,
+                total: sumTotal
             } as RegionCountData
         })
         .then(t => setGenerationData((t)));
@@ -52,6 +56,8 @@ export function HomePage() {
         return <></>
     }
 
+    console.log(generationData)
+
     return (
         <>
             <DexHeader title="Home"/>
@@ -61,7 +67,7 @@ export function HomePage() {
                     {displayTutorial(dbContext)}
                     <div className={styles.total_registered}>
                         <p>Total registered:</p>
-                        <p>0/0</p>
+                        <p>{generationData.registered}/{generationData.total}</p>
                     </div>
                 </div>
             </div>
