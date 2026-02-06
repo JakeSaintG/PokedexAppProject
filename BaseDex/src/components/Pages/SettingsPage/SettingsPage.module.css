@@ -3,7 +3,7 @@
     background-color: var(--pokedex-background);
     display: grid;
     padding: 0 1rem calc(70px + 1rem) 1rem;
-    margin: 0 auto 68px auto;
+    margin: 0 auto 0 auto;
     gap: 1rem;
 }
 

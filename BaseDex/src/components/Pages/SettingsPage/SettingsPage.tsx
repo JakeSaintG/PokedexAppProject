@@ -25,14 +25,14 @@ export function SettingsPage( ) {
     useEffect(() => {
         // Triggers desired effects if, for some reason, the counter is already 0;
         if (debugCounter == -1) setDebugCounter(0); 
+
+        if (debugCounter > 5) setDebugCounter(1);
         
         if (settings.last_updated_dts && (debugCounter == 5 || debugCounter == 0)) {
             console.log(`updating debug settings: debug ${!settings.debug_active}`);
             settings.debug_active = !settings.debug_active;
             updateSettings(dbContext, settings).then((s: Settings) => setSettings(s));
         }
-
-        if (debugCounter > 5) setDebugCounter(5);
     },[debugCounter]);
 
     const displayDebugOptions = () => {
@@ -73,7 +73,7 @@ export function SettingsPage( ) {
 
                 <p 
                     onClick={() => setDebugCounter(debugCounter + 1)} 
-                    className={`debug_${debugCounter}`} 
+                    className={styles[`debug_${debugCounter}`]} 
                 >
                     JakeSaintG
                 </p>

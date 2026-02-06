@@ -16,7 +16,7 @@ export function HomePage() {
     // TODO: I'm going to be getting settings a lot...should probably
     // look into react's ContextApi or Signals
     const [settings, setSettings] = useState({} as Settings);
-    const [generationData, setGenerationData] = useState({});
+    const [generationData, setGenerationData] = useState({} as RegionCountData);
     
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
