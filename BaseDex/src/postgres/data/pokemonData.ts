@@ -104,19 +104,42 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         .then(() => console.log("pokemon_images table created"));
 };
 
+
+const blobToArray = (blob: Blob): Promise<Uint8Array> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            const array = new Uint8Array(reader.result as ArrayBuffer);
+            resolve(array);
+        };
+
+        reader.onerror = (error) => {
+            reject(error);
+        };
+
+        reader.readAsArrayBuffer(blob);
+    });
+}
+
+
 export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData: PokemonImageData) => {
-    let defaultImageBuffer = null;
+    // let defaultImageBuffer = null;
     let femaleImageBuffer = null;
     let defaultImageSize: number;
     let femaleImageSize: number;
-    const defaultImageLastModifiedDate = new Date().toISOString();
     let femaleImageLastModifiedDate = null;
 
+    let test: any;
+
     if (typeof(pkmnImgData.default_sprite) != 'string') {
-        defaultImageBuffer = Buffer.from(
-            await pkmnImgData.default_sprite.arrayBuffer()
-        );
+        test = await blobToArray(pkmnImgData.default_sprite)
+
+        // defaultImageBuffer = Buffer.from(
+        //     await pkmnImgData.default_sprite.arrayBuffer()
+        // );
         defaultImageSize = pkmnImgData.default_sprite.size;
+
     }
     
     if (typeof(pkmnImgData.female_sprite) != 'string' && pkmnImgData.female_sprite != null) {
@@ -124,7 +147,7 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
             await pkmnImgData.female_sprite.arrayBuffer()
         );
         femaleImageSize = pkmnImgData.female_sprite.size;
-        femaleImageLastModifiedDate = defaultImageLastModifiedDate;
+        femaleImageLastModifiedDate = new Date().toISOString();
     }
 
     const stmt = `
@@ -166,9 +189,9 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
             pkmnImgData.name,
             defaultImageSize,
             femaleImageSize,
-            defaultImageLastModifiedDate,
+            new Date().toISOString(),
             femaleImageLastModifiedDate,
-            defaultImageBuffer,
+            test, // test
             femaleImageBuffer,
         ]));
     } catch (error) {

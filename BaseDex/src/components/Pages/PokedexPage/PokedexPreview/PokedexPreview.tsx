@@ -14,15 +14,16 @@ export function PokedexPreview(props: Props) {
     const [registered, setRegistered] = useState('not_registered');
     const [previewName, setPreviewName] = useState('not_registered');
     
-    // TODO: Use the stored blobs instead of the URL....................
+    // TODO: Use the stored blobs instead of the URL..
     useEffect(() => {
-        // const url = URL.createObjectURL(props.previewData.img_data);
-        // setImageSrc(url);
-        // return () => URL.revokeObjectURL(url);
-
-        setImageSrc(props.previewData.img_url);
+        const url = URL.createObjectURL(props.previewData.img_data);
+        setImageSrc(url);
+        
+        // setImageSrc(props.previewData.img_url);
+        
         setRegistered(() => props.previewData.is_registered ? 'registered' : 'not_registered');
         setPreviewName(() => props.previewData.is_registered ? props.previewData.name : '???');
+        return () => URL.revokeObjectURL(url);
     }, [])
 
     const displayPreviewBackground = (previewData: PokedexPreviewData) => {
