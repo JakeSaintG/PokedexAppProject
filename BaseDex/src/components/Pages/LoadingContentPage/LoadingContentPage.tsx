@@ -53,30 +53,32 @@ export function LoadingContentPage() {
                 initPokemonDb(dbContext);
             })
             .then(async () => {
-                await artificalDelay(() => {
-                    setLoadingText(
-                        "Loading PokeDex Data, courtesy of PokeAPI."
-                    );
-                    // TODO: setLoadingText("User is offline, ensuring usable state.")
-                });
+                await artificalDelay(() => setLoadingText( "Loading PokeDex Data, courtesy of PokeAPI."));
             })
             .then(async () => {
                 const pkmnGenLastUpdatedLocally = await getLastLocalGenerationUpdate(dbContext);
                 const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
 
-                if (pokeApiPing()) {
+                if (await pokeApiPing()) {
                     await loadPokemonData(dbContext, pokemonDataToLoad, batchSize, setLoadingText);
+                } else {
+                    throw 'Unable to communicate with PokeApi.';
                 }
             })
             .then(async () => {
-                await artificalDelay(() =>
-                    setLoadingText("Welcome to your PokeDex!")
-            );
-        })
-        .then(async () => {
-                await artificalDelay(() =>
-                    navigate("../home")
-                );
+                await artificalDelay(() => setLoadingText("Welcome to your PokeDex!"));
+            })
+            .then(async () => {
+                await artificalDelay(() => navigate("../home"));
+            })
+            .catch(async (e) => {
+                // TODOs:
+                // show "learn more" button - display that this app uses PokeAPI for its data
+                // If there is already data loaded, proceed to app
+                // If not, ask user to try again later
+                // log error
+                
+                await artificalDelay(() => setLoadingText(e));
             });
     }, []);
 

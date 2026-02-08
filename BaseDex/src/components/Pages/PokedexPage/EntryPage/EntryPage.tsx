@@ -8,8 +8,6 @@ import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../../
 import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
 import { connectionCheck } from "../../../../repositories/configurationRepository";
 
-
-// TODO: next up, need to work though defaults and ensuring ??? when not registered
 export function EntryPage() {
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id")!;
@@ -76,7 +74,6 @@ export function EntryPage() {
 
     const displayRegisterBtn = (context: PGliteWithLive, id: number) => {
         if (pokedexEntryData.is_registered) return <></>;
-
         return <button onClick={() => registerPkmn(context, id)} className={styles.register_button}>Register</button>;
     } 
 
