@@ -56,8 +56,6 @@ export function HomePage() {
         return <></>
     }
 
-    console.log(generationData)
-
     return (
         <>
             <DexHeader title="Home"/>
