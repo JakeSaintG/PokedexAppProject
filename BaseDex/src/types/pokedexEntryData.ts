@@ -12,9 +12,7 @@ export interface PokedexEntryData {
     height: number,
     weight: number,
     has_forms: boolean
-    male_sprite_url: string
-    female_sprite_url: string | null
     is_registered: boolean
-    default_img_data?: Blob 
-    female_img_data?: Blob
+    default_img_data: Blob | MediaSource
+    female_img_data: Blob | MediaSource | null
 }

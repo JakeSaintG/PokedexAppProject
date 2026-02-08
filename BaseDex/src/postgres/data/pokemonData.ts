@@ -533,8 +533,6 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
                     ,d.weight
                     ,d.height
                     ,d.has_forms
-                    ,d.male_sprite_url
-                    ,d.female_sprite_url
                     ,d.is_registered
                     ,i.default_img_data
                     ,i.female_img_data
@@ -563,8 +561,6 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
             height: 0,
             weight: 0,
             has_forms: false,
-            male_sprite_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
-            female_sprite_url: null,
             is_registered: true,
         }
     }
@@ -622,10 +618,6 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
             && typeof data['has_forms'] === 'boolean'
         )
         && (
-            'male_sprite_url' in data
-            && typeof data['male_sprite_url'] === 'string'
-        )
-        && (
             'is_registered' in data
             && typeof data['is_registered'] === 'boolean'
         )
@@ -635,9 +627,18 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
         )
         && (
             'female_img_data' in data
-            && typeof data['female_img_data'] === 'object'
+            && (
+                typeof data['female_img_data'] === 'object'
+                || data['female_img_data'] === null
+            )
         )
     ) {
+        data.default_img_data = new Blob([data.default_img_data] as BlobPart[], {type: 'image/png'});
+
+        if (data.female_img_data !== null) {
+            data.female_img_data = new Blob([data.female_img_data] as BlobPart[], {type: 'image/png'});
+        }
+        
         return data as PokedexEntryData;
     }
 

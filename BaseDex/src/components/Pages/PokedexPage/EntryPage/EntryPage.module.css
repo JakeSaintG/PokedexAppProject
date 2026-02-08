@@ -20,24 +20,11 @@
 .dex_img {
     grid-area: dex_img;
     margin: auto;
+    display: flex;
+}
+
+.dex_img img {
     width: 160px;
-}
-
-.change_form {
-    grid-area: change_form;
-    width: 100%;
-    text-align: right;
-}
-
-.change_form button {
-    border: none;
-    background-color:transparent;
-    cursor: pointer;
-    padding: .5rem;
-}
-
-.change_form img {
-    height: 36px;
 }
 
 .dex_name {
@@ -63,8 +50,8 @@
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas: 
         ". . dex_no"
-        ". dex_img ."
-        ". dex_name change_form"
+        "dex_img dex_img dex_img"
+        ". dex_name ."
         "dex_desc dex_desc dex_desc";
 }
 
