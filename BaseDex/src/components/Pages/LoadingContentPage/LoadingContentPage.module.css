@@ -2,6 +2,7 @@
     background-color: var(--pokedex-red);
     height: 100vh;
     display: flex;
+    flex-direction: column;
 }
 
 /* TODO: Add the extra buttons and speaker */
@@ -12,7 +13,7 @@
     border-bottom-left-radius: 30px;
     display: flex;
     flex-direction: column;
-    margin: auto;
+    margin: 250px auto 1rem auto ;
     
     /* TODO: This needs to be tweaked for multiple display sizes */
     max-width: 375px;
@@ -88,4 +89,12 @@
     font-weight: bold;
     text-align: center;
     margin: auto;
+}
+
+.learn_more {
+    max-width: 375px;
+    min-width: 275px;
+    width: 70%;
+    margin: 0 auto;
+    padding: 1rem;
 }

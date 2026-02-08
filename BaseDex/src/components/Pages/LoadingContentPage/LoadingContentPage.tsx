@@ -23,9 +23,8 @@ export function LoadingContentPage() {
     const navigate = useNavigate();
     const dbContext = usePGlite();
 
-    const [loadingText, setLoadingText] = useState(
-        "Initializing PokeDex data storage..."
-    );
+    const [loadingText, setLoadingText] = useState("Initializing PokeDex data storage...");
+    const [pingSuccess, setPingSuccess] = useState(true);
 
     const artificalDelay = async (f: () => void) => {
         return new Promise((resolve) => {
@@ -73,14 +72,27 @@ export function LoadingContentPage() {
             })
             .catch(async (e) => {
                 // TODOs:
-                // show "learn more" button - display that this app uses PokeAPI for its data
                 // If there is already data loaded, proceed to app
                 // If not, ask user to try again later
-                // log error
-                
-                await artificalDelay(() => setLoadingText(e));
+                console.error(e)
+                await artificalDelay(() => {
+                    setLoadingText(e);
+                    setPingSuccess(false);
+                });
             });
     }, []);
+
+    const displayInfo = () => {
+        // display that this app uses PokeAPI for its data
+    }
+
+    const displayLearnMoreBtn = () => {
+        if (!pingSuccess) {
+            return <button onClick={() => displayInfo()} className={styles.learn_more}>learn more</button>;
+        }
+
+        return <></>;
+    }
 
     return (
         <>
@@ -99,6 +111,8 @@ export function LoadingContentPage() {
                         />
                     </div>
                 </div>
+
+                {displayLearnMoreBtn()}
             </div>
         </>
     );

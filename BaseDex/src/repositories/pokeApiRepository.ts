@@ -7,7 +7,7 @@ import type { Variety } from '../types/varieties';
 export const pokeApiPing = async () => {
     try {
         // TODO: Should get the benefit of retry here
-        await fetchPokeApiData('https://pokeapi.co/api/v2/generation?limit=1'); 
+        await fetchPokeApiData('https://pokeapi.co/api/v2/generatio?limit=1'); 
     } catch {
         return false;
     }
