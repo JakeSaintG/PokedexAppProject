@@ -4,13 +4,10 @@ import { useSearchParams } from "react-router-dom";
 import { usePGlite } from "@electric-sql/pglite-react";
 import type { PGliteWithLive } from "@electric-sql/pglite/live";
 import { DexHeader, NavigationMenu } from "../../../PageElements";
-import swapArrow from "../../../../assets/icons/arrows-rotate-solid-full.svg";
 import { displayPkmnName, getEntryPageData, registerPokemon } from "../../../../repositories/pokemonRepository";
 import type { PokedexEntryData } from "../../../../types/pokedexEntryData";
 import { connectionCheck } from "../../../../repositories/configurationRepository";
 
-
-// TODO: next up, need to work though defaults and ensuring ??? when not registered
 export function EntryPage() {
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id")!;
@@ -29,15 +26,18 @@ export function EntryPage() {
         height: -1,
         weight: -1,
         has_forms: false,
-        male_sprite_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
-        female_sprite_url: null,
+        default_img_data: new Blob(['']), // TODO: no...not this way
+        female_img_data: null,
         is_registered: true,
     }
 
     const [pokedexEntryData, setPokedexEntryData] = useState(placeholderEntry);
-    const [dexImg, setDexImg] = useState(placeholderEntry.male_sprite_url);
+    const [dexDefaultImg, setDexDefaultImg] = useState('https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png');
+    const [dexFemaleImg, setDexFemaleImg] = useState<string | null>(null);
+
     const [registered, setRegistered] = useState('not_registered');
     const [previewName, setPreviewName] = useState('not_registered');
+
     const [reloadEntry, setReloadEntry] = useState(0);
     const [dbError, setDbError] = useState(false);
     
@@ -45,16 +45,35 @@ export function EntryPage() {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
         getEntryPageData(dbContext, id).then((d: PokedexEntryData) => setPokedexEntryData(d))
     }, [reloadEntry]);
-
+    
     useEffect(() => {
         setRegistered(() => pokedexEntryData.is_registered ? 'registered' : 'not_registered');
         setPreviewName(() => pokedexEntryData.is_registered ? displayPkmnName(pokedexEntryData.name) : '???');
-        setDexImg(pokedexEntryData.male_sprite_url);
+
+        const defaultImgUrl = URL.createObjectURL(pokedexEntryData.default_img_data);
+        setDexDefaultImg(defaultImgUrl);
+
+        let femaleImgUrl: string;
+        if (pokedexEntryData.has_gender_differences && pokedexEntryData.female_img_data !== null) {
+            femaleImgUrl = URL.createObjectURL(pokedexEntryData.female_img_data);
+            setDexFemaleImg(femaleImgUrl);
+        }
+
+        return () => { 
+            URL.revokeObjectURL(defaultImgUrl);
+            if (femaleImgUrl) URL.revokeObjectURL(femaleImgUrl);
+        };
     }, [pokedexEntryData])
+
+    const displayFemaleImg = () => {
+        if (dexFemaleImg) {
+            return <img src={dexFemaleImg} alt={`Image of female varient for ${pokedexEntryData.name}`} />
+        }
+        return <></>
+    }
 
     const displayRegisterBtn = (context: PGliteWithLive, id: number) => {
         if (pokedexEntryData.is_registered) return <></>;
-
         return <button onClick={() => registerPkmn(context, id)} className={styles.register_button}>Register</button>;
     } 
 
@@ -62,24 +81,6 @@ export function EntryPage() {
         await registerPokemon(dbContext, id);
         setReloadEntry(1); 
     }   
-
-    const displayFormChangeButton = (pokedexEntryData: PokedexEntryData) => {
-        if (pokedexEntryData.has_gender_differences && pokedexEntryData.female_sprite_url && pokedexEntryData.is_registered) {
-            let url: string;
-
-            if (dexImg == pokedexEntryData.male_sprite_url) {
-                url = pokedexEntryData.female_sprite_url
-            } else {
-                url = pokedexEntryData.male_sprite_url
-            }
-
-            return <button onClick={() => setDexImg(url)}>
-                <img src={swapArrow} alt="circular arrow icon for swapping between gendered images" className={styles.back_img}/>
-            </button>
-        }
-
-        return <></>
-    }
 
     const displayTypeColor = (type_1: string, type_2?: string): React.CSSProperties => {
         if (type_1 != 'Ň̷̨ȕ̷͕l̷͇̑l̸̠̏' && type_1 != '???') {
@@ -112,12 +113,12 @@ export function EntryPage() {
             <div className={styles.entry_display}>
                 <div className={`${styles.banner}`} style={displayTypeColor(pokedexEntryData.type_1, pokedexEntryData.type_2)}>
                     <p className={styles.dex_no}>No. {id}</p>
-                    <img src={dexImg} alt={`Default Image of ${pokedexEntryData.name}`} className={`${styles[`${registered}`]} ${styles.dex_img}`}/>
+                    <div className={`${styles[`${registered}`]} ${styles.dex_img}`}>
+                        <img src={dexDefaultImg} alt={`Default Image of ${pokedexEntryData.name}`} />
+                        {displayFemaleImg()}
+                    </div>
                     <p className={styles.dex_name}>{previewName}</p>
                     <p className={styles.dex_description}>The {pokedexEntryData.genera}</p>
-                    <div className={styles.change_form}>
-                        {displayFormChangeButton(pokedexEntryData)}
-                    </div>
                 </div>
                 <div className={styles.types}>
                     <p style={displayTypeColor(pokedexEntryData.type_1)}>{pokedexEntryData.type_1}</p>

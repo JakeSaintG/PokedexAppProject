@@ -19,8 +19,6 @@ export function PokedexPreview(props: Props) {
         const url = URL.createObjectURL(props.previewData.img_data);
         setImageSrc(url);
         
-        // setImageSrc(props.previewData.img_url);
-        
         setRegistered(() => props.previewData.is_registered ? 'registered' : 'not_registered');
         setPreviewName(() => props.previewData.is_registered ? props.previewData.name : '???');
         return () => URL.revokeObjectURL(url);

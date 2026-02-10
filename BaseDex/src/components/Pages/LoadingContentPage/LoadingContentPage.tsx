@@ -23,9 +23,8 @@ export function LoadingContentPage() {
     const navigate = useNavigate();
     const dbContext = usePGlite();
 
-    const [loadingText, setLoadingText] = useState(
-        "Initializing PokeDex data storage..."
-    );
+    const [loadingText, setLoadingText] = useState("Initializing PokeDex data storage...");
+    const [pingSuccess, setPingSuccess] = useState(true);
 
     const artificalDelay = async (f: () => void) => {
         return new Promise((resolve) => {
@@ -53,32 +52,47 @@ export function LoadingContentPage() {
                 initPokemonDb(dbContext);
             })
             .then(async () => {
-                await artificalDelay(() => {
-                    setLoadingText(
-                        "Loading PokeDex Data, courtesy of PokeAPI."
-                    );
-                    // TODO: setLoadingText("User is offline, ensuring usable state.")
-                });
+                await artificalDelay(() => setLoadingText( "Loading PokeDex Data, courtesy of PokeAPI."));
             })
             .then(async () => {
                 const pkmnGenLastUpdatedLocally = await getLastLocalGenerationUpdate(dbContext);
                 const pokemonDataToLoad = checkIfUpdatesNeeded(pkmnGenLastUpdatedLocally, forceUpdate);
 
-                if (pokeApiPing()) {
+                if (await pokeApiPing()) {
                     await loadPokemonData(dbContext, pokemonDataToLoad, batchSize, setLoadingText);
+                } else {
+                    throw 'Unable to communicate with PokeApi.';
                 }
             })
             .then(async () => {
-                await artificalDelay(() =>
-                    setLoadingText("Welcome to your PokeDex!")
-            );
-        })
-        .then(async () => {
-                await artificalDelay(() =>
-                    navigate("../home")
-                );
+                await artificalDelay(() => setLoadingText("Welcome to your PokeDex!"));
+            })
+            .then(async () => {
+                await artificalDelay(() => navigate("../home"));
+            })
+            .catch(async (e) => {
+                // TODOs:
+                // If there is already data loaded, proceed to app
+                // If not, ask user to try again later
+                console.error(e)
+                await artificalDelay(() => {
+                    setLoadingText(e);
+                    setPingSuccess(false);
+                });
             });
     }, []);
+
+    const displayInfo = () => {
+        // display that this app uses PokeAPI for its data
+    }
+
+    const displayLearnMoreBtn = () => {
+        if (!pingSuccess) {
+            return <button onClick={() => displayInfo()} className={styles.learn_more}>learn more</button>;
+        }
+
+        return <></>;
+    }
 
     return (
         <>
@@ -97,6 +111,8 @@ export function LoadingContentPage() {
                         />
                     </div>
                 </div>
+
+                {displayLearnMoreBtn()}
             </div>
         </>
     );

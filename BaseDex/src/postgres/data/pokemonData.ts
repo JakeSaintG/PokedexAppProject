@@ -95,7 +95,7 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
                     ,default_img_size INT NOT NULL
                     ,female_img_size INT NULL
                     ,default_img_last_modified TEXT NOT NULL
-                    ,female_img_last_modified TEXT NULL
+                    ,female_img_last_modified TEXT NOT NULL
                     ,default_img_data BYTEA NOT NULL
                     ,female_img_data BYTEA NULL
                 )
@@ -104,50 +104,30 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         .then(() => console.log("pokemon_images table created"));
 };
 
-
-const blobToArray = (blob: Blob): Promise<Uint8Array> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-            const array = new Uint8Array(reader.result as ArrayBuffer);
-            resolve(array);
-        };
-
-        reader.onerror = (error) => {
-            reject(error);
-        };
-
-        reader.readAsArrayBuffer(blob);
-    });
+const blobToByteArray = async (blob: Blob): Promise<Uint8Array> => {
+    try {
+        return new Uint8Array(await blob.arrayBuffer()); 
+    } catch (error) {
+        console.error("Error converting blob to byte array:", error);
+        throw error;
+    }
 }
 
-
 export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData: PokemonImageData) => {
-    // let defaultImageBuffer = null;
-    let femaleImageBuffer = null;
+    let defaultImageBytes = null;
     let defaultImageSize: number;
-    let femaleImageSize: number;
-    let femaleImageLastModifiedDate = null;
-
-    let test: any;
 
     if (typeof(pkmnImgData.default_sprite) != 'string') {
-        test = await blobToArray(pkmnImgData.default_sprite)
-
-        // defaultImageBuffer = Buffer.from(
-        //     await pkmnImgData.default_sprite.arrayBuffer()
-        // );
         defaultImageSize = pkmnImgData.default_sprite.size;
-
+        defaultImageBytes = await blobToByteArray(pkmnImgData.default_sprite);
     }
+
+    let femaleImageBytes = null;
+    let femaleImageSize: number;
     
     if (typeof(pkmnImgData.female_sprite) != 'string' && pkmnImgData.female_sprite != null) {
-        femaleImageBuffer = Buffer.from(
-            await pkmnImgData.female_sprite.arrayBuffer()
-        );
         femaleImageSize = pkmnImgData.female_sprite.size;
-        femaleImageLastModifiedDate = new Date().toISOString();
+        femaleImageBytes = await blobToByteArray(pkmnImgData.female_sprite);
     }
 
     const stmt = `
@@ -190,9 +170,9 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
             defaultImageSize,
             femaleImageSize,
             new Date().toISOString(),
-            femaleImageLastModifiedDate,
-            test, // test
-            femaleImageBuffer,
+            new Date().toISOString(), // Even if it's null, it was still modified
+            defaultImageBytes,
+            femaleImageBytes,
         ]));
     } catch (error) {
         // TODO: better error handling
@@ -395,7 +375,7 @@ export const upsertPokemonSpeciesData = async (dbContext: PGliteWithLive, pkmnSp
 
 // TODO: need to refactor most data<=>repository functions to be more like this in structure
 export const getRegionCountData = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
-    // I don't want to return megas...or gmaxes...but I do want regional variations. I may need go back to the drawing board with my data
+    // TODO: I don't want to return megas...or gmaxes...but I do want regional variations. I may need go back to the drawing board with my data
 
     return await dbContext.query(
         `
@@ -523,7 +503,7 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
                     dex_no: d.dex_no,
                     img_url: d.male_sprite_url,
                     is_registered: d.is_registered,
-                    img_data: new Blob(d.default_img_data as BlobPart[], {type: 'image/png'})
+                    img_data: new Blob([d.default_img_data] as BlobPart[], {type: 'image/png'})
                 }
             }
         })
@@ -553,8 +533,6 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
                     ,d.weight
                     ,d.height
                     ,d.has_forms
-                    ,d.male_sprite_url
-                    ,d.female_sprite_url
                     ,d.is_registered
                     ,i.default_img_data
                     ,i.female_img_data
@@ -583,8 +561,6 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
             height: 0,
             weight: 0,
             has_forms: false,
-            male_sprite_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
-            female_sprite_url: null,
             is_registered: true,
         }
     }
@@ -642,10 +618,6 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
             && typeof data['has_forms'] === 'boolean'
         )
         && (
-            'male_sprite_url' in data
-            && typeof data['male_sprite_url'] === 'string'
-        )
-        && (
             'is_registered' in data
             && typeof data['is_registered'] === 'boolean'
         )
@@ -655,9 +627,18 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
         )
         && (
             'female_img_data' in data
-            && typeof data['female_img_data'] === 'object'
+            && (
+                typeof data['female_img_data'] === 'object'
+                || data['female_img_data'] === null
+            )
         )
     ) {
+        data.default_img_data = new Blob([data.default_img_data] as BlobPart[], {type: 'image/png'});
+
+        if (data.female_img_data !== null) {
+            data.female_img_data = new Blob([data.female_img_data] as BlobPart[], {type: 'image/png'});
+        }
+        
         return data as PokedexEntryData;
     }
 
@@ -665,9 +646,7 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
 }
 
 export const setPokedexRegistered = async (dbContext: PGliteWithLive, id: number) => {
-    /*
-        Set the boolean is_registered for a specified row given a unique id.
-    */ 
+    /*Set the boolean is_registered for a specified row given a unique id.*/ 
 
     try {
         await dbContext.transaction(async (transaction) => transaction.query(

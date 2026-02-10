@@ -1,22 +1,32 @@
-import type { FlavorTextEntry } from "../types/flavorText";
-import type { Pokemon } from "../types/pokemon";
-import type { PokemonBaseData, PokemonSpeciesData } from "../types/pokemonData";
-// import type { pokemonType } from "../types/pokemonType";
-import type { Variety } from "../types/varieties";
+import type { FlavorTextEntry } from '../types/flavorText';
+import type { Pokemon } from '../types/pokemon';
+import type { PokemonBaseData, PokemonSpeciesData } from '../types/pokemonData';
+
+import type { Variety } from '../types/varieties';
+
+export const pokeApiPing = async () => {
+    try {
+        // TODO: Should get the benefit of retry here
+        await fetchPokeApiData('https://pokeapi.co/api/v2/generation?limit=1'); 
+    } catch {
+        return false;
+    }
+    return true;
+};
 
 export const fetchPkmnToLoad = async (limit: number, offset: number) => {
-    // TODO: better error handling
+    // TODO: better error handling and retry
     let pkmn: Pokemon[] = [];
 
     await fetch(
         `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`,
-        { method: "GET" }
+        { method: 'GET' }
     )
     .then((res) => res.json())
     .then((data) => (pkmn = data.results))
     .catch(() =>
         console.log(
-            "Unable to contact PokeAPI. Continuing in offline mode.\r\nIf connectivity resumes, and you wish to sync data, please do so in the settings."
+            'Unable to contact PokeAPI. Continuing in offline mode.\r\nIf connectivity resumes, and you wish to sync data, please do so in the settings.'
         )
     );
 
@@ -24,14 +34,14 @@ export const fetchPkmnToLoad = async (limit: number, offset: number) => {
 };
 
 export const fetchPokeApiImage = async (url: string) => {
-    // TODO: better error handling
-    return await fetch(url, { method: "GET" })
+    // TODO: better error handling and retry
+    return await fetch(url, { method: 'GET' })
         .then((res) => res.blob())
 }
 
 export const fetchPokeApiData = async (url: string) => {
-    // TODO: better error handling
-    return await fetch(url, { method: "GET" })
+    // TODO: better error handling and retry
+    return await fetch(url, { method: 'GET' })
         .then((res) => res.json())
         .then((json) => {
             json.url = url
@@ -217,13 +227,13 @@ export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]
             return {
                 language: flavorTxt.language,
                 version: flavorTxt.version,
-                flavor_text: flavorTxt.flavor_text.replace(/\n|\f/g, " ")
+                flavor_text: flavorTxt.flavor_text.replace(/\n|\f/g, ' ')
             }
         })
 
         // Build regex string to test use in filtering out unneeded varieties.
         // Doing this process with regex was the least time-complex option I could think of for now.
-        const blackListRegex = new RegExp(blackList.join("|"), "i");
+        const blackListRegex = new RegExp(blackList.join('|'), 'i');
         const varietiesToGet: Variety[] = data.varieties.filter((variety: Variety) => 
             // It's a special form that needs more data if it's not default or blacklisted
             variety.is_default == false && !blackListRegex.test(variety.pokemon.name)
@@ -235,8 +245,3 @@ export const parsePokemonSpeciesData = async (data: unknown, blackList: string[]
         throw 'Unable to parse Pokemon species data.';
     }
 }
-
-// TODO: Implement
-export const pokeApiPing = () => {
-    return true;
-};
