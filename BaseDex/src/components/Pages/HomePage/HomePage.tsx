@@ -56,7 +56,12 @@ export function HomePage() {
         return <></>
     }
 
-    console.log(generationData)
+    const displayRegisterData = (generationData: RegionCountData) => {
+        const reg = generationData.registered ? generationData.registered : 'XXX';
+        const tot = generationData.total ? generationData.total : 'XXX';
+
+        return <p>{reg}/{tot}</p>;
+    }
 
     return (
         <>
@@ -67,7 +72,7 @@ export function HomePage() {
                     {displayTutorial(dbContext)}
                     <div className={styles.total_registered}>
                         <p>Total registered:</p>
-                        <p>{generationData.registered}/{generationData.total}</p>
+                        {displayRegisterData(generationData)}
                     </div>
                 </div>
             </div>
