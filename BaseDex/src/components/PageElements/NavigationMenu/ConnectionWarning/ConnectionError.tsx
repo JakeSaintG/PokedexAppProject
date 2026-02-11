@@ -10,7 +10,7 @@ export function ConnectionError(props: Props) {
         return (
             <div className={styles.con_warn}>
                 <p>Warning!</p>
-                <p>This POC app seems to have lost stored data. Please return to<Link to='../'>start</Link>or reload data in settings.</p>
+                <p>This POC app seems to have its lost stored data. Please return to<Link to='../'>start</Link>or reload data in settings.</p>
             </div>
         )
     }

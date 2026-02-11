@@ -57,8 +57,11 @@ export function HomePage() {
     }
 
     const displayRegisterData = (generationData: RegionCountData) => {
-        const reg = generationData.registered ? generationData.registered : 'XXX';
-        const tot = generationData.total ? generationData.total : 'XXX';
+        
+        console.log(generationData.registered)
+        console.log(generationData.total)
+        const reg = generationData.registered !== undefined ? generationData.registered : 'XXX';
+        const tot = generationData.total !== undefined ? generationData.total : 'XXX';
 
         return <p>{reg}/{tot}</p>;
     }
