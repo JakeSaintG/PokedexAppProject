@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { getHabitatPageData } from "../../../../repositories/pokemonRepository";
 import type { Habitat } from "../../../../types/regionCountData";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 export function HabitatSelect() {
     let key = 0;
@@ -35,12 +35,16 @@ export function HabitatSelect() {
                 */}
                 {habitatData.map((r) => (
                     // TODO: link - user will then be greeted with a grassy grid that they can click on until a pkmn appears.
-                    <div className={TallGrassStyles.tile} key={key++}>
+                                        
+                    <Link className={TallGrassStyles.tile} key={key++} to={`/habitat_select`}>
                         <p>img</p>
                         <p>
                             {r.habitat.replace('-', ' ')}
                         </p>
-                    </div>
+                    </Link>
+                    
+
+
                 ))}
             </div>
             <NavigationMenu backButtonOverride="tall_grass" backButtonLink={-1} activePage="tall_grass" connectionError={dbError}></NavigationMenu>
