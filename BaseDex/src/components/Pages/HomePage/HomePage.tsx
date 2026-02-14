@@ -3,9 +3,9 @@ import { DexHeader, NavigationMenu } from "../../PageElements";
 import { useEffect, useState } from "react";
 import { connectionCheck, getSettings, toggleTutorial } from "../../../repositories/configurationRepository";
 import { usePGlite } from "@electric-sql/pglite-react";
+import { getPokemonCountData } from "../../../repositories/pokemonRepository";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
 import type { Settings } from "../../../types/settings";
-import { getPokemonCountData } from "../../../repositories/pokemonRepository";
 import type { RegionCountData } from "../../../types/regionCountData";
 
 
@@ -14,7 +14,7 @@ export function HomePage() {
     const [dbError, setDbError] = useState(false);
 
     // TODO: I'm going to be getting settings a lot...should probably
-    // look into react's ContextApi or Signals
+    // look into react's ContextApi or Signals: https://react.dev/reference/react/useContext
     const [settings, setSettings] = useState({} as Settings);
     const [generationData, setGenerationData] = useState({} as RegionCountData);
     
@@ -57,9 +57,6 @@ export function HomePage() {
     }
 
     const displayRegisterData = (generationData: RegionCountData) => {
-        
-        console.log(generationData.registered)
-        console.log(generationData.total)
         const reg = generationData.registered !== undefined ? generationData.registered : 'XXX';
         const tot = generationData.total !== undefined ? generationData.total : 'XXX';
 
