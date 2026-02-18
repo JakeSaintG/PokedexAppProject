@@ -7,5 +7,5 @@ export default defineConfig({
     optimizeDeps: {
         exclude: ["@electric-sql/pglite"],
     },
-    base:"https://jakesaintg.github.io/PokedexAppProject/"
+    // base:"https://jakesaintg.github.io/PokedexAppProject/"
 });
