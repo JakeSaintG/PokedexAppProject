@@ -33,7 +33,7 @@ export function LoadingContentPage() {
         });
     };
 
-    // Start up
+    // TODO: this whole mess will happily route to HOME if there's an error...fix that
     useEffect(() => {
         // Might want to handle offline mode here too but, since everything will be
         // hard coded for now, it may not be super worth it.
@@ -68,7 +68,7 @@ export function LoadingContentPage() {
                 await artificalDelay(() => setLoadingText("Welcome to your PokeDex!"));
             })
             .then(async () => {
-                await artificalDelay(() => navigate("../home"));
+                // await artificalDelay(() => navigate("../home"));
             })
             .catch(async (e) => {
                 // TODOs:

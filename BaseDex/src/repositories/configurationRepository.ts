@@ -155,6 +155,41 @@ const updateObtainablity = (dbContext: PGliteWithLive, obtainableList: Obtainabl
     obtainableList.forEach((obtainable) => upsertObtainableData(dbContext, obtainable))
 }
 
+// const parseDateData = async (dbContext: PGliteWithLive, id: number) => {
+//     const genDateData: unknown = await getGenerationUpdateData(dbContext, id);
+
+//     if (
+//         typeof genDateData === 'object' 
+//         && genDateData !== null 
+//         && (
+//             'last_modified_dts' in genDateData
+//             && typeof genDateData['last_modified_dts'] === 'string'
+//         )
+//         && (
+//             'source_last_modified_dts' in genDateData
+//             && typeof genDateData['source_last_modified_dts'] === 'string'
+//         )
+//         && (
+//             'stale_by_dts' in genDateData
+//             && typeof genDateData['stale_by_dts'] === 'string'
+//         )
+//         && (
+//             'active' in genDateData
+//             && typeof genDateData['active'] === 'boolean'
+//         )
+//     ) {
+//         return {
+//             last_modified_dts: genDateData.last_modified_dts,
+//             source_last_modified_dts: genDateData.source_last_modified_dts,
+//             stale_by_dts: genDateData.stale_by_dts,
+//             active: genDateData.active
+//         }
+//     } else {
+//         throw `Unable to parse date data for gen ${id}`;
+//     }
+// }
+
+
 export const updateSupportedGenerations = async (dbContext: PGliteWithLive, supported_generations: SupportedGeneration[]) => {
     supported_generations.forEach(async (generation: SupportedGeneration) => {
         const generationDateData: DateData | undefined = await getGenerationUpdateData(dbContext, generation.id);

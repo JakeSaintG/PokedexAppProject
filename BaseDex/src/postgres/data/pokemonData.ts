@@ -1,5 +1,4 @@
 import type { PGliteWithLive } from "@electric-sql/pglite/live";
-import { Buffer } from 'buffer';
 import type {
     PokemonBaseData,
     PokemonSpeciesData,
@@ -84,8 +83,6 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         .then(() => console.log("pokedex_entries table created"));
 
     // pokemon_images
-    //TODO: I used a BLOB in sqlite and a BYTEA here (byte array)
-    // Make sure this still works on read/write
     await dbContext
         .exec(
             `
@@ -394,7 +391,7 @@ export const getRegionCountData = async (dbContext: PGliteWithLive): Promise<unk
     )
     .then(r =>  r.rows)
     .catch(c => { 
-        throw `Unable to retrieve data from supported_generations table: ${c}`;
+        throw `Unable to retrieve regional count data: ${c}`;
     });
 }
 
@@ -444,6 +441,7 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<Pokedex
             secondary_type: undefined,
             id: 0,
             img_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
+            img_data: new Blob(), //TODO: actually init something here
             is_registered: true,
         }]
     }
@@ -560,6 +558,8 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
             type_1: "Ň̷̨ȕ̷͕l̷͇̑l̸̠̏",
             height: 0,
             weight: 0,
+            default_img_data: new Blob(), //TODO: actually init something here
+            female_img_data: new Blob(), //TODO: actually init something here
             has_forms: false,
             is_registered: true,
         }
