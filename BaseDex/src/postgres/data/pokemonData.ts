@@ -410,106 +410,28 @@ export const getHabitatData = async (dbContext: PGliteWithLive, regionId: string
     });
 }
 
-export const getPokedexList = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {
-    let results;
-
-    try {        
-        results = await dbContext.query(`
-                SELECT 
-                    d.id
-                    ,s.dex_no
-                    ,s.name
-                    ,i.default_img_data
-                    ,d.type_1
-                    ,d.type_2
-                    ,d.male_sprite_url
-                    ,d.is_registered
-                FROM pokemon_species_data s
-                JOIN pokemon_base_data d
-                    ON d.id = s.dex_no
-                JOIN pokemon_images i
-                    on d.id = i.id;
-            `
-        )
-    } catch {
-        console.log('Error reading from database');
-
-        return [{
-            name: 'MissingNo',
-            primary_type: 'none',
-            dex_no: 0,
-            secondary_type: undefined,
-            id: 0,
-            img_url: 'https://1.bp.blogspot.com/-d9W8PmlYaFQ/UiIiGoN043I/AAAAAAAAAK0/WFFm5tDQFjo/s1600/missingno.png',
-            img_data: new Blob(), //TODO: actually init something here
-            is_registered: true,
-        }]
-    }
-    
-
-    const data = results.rows;
-
-    if (
-        Array.isArray(data)
-        && data !== null
-    ) {
-        const previewData = data.map(d => {
-            if (
-                    typeof d === 'object' 
-                    && d !== null
-                    && (
-                        'id' in d
-                        && typeof d['id'] === 'number'
-                    )
-                    && (
-                        'dex_no' in d
-                        && typeof d['dex_no'] === 'number'
-                    )
-                    && (
-                        'name' in d
-                        && typeof d['name'] === 'string'
-                    )
-                    && (
-                        'type_1' in d
-                        && typeof d['type_1'] === 'string'
-                    )
-                    && (
-                        'type_2' in d
-                        && (
-                            typeof d['type_2'] === 'string' 
-                            || d['type_2'] === null
-                        )
-                    )
-                    && (
-                        'male_sprite_url' in d
-                        && typeof d['male_sprite_url'] === 'string'
-                    )
-                    && (
-                        'is_registered' in d
-                        && typeof d['is_registered'] === 'boolean'
-                    )
-                    && (
-                        'default_img_data' in d
-                        && typeof d['default_img_data'] === 'object'
-                    )
-            ) {
-                return {
-                    id: d.id,
-                    name: d.name,
-                    primary_type: d.type_1,
-                    secondary_type: d.type_2,
-                    dex_no: d.dex_no,
-                    img_url: d.male_sprite_url,
-                    is_registered: d.is_registered,
-                    img_data: new Blob([d.default_img_data] as BlobPart[], {type: 'image/png'})
-                }
-            }
-        })
-
-        return previewData as PokedexPreviewData[];
-    }
-
-    throw "Error reading pokedex list";
+export const getPokedexList = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
+    return await dbContext.query(`
+            SELECT 
+                d.id
+                ,s.dex_no
+                ,s.name
+                ,i.default_img_data
+                ,d.type_1
+                ,d.type_2
+                ,d.male_sprite_url
+                ,d.is_registered
+            FROM pokemon_species_data s
+            JOIN pokemon_base_data d
+                ON d.id = s.dex_no
+            JOIN pokemon_images i
+                on d.id = i.id;
+        `
+    )
+    .then (r => r.rows)
+    .catch(r => {
+        throw `Error reading pokedex list ${r}`;
+    })
 }
 
 export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Promise<PokedexEntryData> => {
