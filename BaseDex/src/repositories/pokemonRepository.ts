@@ -279,6 +279,8 @@ export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<Pok
                 }
             }
             else {
+                console.log('Error parsing dex entry...returning missingno');
+                
                 return [{
                     name: 'MissingNo',
                     primary_type: 'none',
@@ -299,18 +301,100 @@ export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<Pok
 }
 
 export const getEntryPageData = async (dbContext: PGliteWithLive, id: string): Promise<PokedexEntryData>  => {
-    const data = await getPokedexEntry(dbContext, id);
-    
-    // Strip away some details in this "API Layer"
-    if (!data.is_registered){
-        data.height = -1;
-        data.weight = -1;
-        data.type_1 = "???";
-        data.type_2 = undefined;
-        data.genera = "??? Pokémon"
+    const results: unknown = await getPokedexEntry(dbContext, id);
+
+    if (
+        typeof results === 'object' 
+        && results !== null
+        && (
+            'id' in results
+            && typeof results['id'] === 'number'
+        )
+        && (
+            'name' in results
+            && typeof results['name'] === 'string'
+        )
+        && (
+            'dex_no' in results
+            && typeof results['dex_no'] === 'number'
+        )
+        && (
+            'weight' in results
+            && typeof results['weight'] === 'number'
+        )
+        && (
+            'height' in results
+            && typeof results['height'] === 'number'
+        )
+        && (
+            'habitat' in results
+            && typeof results['habitat'] === 'string'
+        )
+        && (
+            'has_gender_differences' in results
+            && typeof results['has_gender_differences'] === 'boolean'
+        )
+        && (
+            'generation' in results
+            && typeof results['generation'] === 'string'
+        )
+        && (
+            'genera' in results
+            && typeof results['genera'] === 'string'
+        )
+        && (
+            'is_default' in results
+            && typeof results['is_default'] === 'boolean'
+        )
+        && (
+            'type_1' in results
+            && typeof results['type_1'] === 'string'
+        )
+        && (
+            'type_2' in results
+            && (
+                typeof results['type_2'] === 'string'
+                || results['type_2'] === null
+            )
+        )
+        && (
+            'has_forms' in results
+            && typeof results['has_forms'] === 'boolean'
+        )
+        && (
+            'is_registered' in results
+            && typeof results['is_registered'] === 'boolean'
+        )
+        && (
+            'default_img_data' in results
+            && typeof results['default_img_data'] === 'object'
+        )
+        && (
+            'female_img_data' in results
+            && (
+                typeof results['female_img_data'] === 'object'
+                || results['female_img_data'] === null
+            )
+        )
+    ) {
+        results.default_img_data = new Blob([results.default_img_data] as BlobPart[], {type: 'image/png'});
+
+        if (results.female_img_data !== null) {
+            results.female_img_data = new Blob([results.female_img_data] as BlobPart[], {type: 'image/png'});
+        }
+
+        // Strip away some details in this "API Layer"
+        if (!results.is_registered){
+            console.log('meep')
+            results.height = -1;
+            results.weight = -1;
+            results.type_1 = "???";
+            results.type_2 = undefined;
+            results.genera = "??? Pokémon"
+        }
     }
 
-    return data;
+    return results as PokedexEntryData;
 }
 
 export const registerPokemon = async (dbContext: PGliteWithLive, id: number) => {

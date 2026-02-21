@@ -434,137 +434,38 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<unknown
     })
 }
 
-export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Promise<PokedexEntryData> => {
-    let results;
-    
-    try {
-        results = await dbContext.query(`
-                SELECT 
-                    d.id
-                    ,s.name
-                    ,s.dex_no
-                    ,s.habitat
-                    ,s.has_gender_differences
-                    ,s.generation
-                    ,s.genera
-                    ,d.is_default
-                    ,d.type_1
-                    ,d.type_2
-                    ,d.weight
-                    ,d.height
-                    ,d.has_forms
-                    ,d.is_registered
-                    ,i.default_img_data
-                    ,i.female_img_data
-                FROM pokemon_species_data s
-                JOIN pokemon_base_data d
-                    ON d.id = s.dex_no
-                JOIN pokemon_images i
-                    on d.id = i.id
-                WHERE d.id = $1
-                LIMIT 1;
-            `, [id]
-        )
-    } catch {
-        console.log('Error reading from database.');
-        
-        return {
-            id: 0,
-            name: "MissingNo",
-            dex_no: 0,
-            habitat: "Shoreline",
-            has_gender_differences: false,
-            generation: "i",
-            genera: "UNIDENTIFIABLE",
-            is_default: false,
-            type_1: "Ň̷̨ȕ̷͕l̷͇̑l̸̠̏",
-            height: 0,
-            weight: 0,
-            default_img_data: new Blob(), //TODO: actually init something here
-            female_img_data: new Blob(), //TODO: actually init something here
-            has_forms: false,
-            is_registered: true,
-        }
-    }
-
-    const data = results.rows[0];
-
-    if (
-        typeof data === 'object' 
-        && data !== null
-        && (
-            'id' in data
-            && typeof data['id'] === 'number'
-        )
-        && (
-            'name' in data
-            && typeof data['name'] === 'string'
-        )
-        && (
-            'dex_no' in data
-            && typeof data['dex_no'] === 'number'
-        )
-        && (
-            'habitat' in data
-            && typeof data['habitat'] === 'string'
-        )
-        && (
-            'has_gender_differences' in data
-            && typeof data['has_gender_differences'] === 'boolean'
-        )
-        && (
-            'generation' in data
-            && typeof data['generation'] === 'string'
-        )
-        && (
-            'genera' in data
-            && typeof data['genera'] === 'string'
-        )
-        && (
-            'is_default' in data
-            && typeof data['is_default'] === 'boolean'
-        )
-        && (
-            'type_1' in data
-            && typeof data['type_1'] === 'string'
-        )
-        && (
-            'type_2' in data
-            && (
-                typeof data['type_2'] === 'string'
-                || data['type_2'] === null
-            )
-        )
-        && (
-            'has_forms' in data
-            && typeof data['has_forms'] === 'boolean'
-        )
-        && (
-            'is_registered' in data
-            && typeof data['is_registered'] === 'boolean'
-        )
-        && (
-            'default_img_data' in data
-            && typeof data['default_img_data'] === 'object'
-        )
-        && (
-            'female_img_data' in data
-            && (
-                typeof data['female_img_data'] === 'object'
-                || data['female_img_data'] === null
-            )
-        )
-    ) {
-        data.default_img_data = new Blob([data.default_img_data] as BlobPart[], {type: 'image/png'});
-
-        if (data.female_img_data !== null) {
-            data.female_img_data = new Blob([data.female_img_data] as BlobPart[], {type: 'image/png'});
-        }
-        
-        return data as PokedexEntryData;
-    }
-
-    throw "Error reading pokedex entry";
+export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Promise<unknown> => {
+    return await dbContext.query(`
+            SELECT 
+                d.id
+                ,s.name
+                ,s.dex_no
+                ,s.habitat
+                ,s.has_gender_differences
+                ,s.generation
+                ,s.genera
+                ,d.is_default
+                ,d.type_1
+                ,d.type_2
+                ,d.weight
+                ,d.height
+                ,d.has_forms
+                ,d.is_registered
+                ,i.default_img_data
+                ,i.female_img_data
+            FROM pokemon_species_data s
+            JOIN pokemon_base_data d
+                ON d.id = s.dex_no
+            JOIN pokemon_images i
+                on d.id = i.id
+            WHERE d.id = $1
+            LIMIT 1;
+        `, [id]
+    )
+    .then(r => r.rows[0])
+    .catch(r => {
+        throw `Error reading pokedex entry: ${r}`;
+    })
 }
 
 export const setPokedexRegistered = async (dbContext: PGliteWithLive, id: number) => {
