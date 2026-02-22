@@ -98,9 +98,10 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, whi
 
     const pokemonSpeciesToLoad: Pokemon = { name: parsedBaseData.name, url: parsedBaseData.species_url };
     
-    const imagesToGet = {
+    const imagesToGet: PokemonImageData = {
         id: parsedBaseData.id,
         name: parsedBaseData.name,
+        default_sprite_size: 0,
         default_sprite: parsedBaseData.male_sprite_url,
         female_sprite: parsedBaseData.female_sprite_url
     };
@@ -118,6 +119,7 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, whi
             const imagesToGet = {
                 id: varietiesImagesLeftToGet.id,
                 name: varietiesImagesLeftToGet.name,
+                default_sprite_size: 0,
                 default_sprite: varietiesImagesLeftToGet.male_sprite_url,
                 female_sprite: varietiesImagesLeftToGet.female_sprite_url
             };
