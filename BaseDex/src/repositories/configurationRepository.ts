@@ -189,10 +189,44 @@ const updateObtainablity = (dbContext: PGliteWithLive, obtainableList: Obtainabl
 //     }
 // }
 
+const generationUpdateData = async (dbContext: PGliteWithLive, genId: number) => {
+    const results = await getGenerationUpdateData(dbContext, genId);
+
+    if (
+        typeof results === 'object' 
+        && results !== null 
+        && (
+            'last_modified_dts' in results
+            && typeof results['last_modified_dts'] === 'string'
+        )
+        && (
+            'source_last_modified_dts' in results
+            && typeof results['source_last_modified_dts'] === 'string'
+        )
+        && (
+            'stale_by_dts' in results
+            && typeof results['stale_by_dts'] === 'string'
+        )
+        && (
+            'active' in results
+            && typeof results['active'] === 'boolean'
+        )
+    ) {
+        return {
+            last_modified_dts: results.last_modified_dts,
+            source_last_modified_dts: results.source_last_modified_dts,
+            stale_by_dts: results.stale_by_dts,
+            active: results.active
+        }
+    } else {
+        return undefined;
+    }
+}
+
 
 export const updateSupportedGenerations = async (dbContext: PGliteWithLive, supported_generations: SupportedGeneration[]) => {
     supported_generations.forEach(async (generation: SupportedGeneration) => {
-        const generationDateData: DateData | undefined = await getGenerationUpdateData(dbContext, generation.id);
+        const generationDateData: DateData | undefined = await generationUpdateData(dbContext, generation.id);
 
         if (
             // Update if there is no data stored

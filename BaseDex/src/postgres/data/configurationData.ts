@@ -302,8 +302,8 @@ export const upsertConfigurationData = async (dbContext: PGliteWithLive, configD
     }
 }
 
-export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: number): Promise<DateData | undefined> => {
-    const result = await dbContext.query(
+export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: number): Promise<unknown> => {
+    return await dbContext.query(
         `
             SELECT 
                 last_modified_dts
@@ -315,39 +315,8 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
             LIMIT 1;
         `, 
         [id]
-    );
-
-    const genDateData = result.rows[0];
-
-    if (
-        typeof genDateData === 'object' 
-        && genDateData !== null 
-        && (
-            'last_modified_dts' in genDateData
-            && typeof genDateData['last_modified_dts'] === 'string'
-        )
-        && (
-            'source_last_modified_dts' in genDateData
-            && typeof genDateData['source_last_modified_dts'] === 'string'
-        )
-        && (
-            'stale_by_dts' in genDateData
-            && typeof genDateData['stale_by_dts'] === 'string'
-        )
-        && (
-            'active' in genDateData
-            && typeof genDateData['active'] === 'boolean'
-        )
-    ) {
-        return {
-            last_modified_dts: genDateData.last_modified_dts,
-            source_last_modified_dts: genDateData.source_last_modified_dts,
-            stale_by_dts: genDateData.stale_by_dts,
-            active: genDateData.active
-        }
-    } else {
-        return undefined;
-    }
+    )
+    .then(r => r.rows[0]);
 }
 
 export const setGenerationActive = async (dbContext: PGliteWithLive, id: number) => {
