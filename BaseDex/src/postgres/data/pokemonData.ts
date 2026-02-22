@@ -5,8 +5,6 @@ import type {
 } from "../../types/pokemonData";
 import type { PokemonImageData } from "../../types/pokemonImageData";
 import { logInfo } from "../../repositories/logRepository";
-import type { PokedexPreviewData } from "../../types/pokdexPreviewData";
-import type { PokedexEntryData } from "../../types/pokedexEntryData";
 
 export const initPokemonDb = async (dbContext: PGliteWithLive) => {
     await createPokemonTablesIfNotExist(dbContext);
@@ -101,32 +99,7 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         .then(() => console.log("pokemon_images table created"));
 };
 
-const blobToByteArray = async (blob: Blob): Promise<Uint8Array> => {
-    try {
-        return new Uint8Array(await blob.arrayBuffer()); 
-    } catch (error) {
-        console.error("Error converting blob to byte array:", error);
-        throw error;
-    }
-}
-
 export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData: PokemonImageData) => {
-    let defaultImageBytes = null;
-    let defaultImageSize: number;
-
-    if (typeof(pkmnImgData.default_sprite) != 'string') {
-        defaultImageSize = pkmnImgData.default_sprite.size;
-        defaultImageBytes = await blobToByteArray(pkmnImgData.default_sprite);
-    }
-
-    let femaleImageBytes = null;
-    let femaleImageSize: number;
-    
-    if (typeof(pkmnImgData.female_sprite) != 'string' && pkmnImgData.female_sprite != null) {
-        femaleImageSize = pkmnImgData.female_sprite.size;
-        femaleImageBytes = await blobToByteArray(pkmnImgData.female_sprite);
-    }
-
     const stmt = `
         INSERT INTO pokemon_images (
             id
@@ -164,12 +137,12 @@ export const upsertPokemonImage = async (dbContext: PGliteWithLive, pkmnImgData:
         await dbContext.transaction(async (transaction) => transaction.query(stmt, [
             pkmnImgData.id,
             pkmnImgData.name,
-            defaultImageSize,
-            femaleImageSize,
+            pkmnImgData.default_sprite_size,
+            pkmnImgData.female_sprite_size,
             new Date().toISOString(),
             new Date().toISOString(), // Even if it's null, it was still modified
-            defaultImageBytes,
-            femaleImageBytes,
+            pkmnImgData.default_sprite,
+            pkmnImgData.female_sprite
         ]));
     } catch (error) {
         // TODO: better error handling

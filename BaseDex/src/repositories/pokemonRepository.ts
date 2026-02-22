@@ -155,11 +155,30 @@ const loadBasePokemonData = async ( dbContext: PGliteWithLive, pokemonToLoad: Po
     return parsedData;
 }
 
-const loadPokemonImages = async (dbContext: PGliteWithLive, pkmnImgdata: PokemonImageData ) => {
-    pkmnImgdata.default_sprite = await fetchPokeApiImage(pkmnImgdata.default_sprite as string);
-    if (pkmnImgdata.female_sprite) pkmnImgdata.female_sprite = await fetchPokeApiImage(pkmnImgdata.female_sprite as string);
+const blobToByteArray = async (blob: Blob): Promise<Uint8Array> => {
+    try {
+        return new Uint8Array(await blob.arrayBuffer()); 
+    } catch (error) {
+        console.error("Error converting blob to byte array:", error);
+        throw error;
+    }
+}
 
-    upsertPokemonImage(dbContext, pkmnImgdata);
+const loadPokemonImages = async (dbContext: PGliteWithLive, pkmnImgData: PokemonImageData ) => {
+    pkmnImgData.default_sprite = await fetchPokeApiImage(pkmnImgData.default_sprite as string);
+    if (pkmnImgData.female_sprite) pkmnImgData.female_sprite = await fetchPokeApiImage(pkmnImgData.female_sprite as string);
+
+    if (typeof(pkmnImgData.default_sprite) != 'string') {
+        pkmnImgData.default_sprite_size = pkmnImgData.default_sprite.size;
+        pkmnImgData.default_sprite = await blobToByteArray(pkmnImgData.default_sprite);
+    }
+
+    if (typeof(pkmnImgData.female_sprite) != 'string' && pkmnImgData.female_sprite != null) {
+        pkmnImgData.female_sprite_size = pkmnImgData.female_sprite.size;
+        pkmnImgData.female_sprite = await blobToByteArray(pkmnImgData.female_sprite);
+    }
+
+    upsertPokemonImage(dbContext, pkmnImgData);
 }
 
 export const getPokemonCountData = async (dbContext: PGliteWithLive): Promise<RegionCountData[]> => {
@@ -385,13 +404,31 @@ export const getEntryPageData = async (dbContext: PGliteWithLive, id: string): P
 
         // Strip away some details in this "API Layer"
         if (!results.is_registered){
-            console.log('meep')
             results.height = -1;
             results.weight = -1;
             results.type_1 = "???";
             results.type_2 = undefined;
             results.genera = "??? Pokémon"
         }
+    } else {
+        console.log('Error parsing dex entry...returning missingno.')
+        return {
+            id: 0,
+            name: "MissingNo",
+            dex_no: 0,
+            habitat: "Shoreline",
+            has_gender_differences: false,
+            generation: "i",
+            genera: "UNIDENTIFIABLE",
+            is_default: false,
+            type_1: "Ň̷̨ȕ̷͕l̷͇̑l̸̠̏",
+            height: 0,
+            weight: 0,
+            default_img_data: new Blob(), //TODO: actually init something here
+            female_img_data: new Blob(), //TODO: actually init something here
+            has_forms: false,
+            is_registered: true,
+        } as PokedexEntryData;
     }
 
     return results as PokedexEntryData;
