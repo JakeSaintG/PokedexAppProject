@@ -458,3 +458,17 @@ export const setPokedexRegistered = async (dbContext: PGliteWithLive, id: number
         console.error(`Failed to set ${id} as registered: ${error}`);
     }
 }
+
+export const updateAllPkmnRegistered = async (dbContext: PGliteWithLive) => {
+    try {
+        await dbContext.transaction(async (transaction) => transaction.query(
+            `
+                UPDATE pokemon_base_data
+                SET is_registered = true;
+            `
+        ));
+    } catch (error) {
+        // TODO: better error handling
+        console.error(`Failed to set all pkmn as registered: ${error}`);
+    }
+}
