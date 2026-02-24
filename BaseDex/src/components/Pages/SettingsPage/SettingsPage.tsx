@@ -44,7 +44,7 @@ export function SettingsPage( ) {
         if (settings.debug_active) {
             return <div className={styles.debug_options}>
                 <h3>Debug</h3>
-                <button onClick={() => setDebugCounter(-1)}>Hide Debug Settings(wip)</button>
+                <button onClick={() => setDebugCounter(-1)}>Hide Debug Settings</button>
                 <button onClick={() => toggleAllPkmnRegister(dbContext)}>Register All Pokémon</button>
                 <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>

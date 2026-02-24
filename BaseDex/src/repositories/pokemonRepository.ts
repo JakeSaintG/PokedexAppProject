@@ -8,7 +8,7 @@ import {
     getPokedexEntry,
     setPokedexRegistered,
     getHabitatData,
-    updateAllPkmnRegistered
+    updateToggleRegistered
 } from "../postgres/data/pokemonData";
 import type { DateData } from "../types/dateData";
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
@@ -445,6 +445,11 @@ export const registerPokemon = async (dbContext: PGliteWithLive, id: number) => 
 export const DEBUGtogglePkmnRegistered = async (dbContext: PGliteWithLive) => updateToggleRegistered(dbContext);
 
 export const displayPkmnName = (name: string) => {
-    //TODO: special names list like Mr. Mime
+    const nameCorrections: Record<string, string> = {
+        'farfetchd': "Farfetch'd"
+    }
+
+    if (nameCorrections[name]) return nameCorrections[name];
+
     return name.charAt(0).toUpperCase() + name.slice(1);
 }
