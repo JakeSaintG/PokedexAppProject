@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { usePGlite } from '@electric-sql/pglite-react';
 import type { Settings } from '../../../types/settings';
 import type { PGliteWithLive } from '@electric-sql/pglite/live';
-import { DEBUGsetAllPkmnAsRegistered } from '../../../repositories/pokemonRepository';
+import { DEBUGtogglePkmnRegistered } from '../../../repositories/pokemonRepository';
 
 export function SettingsPage( ) {
     const navigate = useNavigate();
@@ -36,8 +36,8 @@ export function SettingsPage( ) {
         }
     },[debugCounter]);
 
-    const registerAllPkmn = async (dbContext: PGliteWithLive) => {
-        DEBUGsetAllPkmnAsRegistered(dbContext);
+    const toggleAllPkmnRegister = async (dbContext: PGliteWithLive) => {
+        DEBUGtogglePkmnRegistered(dbContext);
     }
 
     const displayDebugOptions = () => {
@@ -45,7 +45,7 @@ export function SettingsPage( ) {
             return <div className={styles.debug_options}>
                 <h3>Debug</h3>
                 <button onClick={() => setDebugCounter(-1)}>Hide Debug Settings(wip)</button>
-                <button onClick={() => registerAllPkmn(dbContext)}>Register All Pokémon</button>
+                <button onClick={() => toggleAllPkmnRegister(dbContext)}>Register All Pokémon</button>
                 <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>export logs(wip)</button>

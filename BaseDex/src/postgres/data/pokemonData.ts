@@ -459,7 +459,9 @@ export const setPokedexRegistered = async (dbContext: PGliteWithLive, id: number
     }
 }
 
-export const updateAllPkmnRegistered = async (dbContext: PGliteWithLive) => {
+export const updateToggleRegistered = async (dbContext: PGliteWithLive) => {
+    // TODO: actually toggle this 
+    
     try {
         await dbContext.transaction(async (transaction) => transaction.query(
             `

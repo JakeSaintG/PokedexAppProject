@@ -442,7 +442,7 @@ export const registerPokemon = async (dbContext: PGliteWithLive, id: number) => 
 }
 
 // TODO: update all debug fuctions to look like this (DEBUG) or revert it. Whichever you're in the mood for
-export const DEBUGsetAllPkmnAsRegistered = async (dbContext: PGliteWithLive) => updateAllPkmnRegistered(dbContext);
+export const DEBUGtogglePkmnRegistered = async (dbContext: PGliteWithLive) => updateToggleRegistered(dbContext);
 
 export const displayPkmnName = (name: string) => {
     //TODO: special names list like Mr. Mime
