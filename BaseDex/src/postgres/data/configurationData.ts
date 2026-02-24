@@ -316,7 +316,10 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
         `, 
         [id]
     )
-    .then(r => r.rows[0]);
+    .then(r => r.rows[0])
+    .catch(r => {
+        throw `Unable to get generation last updated data. This is a terminating error. ${r}`; // TODO: make it terminating
+    });
 }
 
 export const setGenerationActive = async (dbContext: PGliteWithLive, id: number) => {
@@ -357,8 +360,8 @@ export const setLocalLastModifiedDate = async (dbContext: PGliteWithLive, id: nu
     }
 }
 
-export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive): Promise<DateData[]> => {
-    const results = await dbContext.query(`
+export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
+    return await dbContext.query(`
             SELECT 
                 id
                 ,last_modified_dts
@@ -366,42 +369,11 @@ export const getGenerationLastUpdatedLocally = async (dbContext: PGliteWithLive)
                 ,local_last_modified_dts
             FROM supported_generations;
         `
-    );
-
-    return results.rows.reduce((acc: DateData[], e: unknown) => {
-        if (
-            typeof e === 'object' 
-            && e !== null 
-            && (
-                'id' in e
-                && typeof e['id'] === 'number'
-            )
-            && (
-                'last_modified_dts' in e
-                && typeof e['last_modified_dts'] === 'string'
-            )
-            && (
-                'local_last_modified_dts' in e
-                && typeof e['local_last_modified_dts'] === 'string'
-            )
-            && (
-                'active' in e
-                && (
-                    typeof e['active'] === 'boolean' 
-                    || e['active'] === null
-                )
-            )
-        ) {
-            acc.push({
-                generation_id: e.id,
-                last_modified_dts: e.last_modified_dts,
-                active: Boolean(e.active),
-                local_last_modified_dts: e.local_last_modified_dts
-            });
-        }
-
-        return acc;
-    }, []);
+    )
+    .then(r => r.rows)
+    .catch(r => {
+        throw `Unable to retrieve supported generations data ${r}`; // TODO: Is this a terminating error
+    });
 }
 
 export const selectObtainableList = async (dbContext: PGliteWithLive, listType: string): Promise<string[]> => {

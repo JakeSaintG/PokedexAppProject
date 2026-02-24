@@ -147,7 +147,47 @@ export const getObtainableList = async (dbContext: PGliteWithLive, listType: str
 export const getGenerationCountOffset = async (dbContext: PGliteWithLive, id: number): Promise<[number, number]> =>
     await getGenerationCountAndOffset(dbContext, id);
 
-export const getLastLocalGenerationUpdate = async (dbContext: PGliteWithLive): Promise<DateData[]> => getGenerationLastUpdatedLocally(dbContext);
+export const getLastLocalGenerationUpdate = async (dbContext: PGliteWithLive): Promise<DateData[]> => {
+    const results = getGenerationLastUpdatedLocally(dbContext)
+    .then (r => 
+        r.reduce((acc: DateData[], e: unknown) => {
+            if (
+                typeof e === 'object' 
+                && e !== null 
+                && (
+                    'id' in e
+                    && typeof e['id'] === 'number'
+                )
+                && (
+                    'last_modified_dts' in e
+                    && typeof e['last_modified_dts'] === 'string'
+                )
+                && (
+                    'local_last_modified_dts' in e
+                    && typeof e['local_last_modified_dts'] === 'string'
+                )
+                && (
+                    'active' in e
+                    && (
+                        typeof e['active'] === 'boolean' 
+                        || e['active'] === null
+                    )
+                )
+            ) {
+                acc.push({
+                    generation_id: e.id,
+                    last_modified_dts: e.last_modified_dts,
+                    active: Boolean(e.active),
+                    local_last_modified_dts: e.local_last_modified_dts
+                });
+            }
+    
+            return acc;
+        }, [])
+    )
+
+    return results;
+};
 
 export const updateGenerationActive = (dbContext: PGliteWithLive, id: number) => setGenerationActive(dbContext, id);
 
@@ -222,7 +262,6 @@ const generationUpdateData = async (dbContext: PGliteWithLive, genId: number) =>
         return undefined;
     }
 }
-
 
 export const updateSupportedGenerations = async (dbContext: PGliteWithLive, supported_generations: SupportedGeneration[]) => {
     supported_generations.forEach(async (generation: SupportedGeneration) => {
