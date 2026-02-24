@@ -68,7 +68,7 @@ export function LoadingContentPage() {
                 await artificalDelay(() => setLoadingText("Welcome to your PokeDex!"));
             })
             .then(async () => {
-                // await artificalDelay(() => navigate("../home"));
+                await artificalDelay(() => navigate("../home"));
             })
             .catch(async (e) => {
                 // TODOs:
