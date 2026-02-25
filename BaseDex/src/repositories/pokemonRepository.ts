@@ -80,7 +80,7 @@ const loadPokemon = async (
     // TODO: I still want to to try to be loading multiple pokemon at once...
     // TODO: actually use batchSize for something
     for (const pkmn of pokemonToLoad) {
-        logInfo(dbContext, `${batchSize} - Loading data for ${pkmn.name}.`)
+        logInfo(dbContext, `${batchSize} - Loading data for ${displayPkmnName(pkmn.name)}.`);
         setLoadingText(`Loading Gen ${generationId}: \r\n${pkmn.name}`);
 
         await startLoad(dbContext, pkmn, whiteList, blackList, new Date().toISOString());
