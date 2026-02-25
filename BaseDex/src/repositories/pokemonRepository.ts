@@ -446,7 +446,11 @@ export const DEBUGtogglePkmnRegistered = async (dbContext: PGliteWithLive) => up
 
 export const displayPkmnName = (name: string) => {
     const nameCorrections: Record<string, string> = {
-        'farfetchd': "Farfetch'd"
+        'farfetchd': "Farfetch'd",
+        'nidoran-f': "Nidoran ♀",
+        'nidoran-m': "Nidoran ♂",
+        'mr-mime': "Mr. Mime",
+        // 'farfetchd': "Farfetch'd",
     }
 
     if (nameCorrections[name]) return nameCorrections[name];
