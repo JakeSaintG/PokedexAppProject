@@ -79,6 +79,7 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
                 id SERIAL PRIMARY KEY
                 ,debug_active BOOLEAN NOT NULL
                 ,light_mode BOOLEAN NOT NULL
+                ,show_regional_forms BOOLEAN NOT NULL
                 ,register_from_dex BOOLEAN NOT NULL
                 ,tutorial_active BOOLEAN NOT NULL
                 ,last_updated_dts TEXT NOT NULL
@@ -116,16 +117,18 @@ export const setDefaultSettings = async (dbContext: PGliteWithLive) => {
                 INSERT INTO settings (
                     debug_active
                     ,light_mode
+                    ,show_regional_forms
                     ,register_from_dex
                     ,tutorial_active
                     ,last_updated_dts
                 )
                 VALUES (
-                    false
-                    ,true
-                    ,false
-                    ,true
-                    ,$1
+                    false                   -- debug_active
+                    ,true                   -- light_mode
+                    ,false                  -- show_regional_forms
+                    ,false                  -- register_from_dex
+                    ,true                   -- tutorial_active
+                    ,$1                     -- last_updated_dts
                 )
             `,
             [new Date().toISOString()]
@@ -147,6 +150,7 @@ export const selectAppSettings = async (dbContext: PGliteWithLive): Promise<unkn
                 id
                 ,debug_active
                 ,light_mode
+                ,show_regional_forms
                 ,register_from_dex
                 ,tutorial_active
                 ,last_updated_dts

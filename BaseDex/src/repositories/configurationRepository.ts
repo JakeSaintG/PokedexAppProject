@@ -103,6 +103,10 @@ export const getSettings = async (dbContext: PGliteWithLive): Promise<Settings> 
             && typeof result['light_mode'] === 'boolean'
         )
         && (
+            'show_regional_forms' in result
+            && typeof result['show_regional_forms'] === 'boolean'
+        )
+        && (
             'register_from_dex' in result
             && typeof result['register_from_dex'] === 'boolean'
         )
