@@ -44,8 +44,9 @@ export function SettingsPage( ) {
         if (settings.debug_active) {
             return <div className={styles.debug_options}>
                 <h3>Debug</h3>
+                <p>NOTE! These settings may take the fun out of the app. Use with caution.</p>
                 <button onClick={() => setDebugCounter(-1)}>Hide Debug Settings</button>
-                <button onClick={() => toggleAllPkmnRegister(dbContext)}>Register All Pokémon</button>
+                <button onClick={() => toggleAllPkmnRegister(dbContext)}>Toggle All Pokémon registered</button>
                 <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>export logs(wip)</button>
@@ -64,7 +65,7 @@ export function SettingsPage( ) {
         <>
             <DexHeader title='Settings'/>
             <div className={styles.settings_menu}>
-                {/* These should be slider/checkboxes... */}
+                {/* TODO: These should be slider/checkboxes... */}
                 <h3>Appearance</h3>
                 {/* The reload data button needs to not be debug in the web based version */}
                 <button onClick={() => navigate('../loading')}>Reload Data</button>
@@ -73,7 +74,6 @@ export function SettingsPage( ) {
                 </button>
                 <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
                 <button onClick={() => setDefault(dbContext)}>Restore default settings</button>
-                {/* TODO: Warn that this may take some of the fun out of the app */}
                 {displayDebugOptions()}
 
                 <p 

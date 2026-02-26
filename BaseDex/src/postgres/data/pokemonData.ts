@@ -460,17 +460,42 @@ export const setPokedexRegistered = async (dbContext: PGliteWithLive, id: number
 }
 
 export const updateToggleRegistered = async (dbContext: PGliteWithLive) => {
-    // TODO: actually toggle this 
+    const count_check = await dbContext.query(
+        `
+            SELECT 
+                count(is_registered) as total
+                ,COUNT(CASE WHEN is_registered = true THEN 0 END) AS registered
+            FROM pokemon_base_data;
+        `
+    )
+    .then(r =>  r.rows[0]);
+
+    if (
+        typeof count_check === 'object' 
+        && count_check !== null 
+        && (
+            'total' in count_check
+            && typeof count_check['total'] === 'number'
+        )
+        && (
+            'registered' in count_check
+            && typeof count_check['registered'] === 'number'
+        )
+    ) {
+        const toggleState = count_check.registered > (count_check.total / 2) ? false : true;
     
-    try {
-        await dbContext.transaction(async (transaction) => transaction.query(
-            `
-                UPDATE pokemon_base_data
-                SET is_registered = true;
-            `
-        ));
-    } catch (error) {
-        // TODO: better error handling
-        console.error(`Failed to set all pkmn as registered: ${error}`);
+        try {
+            await dbContext.transaction(async (transaction) => transaction.query(
+                `
+                    UPDATE pokemon_base_data
+                    SET is_registered = $1;
+                `,
+                [toggleState]
+            )
+        );
+        } catch (error) {
+            // TODO: better error handling
+            console.error(`Failed to set all pkmn as registered: ${error}`);
+        }
     }
 }
