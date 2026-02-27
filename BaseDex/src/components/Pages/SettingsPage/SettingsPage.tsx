@@ -47,6 +47,7 @@ export function SettingsPage( ) {
                 <p>NOTE! These settings may take the fun out of the app. Use with caution.</p>
                 <button onClick={() => setDebugCounter(-1)}>Hide Debug Settings</button>
                 <button onClick={() => toggleAllPkmnRegister(dbContext)}>Toggle All Pokémon registered</button>
+                <button onClick={() => console.log('not yet implemented')}>Show regional forms from Pokédex page(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>verbose logging(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>Allow registery from dex page(wip)</button>
                 <button onClick={() => console.log('not yet implemented')}>export logs(wip)</button>

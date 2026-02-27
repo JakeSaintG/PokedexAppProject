@@ -95,6 +95,10 @@ export const getSettings = async (dbContext: PGliteWithLive): Promise<Settings> 
             && typeof result['id'] === 'number'
         )
         && (
+            'dex_page_active_gen' in result
+            && typeof result['dex_page_active_gen'] === 'number'
+        )
+        && (
             'debug_active' in result
             && typeof result['debug_active'] === 'boolean'
         )

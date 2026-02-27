@@ -23,6 +23,17 @@ export function PokedexPage( ) {
     return (
         <>
             <DexHeader title='Pokédex'/>
+            <div className={styles.dex_menu}>
+                <div className={styles.dex_menu_select}>
+                    <p>{"<"}</p>
+                    <p>{"GENERATION 1"}</p>
+                    <p>{">"}</p>
+                </div>
+                <div className={styles.dex_menu_toggle}>
+                    <label htmlFor="toggle_regional_forms">Show Regional Forms</label>
+                    <input type="checkbox" name="toggle_regional_forms" id="toggle_regional_forms" />
+                </div>
+            </div>
             <div className={styles.dex_previews}>
                 {pokedexPreviewData.map((pkmn) => (
                         <PokedexPreview previewData={pkmn} key={key++}></PokedexPreview>

@@ -8,6 +8,25 @@
     gap: 1rem;
 }
 
+.dex_menu {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 1rem;
+}
+
+.dex_menu_toggle {
+
+}
+
+.dex_menu_select {
+    display: flex;
+}
+
+.dex_menu_select p {
+    margin: 0;
+}
+
+
 @media only screen and (min-width: 430px) {
 
 }

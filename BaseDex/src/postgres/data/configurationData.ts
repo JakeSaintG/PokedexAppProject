@@ -77,6 +77,7 @@ const createConfigTablesIfNotExist = async (dbContext: PGliteWithLive) => {
         .exec(`
             CREATE TABLE IF NOT EXISTS settings (
                 id SERIAL PRIMARY KEY
+                ,dex_page_active_gen INT NOT NULL
                 ,debug_active BOOLEAN NOT NULL
                 ,light_mode BOOLEAN NOT NULL
                 ,show_regional_forms BOOLEAN NOT NULL
@@ -116,6 +117,7 @@ export const setDefaultSettings = async (dbContext: PGliteWithLive) => {
             `
                 INSERT INTO settings (
                     debug_active
+                    ,dex_page_active_gen
                     ,light_mode
                     ,show_regional_forms
                     ,register_from_dex
@@ -124,6 +126,7 @@ export const setDefaultSettings = async (dbContext: PGliteWithLive) => {
                 )
                 VALUES (
                     false                   -- debug_active
+                    ,1                      -- dex_page_active_gen
                     ,true                   -- light_mode
                     ,false                  -- show_regional_forms
                     ,false                  -- register_from_dex
@@ -148,6 +151,7 @@ export const selectAppSettings = async (dbContext: PGliteWithLive): Promise<unkn
         `
             SELECT 
                 id
+                ,dex_page_active_gen
                 ,debug_active
                 ,light_mode
                 ,show_regional_forms
