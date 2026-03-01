@@ -4,7 +4,7 @@
     width: 100%;
     text-align: right;
     color: black;
-    background-color: var(--pokedex-background);
+    background-color: var(--pokedex_background);
 }
 
 .dex_header_white_space {
@@ -13,7 +13,7 @@
 
 .dex_header {
     width: 100%;
-    max-width: var(--max-mobile-width);
+    max-width: var(--max_mobile_width);
     position: fixed;
     top: 0;
     display: flex;
@@ -29,7 +29,7 @@
 .dex_header::after {
     height: 39px;
     content: '';
-    background-color: var(--pokedex-red);
+    background-color: var(--pokedex_red);
     width: 100%;
     border-top: solid #1a1a1aff 3px;
     border-bottom: solid #1a1a1aff 3px;

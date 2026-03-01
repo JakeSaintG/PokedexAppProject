@@ -1,6 +1,6 @@
 .dex_previews {
     width: 100%;
-    background-color: var(--pokedex-background);
+    background-color: var(--pokedex_background);
     padding: 1rem 1rem calc(80px + 1rem) 1rem;
     display: flex;
     flex-wrap: wrap;
@@ -23,7 +23,23 @@
 }
 
 .dex_menu_select p {
-    margin: 0;
+    margin: 0 1rem;
+}
+
+.dex_menu_arrow_left,
+.dex_menu_arrow_right {
+    width: 0; 
+    height: 0; 
+    border-top: 1rem solid transparent;
+    border-bottom: 1rem solid transparent; 
+}
+
+.dex_menu_arrow_right {
+    border-left: 1rem solid var(--pokedex_light_blue);
+}
+
+.dex_menu_arrow_left {
+    border-right: 1rem solid var(--pokedex_light_blue); 
 }
 
 

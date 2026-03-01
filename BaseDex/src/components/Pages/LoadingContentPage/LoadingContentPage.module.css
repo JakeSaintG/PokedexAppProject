@@ -1,5 +1,5 @@
 .loading_page {
-    background-color: var(--pokedex-red);
+    background-color: var(--pokedex_red);
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -38,7 +38,7 @@
     height: 8px;
     width: 8px;
     bottom: 12px;
-    background-color: var(--pokedex-red);
+    background-color: var(--pokedex_red);
     border: solid black 2px;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .bottom_decoration::before {
-    background-color: var(--pokedex-red);
+    background-color: var(--pokedex_red);
     position: absolute;
     border-radius: 50%;
     content: ' ';

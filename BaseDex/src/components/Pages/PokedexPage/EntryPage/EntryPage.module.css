@@ -6,7 +6,7 @@
 
 .entry_display {
     margin: auto;
-    background-color: var(--pokedex-background);
+    background-color: var(--pokedex_background);
     height: 100%;
 }
 

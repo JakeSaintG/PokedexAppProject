@@ -2,7 +2,7 @@
     height: 100vh;
     width: 100%;
     display: flex;
-    background-color: var(--pokedex-red);
+    background-color: var(--pokedex_red);
     position: relative;
 }
 

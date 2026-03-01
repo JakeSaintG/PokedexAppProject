@@ -2,8 +2,8 @@
     bottom: 0;
     position: fixed;
     border-top: solid black 2px;
-    background-color: var(--pokedex-red);
-    max-width: var(--max-mobile-width);
+    background-color: var(--pokedex_red);
+    max-width: var(--max_mobile_width);
     height: 70px;
     width: 100%;
 }
@@ -40,7 +40,7 @@
 /* TODO: address the accessbility of the home button on light blue */
 .home_button {
     border: solid black 2px;
-    background-color: var(--pokedex-light-blue);
+    background-color: var(--pokedex_light_blue);
     border-radius: 50%;
 }
 

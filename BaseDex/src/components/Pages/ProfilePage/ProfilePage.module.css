@@ -1,5 +1,5 @@
 .profile {
-    background-color: var(--pokedex-background);
+    background-color: var(--pokedex_background);
     display: flex;
     flex-direction: column;
     width: 100%;

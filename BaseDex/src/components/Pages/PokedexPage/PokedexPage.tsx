@@ -25,9 +25,9 @@ export function PokedexPage( ) {
             <DexHeader title='Pokédex'/>
             <div className={styles.dex_menu}>
                 <div className={styles.dex_menu_select}>
-                    <p>{"<"}</p>
+                    <div className={styles.dex_menu_arrow_left}></div>
                     <p>{"GENERATION 1"}</p>
-                    <p>{">"}</p>
+                    <div className={styles.dex_menu_arrow_right}></div>
                 </div>
                 <div className={styles.dex_menu_toggle}>
                     <label htmlFor="toggle_regional_forms">Show Regional Forms</label>

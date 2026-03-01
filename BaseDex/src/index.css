@@ -3,11 +3,11 @@
 }
 
 :root {
-    --max-mobile-width: 1080px;
+    --max_mobile_width: 1080px;
     
-    --pokedex-red: #DC0A2D;
-    --pokedex-light-blue: #00ffff;
-    --pokedex-background: aliceblue;
+    --pokedex_red: #DC0A2D;
+    --pokedex_light_blue: #00ffff;
+    --pokedex_background: aliceblue;
     
     --bug: #C3D21F;
     --electric: #FEE844;

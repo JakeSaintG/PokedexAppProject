@@ -1,5 +1,5 @@
 .contents {
-    background-color: var(--pokedex-background);
+    background-color: var(--pokedex_background);
     display: grid;
     padding: 1rem 1rem calc(70px + 1rem) 1rem;
     gap: 1rem;
@@ -12,7 +12,7 @@
     display: flex;
     margin: 0 auto;
     border: solid #008080 3px;
-    background-color: var(--pokedex-light-blue);
+    background-color: var(--pokedex_light_blue);
     color: #008080;
     text-decoration: none;
 }

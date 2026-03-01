@@ -1,6 +1,6 @@
 .settings_menu {
     width: 100%;
-    background-color: var(--pokedex-background);
+    background-color: var(--pokedex_background);
     display: grid;
     padding: 0 1rem calc(70px + 1rem) 1rem;
     margin: 0 auto 0 auto;

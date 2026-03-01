@@ -24,7 +24,7 @@
 
 .not_registered {
     border: solid #008080 3px;
-    background-color: var(--pokedex-light-blue);
+    background-color: var(--pokedex_light_blue);
     color: #008080;
 }
 
