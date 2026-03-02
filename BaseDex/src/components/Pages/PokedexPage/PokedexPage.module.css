@@ -27,19 +27,48 @@
 }
 
 .dex_menu_arrow_left,
-.dex_menu_arrow_right {
+.dex_menu_arrow_right,
+.dex_menu_arrow_right::after,
+.dex_menu_arrow_left::after {
     width: 0; 
-    height: 0; 
+    height: 0;
+    cursor: pointer;
+}
+
+.dex_menu_arrow_left,
+.dex_menu_arrow_right {
     border-top: 1rem solid transparent;
     border-bottom: 1rem solid transparent; 
 }
 
+.dex_menu_arrow_right::after,
+.dex_menu_arrow_left::after {
+    border-top: .5rem solid transparent;
+    border-bottom: .5rem solid transparent; 
+    position: absolute;
+    top: -8px;
+    content: '';
+}
+
+
+.dex_menu_arrow_right::after {
+    border-left: .5rem solid var(--pokedex_light_blue);
+    right: 5px;
+}
+
+.dex_menu_arrow_left::after {
+    border-right: .5rem solid var(--pokedex_light_blue); 
+    left: 5px;
+}
+
 .dex_menu_arrow_right {
-    border-left: 1rem solid var(--pokedex_light_blue);
+    border-left: 1rem solid var(--pokedex_dark_blue);
+    position: relative;
 }
 
 .dex_menu_arrow_left {
-    border-right: 1rem solid var(--pokedex_light_blue); 
+    border-right: 1rem solid var(--pokedex_dark_blue); 
+    position: relative;
 }
 
 
