@@ -24,6 +24,8 @@
 
 .dex_menu_select p {
     margin: 0 1rem;
+    font-weight: bolder;
+    padding-top: 4px;
 }
 
 .dex_menu_arrow_left,
@@ -43,22 +45,22 @@
 
 .dex_menu_arrow_right::after,
 .dex_menu_arrow_left::after {
-    border-top: .5rem solid transparent;
-    border-bottom: .5rem solid transparent; 
+    border-top: .7rem solid transparent;
+    border-bottom: .7rem solid transparent; 
     position: absolute;
-    top: -8px;
+    top: -11px;
     content: '';
 }
 
 
 .dex_menu_arrow_right::after {
-    border-left: .5rem solid var(--pokedex_light_blue);
-    right: 5px;
+    border-left: .7rem solid var(--pokedex_light_blue);
+    right: 3px;
 }
 
 .dex_menu_arrow_left::after {
-    border-right: .5rem solid var(--pokedex_light_blue); 
-    left: 5px;
+    border-right: .7rem solid var(--pokedex_light_blue); 
+    left: 3px;
 }
 
 .dex_menu_arrow_right {

@@ -25,7 +25,7 @@ export function PokedexPage( ) {
             <DexHeader title='Pokédex'/>
             <div className={styles.dex_menu}>
                 <div className={styles.dex_menu_select}>
-                    <div className={styles.dex_menu_arrow_left} onClick={() => console.log('next gen')}></div>
+                    <div className={styles.dex_menu_arrow_left} onClick={() => console.log('previous gen')}></div>
                     <p>{"GENERATION 1"}</p>
                     <div className={styles.dex_menu_arrow_right} onClick={() => console.log('next gen')}></div>
                 </div>
