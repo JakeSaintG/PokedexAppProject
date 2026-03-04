@@ -19,7 +19,15 @@ export function PokedexPage( ) {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
         getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));
     }, []);
-    
+
+    const [isChecked, setIsChecked] = useState(false);
+    const handleToggleInput = () => {
+        setIsChecked(!isChecked);
+    };
+    useEffect(() => {
+        console.log(isChecked)
+    }, [isChecked])
+
     return (
         <>
             <DexHeader title='Pokédex'/>
@@ -31,7 +39,7 @@ export function PokedexPage( ) {
                 </div>
                 <div className={styles.dex_menu_toggle}>
                     <label htmlFor="toggle_regional_forms">Show Regional Forms</label>
-                    <input type="checkbox" name="toggle_regional_forms" id="toggle_regional_forms" />
+                    <input type="checkbox" name="toggle_regional_forms" id="toggle_regional_forms" onChange={handleToggleInput}/>
                 </div>
             </div>
             <div className={styles.dex_previews}>
