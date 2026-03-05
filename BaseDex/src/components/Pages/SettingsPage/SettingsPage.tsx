@@ -17,12 +17,13 @@ export function SettingsPage( ) {
     // look into react's ContextApi or Signals
     const [settings, setSettings] = useState({} as Settings);
     const [debugCounter, setDebugCounter] = useState(0);
+    const [reloadEntry, setReloadEntry] = useState(0);
 
     useEffect(() => {
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
         getSettings(dbContext).then((r: Settings) => setSettings(r));
-    },[]);
-
+    },[reloadEntry]);
+    
     useEffect(() => {
         // Triggers desired effects if, for some reason, the counter is already 0;
         if (debugCounter > 5) setDebugCounter(1);
@@ -57,9 +58,8 @@ export function SettingsPage( ) {
         return <></>;
     }
 
-    const restoreDefault = (dbContext: PGliteWithLive) => {
-        restoreDefaultSettings(dbContext);
-        setDebugCounter(-1);
+    const restoreDefault = async (dbContext: PGliteWithLive) => {
+        await restoreDefaultSettings(dbContext).then(() => setReloadEntry(1));
     }
 
     return (
