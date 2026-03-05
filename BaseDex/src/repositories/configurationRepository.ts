@@ -39,7 +39,7 @@ export const getUpdatedAppConfiguration = async () => {
             {
                 id: 1,
                 starting_dex_no: 1,
-                count: 151, //151
+                count: 26, //151
                 active: true,
                 stale_by_dts: placeHolderStaleByDate,
                 last_modified_dts: '2025-05-08T22:04:23.251Z', // new Date().toISOString()

@@ -23,6 +23,7 @@ const createPokemonTablesIfNotExist = async (dbContext: PGliteWithLive) => {
             CREATE TABLE IF NOT EXISTS pokemon_base_data (
                 id INT PRIMARY KEY NOT NULL
                 ,name TEXT NOT NULL
+                ,species_name TEXT NOT NULL
                 ,url TEXT NOT NULL
                 ,species_url TEXT NOT NULL
                 ,is_default BOOLEAN NOT NULL
@@ -163,6 +164,7 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                 INSERT INTO pokemon_base_data (
                     id
                     ,name
+                    ,species_name
                     ,url
                     ,is_default
                     ,species_url
@@ -182,44 +184,47 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
                 VALUES (
                     $1 -- pkmnData.id
                     ,$2 -- pkmnData.name
-                    ,$3 -- pkmnData.url
-                    ,$4 -- pkmnData.is_default
-                    ,$5 -- pkmnData.species_url
-                    ,$6 -- pkmnData.male_sprite_url
-                    ,$7 -- pkmnData.female_sprite_url
-                    ,$8 -- pkmnData.img_path
-                    ,$9 -- pkmnData.has_forms
-                    ,$10 -- pkmnData.type_1
-                    ,$11 -- pkmnData.type_2
-                    ,$12 -- pkmnData.weight
-                    ,$13 -- pkmnData.height
-                    ,$14 -- is_registered
-                    ,$15 -- obtainable
-                    ,$16 -- regional_form
-                    ,$17 -- new Date().toISOString()
+                    ,$3 -- pkmnData.species_name
+                    ,$4 -- pkmnData.url
+                    ,$5 -- pkmnData.is_default
+                    ,$6 -- pkmnData.species_url
+                    ,$7 -- pkmnData.male_sprite_url
+                    ,$8 -- pkmnData.female_sprite_url
+                    ,$9 -- pkmnData.img_path
+                    ,$10 -- pkmnData.has_forms
+                    ,$11 -- pkmnData.type_1
+                    ,$12 -- pkmnData.type_2
+                    ,$13 -- pkmnData.weight
+                    ,$14 -- pkmnData.height
+                    ,$15 -- is_registered
+                    ,$16 -- obtainable
+                    ,$17 -- regional_form
+                    ,$18 -- new Date().toISOString()
                 )
                     ON CONFLICT(id) 
                     DO UPDATE SET 
                         id = $1                             -- pkmnData.id
                         ,name = $2                          -- pkmnData.name
-                        ,url = $3                           -- pkmnData.url
-                        ,is_default = $4                    -- pkmnData.is_default
-                        ,species_url = $5                   -- pkmnData.species_url
-                        ,male_sprite_url = $6               -- pkmnData.male_sprite_url
-                        ,female_sprite_url = $7             -- pkmnData.female_sprite_url
-                        ,img_path = $8                      -- pkmnData.img_path
-                        ,has_forms = $9                     -- pkmnData.has_forms
-                        ,type_1 = $10                       -- pkmnData.type_1
-                        ,type_2 = $11                       -- pkmnData.type_2
-                        ,weight = $12                       -- pkmnData.weight
-                        ,height = $13                       -- pkmnData.height
-                        ,obtainable = $15                   -- obtainable
-                        ,regional_form = $16                -- regional_form
-                        ,last_modified_dts = $17            -- new Date().toISOString()
+                        ,species_name = $3                  -- pkmnData.species_name
+                        ,url = $4                           -- pkmnData.url
+                        ,is_default = $5                    -- pkmnData.is_default
+                        ,species_url = $6                   -- pkmnData.species_url
+                        ,male_sprite_url = $7               -- pkmnData.male_sprite_url
+                        ,female_sprite_url = $8             -- pkmnData.female_sprite_url
+                        ,img_path = $9                      -- pkmnData.img_path
+                        ,has_forms = $10                    -- pkmnData.has_forms
+                        ,type_1 = $11                       -- pkmnData.type_1
+                        ,type_2 = $12                       -- pkmnData.type_2
+                        ,weight = $13                       -- pkmnData.weight
+                        ,height = $14                       -- pkmnData.height
+                        ,obtainable = $16                   -- obtainable
+                        ,regional_form = $17                -- regional_form
+                        ,last_modified_dts = $18            -- new Date().toISOString()
             `,
             [
                 pkmnData.id,
                 pkmnData.name,
+                pkmnData.species_name,
                 pkmnData.url,
                 pkmnData.is_default,
                 pkmnData.species_url,
@@ -239,7 +244,7 @@ export const upsertPokemonBaseData = async (dbContext: PGliteWithLive, pkmnData:
         ));
     } catch (error) {
         // TODO: better error handling
-        console.error(`Failed to UPSERT ${pkmnData.name}: ${error}`);
+        console.error(`Failed to UPSERT ${pkmnData.name} in base_data table - ${error}`);
     }
 };
 
@@ -382,11 +387,15 @@ export const getHabitatData = async (dbContext: PGliteWithLive, regionId: string
 }
 
 export const getPokedexList = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
-    return await dbContext.query(`
+    const regionalForms = true;
+    
+    const onCriteria = regionalForms ? 'ON d.species_name = s.name' : 'ON d.id = s.id';
+    
+    const query = `
             SELECT 
                 d.id
                 ,s.dex_no
-                ,s.name
+                ,d.name
                 ,i.default_img_data
                 ,d.type_1
                 ,d.type_2
@@ -394,15 +403,21 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<unknown
                 ,d.is_registered
             FROM pokemon_species_data s
             JOIN pokemon_base_data d
-                ON d.id = s.dex_no
+                ${onCriteria}
             JOIN pokemon_images i
                 on d.id = i.id;
         `
-    )
+    
+    
+    const bar = await dbContext.query(query)
     .then (r => r.rows)
     .catch(r => {
         throw `Error reading pokedex list ${r}`;
     })
+
+    console.log(bar)
+
+    return bar;
 }
 
 export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Promise<unknown> => {

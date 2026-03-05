@@ -113,6 +113,7 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, whi
     await loadPokemonImages(dbContext, imagesToGet);
     
     if (varietiesToGet.length > 0) {
+
         for (const variety of varietiesToGet) {
             logInfoVerbose(dbContext, `${loadStartTime} - Loading remaining special forms for: ${variety.name}...`);
             const varietiesImagesLeftToGet = await loadBasePokemonData(dbContext, variety, whiteList, loadStartTime);
@@ -132,13 +133,14 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, whi
 }
 
 const loadSpeciesPokemonData = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, blackList: string[], loadStartTime: string ): Promise<Pokemon[]> => {
-    logInfoVerbose(dbContext, `${loadStartTime} - fetching species data: ${pokemonToLoad.name}`);
+    // logInfoVerbose(dbContext, `${loadStartTime} - fetching species data: ${pokemonToLoad.name}`);
     const pokemonSpeciesData = await fetchPokeApiData(pokemonToLoad.url)
     
-    logInfoVerbose(dbContext, `${loadStartTime} - parsing species data: ${pokemonToLoad.name}`);
+    // logInfoVerbose(dbContext, `${loadStartTime} - parsing species data: ${pokemonToLoad.name}`);
     const [parsedData, varieties] = await parsePokemonSpeciesData(pokemonSpeciesData, blackList);
 
-    logInfoVerbose(dbContext, `${loadStartTime} - storing species data: ${pokemonToLoad.name}`);
+    // logInfoVerbose(dbContext, `${loadStartTime} - storing species data: ${pokemonToLoad.name}`);
+
     await upsertPokemonSpeciesData(dbContext, parsedData);
     await upsertPokedexData(dbContext, parsedData);
 
@@ -146,13 +148,13 @@ const loadSpeciesPokemonData = async (dbContext: PGliteWithLive, pokemonToLoad: 
 }
 
 const loadBasePokemonData = async ( dbContext: PGliteWithLive, pokemonToLoad: Pokemon, whiteList: string[], loadStartTime: string ) => {
-    logInfoVerbose(dbContext, `${loadStartTime} - fetching base data: ${pokemonToLoad.name}`);
+    // logInfoVerbose(dbContext, `${loadStartTime} - fetching base data: ${pokemonToLoad.name}`);
     const fetchedData = await fetchPokeApiData(pokemonToLoad.url);
-
-    logInfoVerbose(dbContext, `${loadStartTime} - parsing base data: ${pokemonToLoad.name}`);
+    
+    // logInfoVerbose(dbContext, `${loadStartTime} - parsing base data: ${pokemonToLoad.name}`);
     const parsedData = await parsePokemonBaseData(fetchedData, whiteList);
 
-    logInfoVerbose(dbContext, `${loadStartTime} - storing base data: ${pokemonToLoad.name}`);
+    // logInfoVerbose(dbContext, `${loadStartTime} - storing base data: ${pokemonToLoad.name}`);
     await upsertPokemonBaseData(dbContext, parsedData);
 
     return parsedData;

@@ -26,6 +26,8 @@ export function PokedexPage( ) {
     };
     useEffect(() => {
         console.log(isChecked)
+        
+        getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));
     }, [isChecked])
 
     return (

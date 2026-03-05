@@ -3,6 +3,7 @@ import type { FlavorTextEntry } from "./flavorText";
 export interface PokemonBaseData {
     id: number,
     name: string,
+    species_name: string,
     species_url: string,
     is_default: boolean,
     male_sprite_url: string,

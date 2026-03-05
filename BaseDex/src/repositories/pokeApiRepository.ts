@@ -74,6 +74,14 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
             && typeof data['is_default'] === 'boolean'
         )
         && (
+            'species' in data
+            && typeof data['species'] === 'object'
+        )
+        && (
+            'name' in data.species
+            && typeof data.species['name'] === 'string'
+        )
+        && (
             'forms' in data
             && Array.isArray(data['forms'])
         )
@@ -115,10 +123,11 @@ export const parsePokemonBaseData = async (data: unknown, whiteList: string[]) :
         if (typeof data.sprites.front_default !== 'string') {
             data.sprites.front_default = 'https://bulbapedia.bulbagarden.net/wiki/MissingNo.#/media/File:Missingno_RB.png';
         }
-        
+
         const parsedData: PokemonBaseData = {
             id: data.id,
             name: data.name,
+            species_name: data.species.name,
             species_url: data.species.url,
             is_default: data.is_default,
             male_sprite_url: data.sprites.front_default as string,
