@@ -113,6 +113,7 @@ export const setDefaultSettings = async (dbContext: PGliteWithLive) => {
             `TRUNCATE TABLE settings;`
         ));
 
+
         await dbContext.transaction(async (transaction) => transaction.query(
             `
                 INSERT INTO settings (
@@ -162,8 +163,7 @@ export const selectAppSettings = async (dbContext: PGliteWithLive): Promise<unkn
             LIMIT 1;
         `
     )
-    .then(r =>  {
-        return r.rows[0]})
+    .then(r => r.rows[0])
     .catch(c => { 
         throw `Unable to retrieve data from settings table: ${c}`;
     });
@@ -178,7 +178,9 @@ export const truncateInsertSettings = async (dbContext: PGliteWithLive, settings
         `
             INSERT INTO settings (
                 debug_active
+                ,dex_page_active_gen
                 ,light_mode
+                ,show_regional_forms
                 ,register_from_dex
                 ,tutorial_active
                 ,last_updated_dts
@@ -189,11 +191,15 @@ export const truncateInsertSettings = async (dbContext: PGliteWithLive, settings
                 ,$3
                 ,$4
                 ,$5
+                ,$6
+                ,$7
             )
         `,
         [
             settings.debug_active,
+            settings.dex_page_active_gen,
             settings.light_mode,
+            settings.show_regional_forms,
             settings.register_from_dex,
             settings.tutorial_active,
             new Date().toISOString()

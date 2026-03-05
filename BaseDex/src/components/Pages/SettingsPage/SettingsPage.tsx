@@ -25,15 +25,15 @@ export function SettingsPage( ) {
 
     useEffect(() => {
         // Triggers desired effects if, for some reason, the counter is already 0;
-        if (debugCounter == -1) setDebugCounter(0); 
-
         if (debugCounter > 5) setDebugCounter(1);
+        if (debugCounter == -1) setDebugCounter(0);
         
         if (settings.last_updated_dts && (debugCounter == 5 || debugCounter == 0)) {
             console.log(`updating debug settings: debug ${!settings.debug_active}`);
             settings.debug_active = !settings.debug_active;
             updateSettings(dbContext, settings).then((s: Settings) => setSettings(s));
         }
+
     },[debugCounter]);
 
     const toggleAllPkmnRegister = async (dbContext: PGliteWithLive) => {
@@ -57,7 +57,7 @@ export function SettingsPage( ) {
         return <></>;
     }
 
-    const setDefault = (dbContext: PGliteWithLive) => {
+    const restoreDefault = (dbContext: PGliteWithLive) => {
         restoreDefaultSettings(dbContext);
         setDebugCounter(-1);
     }
@@ -74,7 +74,7 @@ export function SettingsPage( ) {
                     {settings.tutorial_active ? 'Hide tutorial' : 'Restore tutorial'}
                 </button>
                 <button onClick={() => console.log('not yet implemented')}>light mode(wip)</button>
-                <button onClick={() => setDefault(dbContext)}>Restore default settings</button>
+                <button onClick={() => restoreDefault(dbContext)}>Restore default settings</button>
                 {displayDebugOptions()}
 
                 <p 

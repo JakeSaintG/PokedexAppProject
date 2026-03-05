@@ -407,17 +407,12 @@ export const getPokedexList = async (dbContext: PGliteWithLive): Promise<unknown
             JOIN pokemon_images i
                 on d.id = i.id;
         `
-    
-    
-    const bar = await dbContext.query(query)
+
+    return await dbContext.query(query)
     .then (r => r.rows)
     .catch(r => {
         throw `Error reading pokedex list ${r}`;
     })
-
-    console.log(bar)
-
-    return bar;
 }
 
 export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Promise<unknown> => {
