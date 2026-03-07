@@ -86,7 +86,7 @@ export const getUpdatedAppConfiguration = async () => {
 
 export const getSettings = async (dbContext: PGliteWithLive): Promise<Settings> => {
     const result = await selectAppSettings(dbContext);
-    console.log(result)
+
     if (
         typeof result === 'object' 
         && result !== null

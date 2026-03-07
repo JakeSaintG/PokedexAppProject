@@ -5,30 +5,44 @@ import type { PokedexPreviewData } from '../../../types/pokdexPreviewData';
 import { usePGlite } from "@electric-sql/pglite-react";
 import { useEffect, useState } from 'react';
 import { getPokedexPageData } from '../../../repositories/pokemonRepository';
-import { connectionCheck } from '../../../repositories/configurationRepository';
+import { connectionCheck, getSettings, updateSettings } from '../../../repositories/configurationRepository';
+import type { Settings } from '../../../types/settings';
+import { useIsMount } from '../../../hooks/useIsMount';
 
 export function PokedexPage( ) {
     const dexTile: PokedexPreviewData[] = [];
     let key = 0;
 
+    const isMount = useIsMount();
     const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
     const [pokedexPreviewData, setPokedexPreviewData] = useState(dexTile);
+    const [settings, setSettings] = useState({} as Settings);
+    const [isChecked, setIsChecked] = useState(false);
     
     useEffect(() => {
+        // TODO: update checkbox state based on settings.show_regional_form
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
-        getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));
+        getSettings(dbContext).then((r: Settings) => setSettings(r));
+        getPokedexPageData(dbContext, settings.show_regional_forms).then(d => setPokedexPreviewData(d));
     }, []);
 
-    const [isChecked, setIsChecked] = useState(false);
+    useEffect(() => {
+        getPokedexPageData(dbContext, settings.show_regional_forms).then(d => setPokedexPreviewData(d));
+    }, [settings]);
+
+    useEffect(() => {
+        if (!isMount){
+            settings.show_regional_forms = !settings.show_regional_forms;
+            updateSettings(dbContext, settings).then((s: Settings) => setSettings(s));
+            getPokedexPageData(dbContext, settings.show_regional_forms).then(d => setPokedexPreviewData(d));
+            // TODO: need to reload page?
+        }
+    }, [isChecked])
+
     const handleToggleInput = () => {
         setIsChecked(!isChecked);
     };
-    useEffect(() => {
-        console.log(isChecked)
-        
-        getPokedexPageData(dbContext).then(d => setPokedexPreviewData(d));
-    }, [isChecked])
 
     return (
         <>

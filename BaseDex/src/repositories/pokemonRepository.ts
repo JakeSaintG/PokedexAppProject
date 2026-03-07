@@ -244,8 +244,8 @@ export const getHabitatPageData = async (dbContext: PGliteWithLive, regionId: st
     throw "Unable to parse data for habitat."
 }
 
-export const getPokedexPageData = async (dbContext: PGliteWithLive): Promise<PokedexPreviewData[]> => {
-    const results: unknown[] = await getPokedexList(dbContext);
+export const getPokedexPageData = async (dbContext: PGliteWithLive, show_regional_forms: boolean): Promise<PokedexPreviewData[]> => {
+    const results: unknown[] = await getPokedexList(dbContext, show_regional_forms);
 
     if (
         Array.isArray(results)

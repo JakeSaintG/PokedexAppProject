@@ -386,11 +386,10 @@ export const getHabitatData = async (dbContext: PGliteWithLive, regionId: string
     });
 }
 
-export const getPokedexList = async (dbContext: PGliteWithLive): Promise<unknown[]> => {
-    const regionalForms = true;
-    
-    const onCriteria = regionalForms ? 'ON d.species_name = s.name' : 'ON d.id = s.id';
-    
+export const getPokedexList = async (dbContext: PGliteWithLive, show_regional_forms: boolean): Promise<unknown[]> => {
+    // NOT great but does work... If PGLite let me do multi-query execution, I wouldn't be in this mess 😅 
+    const onCriteria = show_regional_forms ? 'ON d.species_name = s.name' : 'ON d.id = s.id';
+
     const query = `
             SELECT 
                 d.id
