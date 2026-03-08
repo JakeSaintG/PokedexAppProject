@@ -28,6 +28,7 @@ export function PokedexPage( ) {
     }, []);
 
     useEffect(() => {
+        setPokedexPreviewData([]);
         getPokedexPageData(dbContext, settings.show_regional_forms).then(d => setPokedexPreviewData(d));
     }, [settings]);
 
@@ -35,7 +36,6 @@ export function PokedexPage( ) {
         if (!isMount){
             settings.show_regional_forms = !settings.show_regional_forms;
             updateSettings(dbContext, settings).then((s: Settings) => setSettings(s));
-            getPokedexPageData(dbContext, settings.show_regional_forms).then(d => setPokedexPreviewData(d));
             // TODO: need to reload page?
         }
     }, [isChecked])
