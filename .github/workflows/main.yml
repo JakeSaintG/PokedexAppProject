@@ -32,7 +32,7 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
-    - run: ./cleanup.sh
+    - run: ./.github/workflows/cleanup.sh
 
     - name: Use Node.js 20.x
       uses: actions/setup-node@v6
