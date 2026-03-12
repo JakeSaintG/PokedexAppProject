@@ -32,7 +32,19 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
-    - run: ./.github/workflows/cleanup.sh
+    - run: rm -rf ../../.ScratchPad;
+
+    - run: rm -rf ../../FlutterDex;
+
+    - run: rm -rf ../../KotlinDex;
+
+    - run: rm -rf ../../MauiDex;
+
+    - run: rm -rf ../../ReactDex;
+
+    - run: rm -rf ../../SwiftDex;
+
+    - run: mv ../../BaseDex/* .
 
     - name: Use Node.js 20.x
       uses: actions/setup-node@v6
