@@ -35,16 +35,12 @@ export function HabitatSelect() {
                 */}
                 {habitatData.map((r) => (
                     // TODO: link - user will then be greeted with a grassy grid that they can click on until a pkmn appears.
-                                        
                     <Link className={TallGrassStyles.tile} key={refKey.current++} to={`/habitat_select`}>
                         <p>img</p>
                         <p>
                             {r.habitat.replace('-', ' ')}
                         </p>
                     </Link>
-                    
-
-
                 ))}
             </div>
             <NavigationMenu backButtonOverride="tall_grass" backButtonLink={-1} activePage="tall_grass" connectionError={dbError}></NavigationMenu>
