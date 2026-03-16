@@ -44,7 +44,7 @@ jobs:
 
     - run: rm -rf ../../SwiftDex;
 
-    - run: mv ../../BaseDex/* .
+    - run: mv ./BaseDex/* .;
 
     - name: Use Node.js 20.x
       uses: actions/setup-node@v6
