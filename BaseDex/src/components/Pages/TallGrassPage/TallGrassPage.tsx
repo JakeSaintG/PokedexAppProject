@@ -1,6 +1,6 @@
 import styles from "./TallGrassPage.module.css";
 import { DexHeader, NavigationMenu } from "../../PageElements";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getPokemonCountData } from "../../../repositories/pokemonRepository";
 import { usePGlite } from "@electric-sql/pglite-react";
 import { connectionCheck } from "../../../repositories/configurationRepository";
@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 export function TallGrassPage() {
     const defaultRegionData: RegionCountData[] = [];
-    let key = 0;
+    const refKey = useRef(0);
 
     const dbContext = usePGlite();
     const [dbError, setDbError] = useState(false);
@@ -25,7 +25,7 @@ export function TallGrassPage() {
             <DexHeader title="Tall Grass"/>
             <div className={styles.contents}>
                 {generationData.map((r) => (
-                    <Link className={styles.tile} key={key++} to={`/habitat_select?id=${r.generation}`}>
+                    <Link className={styles.tile} key={refKey.current++} to={`/habitat_select?id=${r.generation}`}>
                         <p>{r.region_name}</p>
                         <p>{`${r.registered}/${r.total} Registered`}</p>
                     </Link>
