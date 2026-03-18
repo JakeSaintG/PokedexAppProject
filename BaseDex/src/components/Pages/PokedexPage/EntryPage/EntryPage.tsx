@@ -137,7 +137,7 @@ export function EntryPage() {
                 {/* TODO: only show it if debug is on */}
                 {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
             </div>
-            <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={-1} connectionError={dbError}></NavigationMenu>
+            <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={'-1'} connectionError={dbError}></NavigationMenu>
         </>
     );
 }

@@ -16,7 +16,7 @@ interface Props extends React.HTMLAttributes<HTMLElement>{
     activePage: string,
     connectionError: boolean,
     backButtonOverride?: string,
-    backButtonLink?: string | number
+    backButtonLink?: string
 }
 
 export function NavigationMenu(props: Props) {
@@ -32,8 +32,14 @@ export function NavigationMenu(props: Props) {
     //TODO: WIP
     const showActiveNavLink = (active: string) => activeLink == active ? styles.active : styles.inactive;
 
-    const backButton = (backButtonLink: string | number) => {
-        return <Link className={styles.nav_link} to={`${backButtonLink}`}>
+    const backButton = (backButtonLink: string) => {
+        // "to" below usually takes a string but can also take a -1 num to go back
+        // For some reason, typescript errors when "link" is typed as a num despite it working...
+        // I need to not fixate...this is for learning app dev, not mastering React.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const link: string | any = backButtonLink == '-1' ? -1 : backButtonLink;
+        
+        return <Link className={styles.nav_link} to={link}>
             <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img}/>
         </Link>
     }
@@ -44,7 +50,7 @@ export function NavigationMenu(props: Props) {
         buttonImg: string,
         buttonAltTxt: string,
         backOverride: string | undefined,
-        backButtonLink: string | number | undefined
+        backButtonLink: string | undefined
     ) => {
         if (backOverride != undefined && backButtonLink != undefined && backOverride.includes(buttonName)) return backButton(backButtonLink);
 

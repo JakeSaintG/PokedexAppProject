@@ -49,7 +49,7 @@ export function PokedexPreview(props: Props) {
 
     return (
         <section>
-            <Link className={`${styles.pokedex_preview} ${styles[`${registered}`]}`} style={displayPreviewBackground(props.previewData)} to={`/pokedex/entry?id=${props.previewData.id}`}>
+            <Link className={`${styles.pokedex_preview} ${styles[`${registered}`]}`} style={displayPreviewBackground(props.previewData)} to={`/PokedexAppProject/pokedex/entry?id=${props.previewData.id}`}>
                 <img src={imageSrc} alt={`Image of ${props.previewData.name}`}/>
                 <span className={styles.preview_name}>{props.previewData.dex_no}. {displayPkmnName(previewName)}</span>
             </Link>

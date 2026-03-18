@@ -17,9 +17,9 @@ import { HabitatSelect } from './components/Pages/TallGrassPage/HabitatSelect';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-      <Route path="/" element={<App />}>
+      <Route path="/PokedexAppProject" element={<App />}>
           <Route index element={<WelcomePage />} />
-          <Route path='/home' element={<HomePage />} />
+          <Route path='home' element={<HomePage />} />
           <Route path="loading" element={<LoadingContentPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="tall_grass" element={<TallGrassPage />} />

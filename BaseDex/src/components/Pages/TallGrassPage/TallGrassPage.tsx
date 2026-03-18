@@ -25,7 +25,7 @@ export function TallGrassPage() {
             <DexHeader title="Tall Grass"/>
             <div className={styles.contents}>
                 {generationData.map((r) => (
-                    <Link className={styles.tile} key={refKey.current++} to={`/habitat_select?id=${r.generation}`}>
+                    <Link className={styles.tile} key={refKey.current++} to={`/PokedexAppProject/habitat_select?id=${r.generation}`}>
                         <p>{r.region_name}</p>
                         <p>{`${r.registered}/${r.total} Registered`}</p>
                     </Link>
