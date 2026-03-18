@@ -10,6 +10,7 @@ const test_data: PokedexPreviewData = {
     dex_no: 25,
     id: 25,
     primary_type: 'string',
+    secondary_type: 'string',
     img_url: "string",
     is_registered: false,
     img_data: new Blob

@@ -134,12 +134,15 @@ const startLoad  = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, whi
 
 const loadSpeciesPokemonData = async (dbContext: PGliteWithLive, pokemonToLoad: Pokemon, blackList: string[], loadStartTime: string ): Promise<Pokemon[]> => {
     // logInfoVerbose(dbContext, `${loadStartTime} - fetching species data: ${pokemonToLoad.name}`);
+    console.log(`${loadStartTime} - fetching species data: ${pokemonToLoad.name}`);
     const pokemonSpeciesData = await fetchPokeApiData(pokemonToLoad.url)
     
     // logInfoVerbose(dbContext, `${loadStartTime} - parsing species data: ${pokemonToLoad.name}`);
+    console.log(`${loadStartTime} - parsing species data: ${pokemonToLoad.name}`);
     const [parsedData, varieties] = await parsePokemonSpeciesData(pokemonSpeciesData, blackList);
 
     // logInfoVerbose(dbContext, `${loadStartTime} - storing species data: ${pokemonToLoad.name}`);
+    console.log(`${loadStartTime} - storing species data: ${pokemonToLoad.name}`);
 
     await upsertPokemonSpeciesData(dbContext, parsedData);
     await upsertPokedexData(dbContext, parsedData);
@@ -149,12 +152,15 @@ const loadSpeciesPokemonData = async (dbContext: PGliteWithLive, pokemonToLoad: 
 
 const loadBasePokemonData = async ( dbContext: PGliteWithLive, pokemonToLoad: Pokemon, whiteList: string[], loadStartTime: string ) => {
     // logInfoVerbose(dbContext, `${loadStartTime} - fetching base data: ${pokemonToLoad.name}`);
+    console.log(`${loadStartTime} - fetching base data: ${pokemonToLoad.name}`);
     const fetchedData = await fetchPokeApiData(pokemonToLoad.url);
     
     // logInfoVerbose(dbContext, `${loadStartTime} - parsing base data: ${pokemonToLoad.name}`);
+    console.log(`${loadStartTime} - parsing base data: ${pokemonToLoad.name}`);
     const parsedData = await parsePokemonBaseData(fetchedData, whiteList);
 
     // logInfoVerbose(dbContext, `${loadStartTime} - storing base data: ${pokemonToLoad.name}`);
+    console.log(`${loadStartTime} - storing base data: ${pokemonToLoad.name}`);
     await upsertPokemonBaseData(dbContext, parsedData);
 
     return parsedData;

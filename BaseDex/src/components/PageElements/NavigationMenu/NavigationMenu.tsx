@@ -32,8 +32,8 @@ export function NavigationMenu(props: Props) {
     //TODO: WIP
     const showActiveNavLink = (active: string) => activeLink == active ? styles.active : styles.inactive;
 
-    const backButton = (backButtonLink: string) => {
-        return <Link className={styles.nav_link} to={backButtonLink}>
+    const backButton = (backButtonLink: string | number) => {
+        return <Link className={styles.nav_link} to={`${backButtonLink}`}>
             <img src={backArrow} alt="arrow icon for returning to previous page" className={styles.back_img}/>
         </Link>
     }
