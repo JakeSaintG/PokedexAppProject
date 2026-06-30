@@ -1,0 +1,27 @@
+{
+    "name": "sqlitedbbuilder",
+    "version": "1.0.0",
+    "description": "sqlite db file builder for pokedex applications",
+    "main": "index.js",
+    "scripts": {
+        "test": "npx tsc && jest './dist/tests'",
+        "build": "npx tsc",
+        "start": "node dist/index.js",
+        "dev": "nodemon src/index.ts "
+    },
+    "author": "JakeSaintG",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/cors": "^2.8.17",
+        "@types/uuid": "^9.0.8",
+        "@types/node": "^26.1.0",
+        "nodemon": "^3.1.14",
+        "ts-node": "^10.9.1",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.7.2"
+    },
+    "dependencies": {
+        "better-sqlite3": "^10.0.0",
+        "uuid": "^9.0.1"
+    }
+}
