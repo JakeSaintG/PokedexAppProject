@@ -112,6 +112,11 @@ export function LoadingContentPage() {
                     </div>
                 </div>
 
+                <div className={styles.disclaimer}>
+                    <h2>Disclaimer:</h2>
+                    <p>You might notice that this is running a tad slow. This is done to ensure that this project abides by the T&Cs of PokéAPI. Their extremely generous and extremely free API is the backbone of this learning project. In the subsequent applications that spin off of this POC, data will be more persistant.</p>
+                </div>
+
                 {displayLearnMoreBtn()}
             </div>
         </>

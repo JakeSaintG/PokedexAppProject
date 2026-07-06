@@ -5,6 +5,20 @@
     flex-direction: column;
 }
 
+/* TODO: remove later? */
+.disclaimer h2 {margin-bottom: 0;}
+.disclaimer {
+    width: 600px;
+    background-color: var(--);
+    text-align: center;
+    border: solid #008080 3px;
+    background-color: var(--pokedex_light_blue);
+    color: #008080;
+    font-weight: bold;
+    padding: 0 1rem;
+    margin: 0 auto;
+}
+
 /* TODO: Add the extra buttons and speaker */
 .dex_display_frame {
     background-color: #D9E0DA;
