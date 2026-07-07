@@ -21,7 +21,6 @@ export function PokedexPage( ) {
     const [isChecked, setIsChecked] = useState(false);
     
     useEffect(() => {
-        // TODO: update checkbox state based on settings.show_regional_form
         connectionCheck(dbContext).then((d: boolean) => setDbError(d));
         getSettings(dbContext).then((r: Settings) => setSettings(r));
         getPokedexPageData(dbContext, settings.show_regional_forms).then(d => setPokedexPreviewData(d));
@@ -46,17 +45,17 @@ export function PokedexPage( ) {
             <div className={styles.dex_menu}>
                 <div className={styles.dex_menu_select}>
                     <div className={styles.dex_menu_arrow_left} onClick={() => console.log('previous gen')}></div>
-                    <p>{"GENERATION 1"}</p>
+                    <p>{"GENERATION 1 (WIP)"}</p>
                     <div className={styles.dex_menu_arrow_right} onClick={() => console.log('next gen')}></div>
                 </div>
                 <div className={styles.dex_menu_toggle}>
-                    <label htmlFor="toggle_regional_forms">Show Regional Forms</label>
+                    <label htmlFor="toggle_regional_forms">{!isChecked?'Show':'Hide'} Regional Forms</label>
                     <input type="checkbox" name="toggle_regional_forms" id="toggle_regional_forms" onChange={() => setIsChecked(!isChecked)}/>
                 </div>
             </div>
             <div className={styles.dex_previews}>
                 {pokedexPreviewData.map((pkmn) => (
-                        <PokedexPreview previewData={pkmn} key={refKey.current++}></PokedexPreview>
+                    <PokedexPreview previewData={pkmn} key={refKey.current++}></PokedexPreview>
                 ))}
             </div>
             <NavigationMenu activePage='pokedex' connectionError={dbError}></NavigationMenu>

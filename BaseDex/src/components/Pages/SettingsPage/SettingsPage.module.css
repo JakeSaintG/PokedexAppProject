@@ -7,7 +7,6 @@
     gap: 1rem;
 }
 
-/* TODO: Make a button component... */
 .settings_menu button {
     height: 80px;
 }

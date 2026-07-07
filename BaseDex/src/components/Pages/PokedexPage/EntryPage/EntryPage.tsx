@@ -74,7 +74,7 @@ export function EntryPage() {
 
     const displayRegisterBtn = (context: PGliteWithLive, id: number) => {
         if (pokedexEntryData.is_registered) return <></>;
-        return <button onClick={() => registerPkmn(context, id)} className={styles.register_button}>Register</button>;
+        return <button onClick={() => registerPkmn(context, id)} className={styles.register_button}>Register (Temoporary, debug)</button>;
     } 
 
     const registerPkmn = async (dbContext: PGliteWithLive, id: number) => {
@@ -135,7 +135,7 @@ export function EntryPage() {
                     </div>
                 </div>
                 {/* TODO: only show it if debug is on */}
-                {displayRegisterBtn(dbContext, pokedexEntryData.id)} 
+                {displayRegisterBtn(dbContext, pokedexEntryData.id)}
             </div>
             <NavigationMenu activePage='entry' backButtonOverride="pokedex" backButtonLink={'-1'} connectionError={dbError}></NavigationMenu>
         </>
