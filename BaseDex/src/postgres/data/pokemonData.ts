@@ -405,7 +405,8 @@ export const getPokedexList = async (dbContext: PGliteWithLive, show_regional_fo
             JOIN pokemon_base_data d
                 ${onCriteria}
             JOIN pokemon_images i
-                on d.id = i.id;
+                on d.id = i.id
+            WHERE d.name NOT LIKE '%-mega%' AND d.name NOT LIKE '%-gmax%';
         `
 
     return await dbContext.query(query)
