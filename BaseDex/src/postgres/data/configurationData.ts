@@ -331,7 +331,7 @@ export const getGenerationUpdateData = async (dbContext: PGliteWithLive, id: num
     )
     .then(r => r.rows[0])
     .catch(r => {
-        throw `Unable to get generation last updated data. This is a terminating error. ${r}`; // TODO: make it terminating
+        throw `Unable to get generation last updated data. This is a terminating error. ${r}`;
     });
 }
 

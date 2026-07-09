@@ -14,7 +14,6 @@ export function PokedexPreview(props: Props) {
     const [registered, setRegistered] = useState('not_registered');
     const [previewName, setPreviewName] = useState('not_registered');
     
-    // TODO: Use the stored blobs instead of the URL..
     useEffect(() => {
         const url = URL.createObjectURL(props.previewData.img_data);
         setImageSrc(url);

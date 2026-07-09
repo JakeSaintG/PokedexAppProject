@@ -449,7 +449,6 @@ export const registerPokemon = async (dbContext: PGliteWithLive, id: number) => 
     setPokedexRegistered(dbContext, id);
 }
 
-// TODO: update all debug fuctions to look like this (DEBUG) or revert it. Whichever you're in the mood for
 export const DEBUGtogglePkmnRegistered = async (dbContext: PGliteWithLive) => updateToggleRegistered(dbContext);
 
 export const displayPkmnName = (name: string) => {
@@ -458,7 +457,6 @@ export const displayPkmnName = (name: string) => {
         'nidoran-f': "Nidoran ♀",
         'nidoran-m': "Nidoran ♂",
         'mr-mime': "Mr. Mime",
-        // 'farfetchd': "Farfetch'd",
     }
 
     if (nameCorrections[name]) return nameCorrections[name];

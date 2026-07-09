@@ -37,7 +37,6 @@
     filter: invert();
 }
 
-/* TODO: address the accessbility of the home button on light blue */
 .home_button {
     border: solid black 2px;
     background-color: var(--pokedex_light_blue);
