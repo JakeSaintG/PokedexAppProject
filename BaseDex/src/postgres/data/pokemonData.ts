@@ -387,7 +387,6 @@ export const getHabitatData = async (dbContext: PGliteWithLive, regionId: string
 }
 
 export const getPokedexList = async (dbContext: PGliteWithLive, show_regional_forms: boolean): Promise<unknown[]> => {
-
     // NOT great but does work... If PGLite let me do multi-query execution, I wouldn't be in this mess 😅 
     const onCriteria = show_regional_forms ? 'ON d.species_name = s.name' : 'ON d.id = s.id';
 
@@ -443,7 +442,7 @@ export const getPokedexEntry = async (dbContext: PGliteWithLive, id: string): Pr
                 ,i.female_img_data
             FROM pokemon_species_data s
             JOIN pokemon_base_data d
-                ON d.id = s.dex_no
+                ON d.species_name = s.name
             JOIN pokemon_images i
                 on d.id = i.id
             WHERE d.id = $1

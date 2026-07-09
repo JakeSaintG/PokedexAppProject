@@ -112,7 +112,7 @@ export function EntryPage() {
             <DexHeader remove_white_space={true}/>
             <div className={styles.entry_display}>
                 <div className={`${styles.banner}`} style={displayTypeColor(pokedexEntryData.type_1, pokedexEntryData.type_2)}>
-                    <p className={styles.dex_no}>No. {id}</p>
+                    <p className={styles.dex_no}>No. {pokedexEntryData.dex_no}</p>
                     <div className={`${styles[`${registered}`]} ${styles.dex_img}`}>
                         <img src={dexDefaultImg} alt={`Default Image of ${pokedexEntryData.name}`} />
                         {displayFemaleImg()}
