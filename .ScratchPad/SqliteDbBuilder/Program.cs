@@ -2,10 +2,8 @@
 using SqliteDbBuilder.Models;
 using SqliteDbBuilder.Services;
 
-var config = new DataConfig
-{
-    SqliteEnabled = true,
-    JsonStoreEnabled = true
-};
+var fileSrv = new FileService();
+var jsonSrv = new JsonService();
 
-var dataSrv = new DataService(config);
+// fileSrv.Test();
+// jsonSrv.Test();
