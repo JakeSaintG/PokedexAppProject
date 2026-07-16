@@ -1,6 +1,6 @@
-// using SqliteDbBuilder.Models;
+// using PokeDataBuilder.Models;
 
-namespace SqliteDbBuilder.Services;
+namespace PokeDataBuilder.Services;
 
 public class DataService : IDataService
 {

@@ -1,6 +1,4 @@
-
-namespace SqliteDbBuilder.Services;
-
+namespace PokeDataBuilder.Services;
 
 public interface IDataService
 {

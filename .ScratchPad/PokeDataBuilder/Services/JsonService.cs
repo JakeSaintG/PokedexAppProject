@@ -1,4 +1,4 @@
-namespace SqliteDbBuilder.Services;
+namespace PokeDataBuilder.Services;
 
 public class JsonService : DataService
 {
