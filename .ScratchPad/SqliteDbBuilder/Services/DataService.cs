@@ -1,5 +1,4 @@
-using SqliteDbBuilder.Models;
-using SqliteDbBuilder.Data;
+// using SqliteDbBuilder.Models;
 
 namespace SqliteDbBuilder.Services;
 
@@ -22,9 +21,6 @@ public class DataService : IDataService
         // }
 
         EnsureFileDirectoryExists();
-        
-        // if (_dataConfig.JsonStoreEnabled) JsonData.EnsureDataExists();
-        // if (_dataConfig.SqliteEnabled) SqliteData.EnsureDataExists();
     }
 
     private void EnsureFileDirectoryExists()
