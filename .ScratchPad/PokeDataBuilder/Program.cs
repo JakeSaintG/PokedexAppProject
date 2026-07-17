@@ -14,19 +14,7 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 
-
-
-app.MapGet("/weather", () =>
-{
-    return new { Temperature = "25°C", Condition = "Sunny" };
-})
-.WithName("GetWeather")
-.WithOpenApi();
-
-
-
-
-
+app.MapControllers();
 app.UseSwagger();
 app.UseStaticFiles();
 app.UseSwaggerUI(options =>
