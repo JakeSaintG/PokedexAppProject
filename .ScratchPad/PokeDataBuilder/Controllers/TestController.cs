@@ -7,23 +7,23 @@ namespace PokeDataBuilder.Controllers;
 
 [ApiController]
 [Route("/api/v1/[controller]")]
-public class TestController : ControllerBase
+public class SqliteFilerBuilderController : ControllerBase
 {
-    public TestController(){}
+    public SqliteFilerBuilderController(){}
 
     [HttpGet]
-    [SwaggerOperation("Get a list of all tenants")]
+    [SwaggerOperation("Trigger build of SQLite file.")]
     // [SwaggerResponse(200, "Request successful", typeof(ResponseMessage<PagedResult<TenantViewModel>>))]
     public async Task<IActionResult> GetTest()
     {
-        return Ok("User registered successfully.");
+        return Ok("Building SQLite file as configured");
     }
 
-    // [HttpGet]
-    // [SwaggerOperation("Get a list of all tenants")]
-    // // [SwaggerResponse(200, "Request successful", typeof(ResponseMessage<PagedResult<TenantViewModel>>))]
-    // public async Task<IActionResult> GetTest()
-    // {
-    //     return new { Temperature = "25°C", Condition = "Sunny" };
-    // }
+    [HttpGet("with-options")]
+    [SwaggerOperation("Trigger build of SQLite file with options.")]
+    // [SwaggerResponse(200, "Request successful", typeof(ResponseMessage<PagedResult<TenantViewModel>>))]
+    public async Task<IActionResult> GetTestButReturnSomething()
+    {
+        return Ok("Building SQLite file as with options");
+    }
 }
