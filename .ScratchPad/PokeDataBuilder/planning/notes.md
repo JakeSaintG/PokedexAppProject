@@ -1,0 +1,78 @@
+# PokeDataBuilder
+
+## Goals
+- Build out the data and tables necessary for the Pokedex App Project applications to function.
+- Provide a SQLite file to be "downloaded" by each application
+    - Shipped with. 
+    - Shipping the app without Pokemon's IP and having it download on start would be the better, more legal option.
+    - However this app does not intend to make money or be hosted on the app store and is strictly educational.
+- Provide API endpoint to trigger functionality
+    - Update and Sync data
+        - Pokemon
+            - Use the SPECIES endpoint to then get data from the
+        - Types
+        - pokedex/generation
+        - images as byte arrays
+- Occasionally refresh data as needed
+    - Time based
+        - weekly
+        - 
+- logging
+
+## Stretch goals
+- Discord integration "Bot functionality"
+    - Connect to a monitoring server
+    - have logging channels
+        - errors
+            - regular message for warnings
+            - @message for errors
+        - log
+            - sync triggered
+            - data updates
+                - will require comparison between old data and new...will be more complex/expensive unless ORM can just do that
+        - verbose
+            - configurable
+
+## Endpoints
+- /sync
+    - get 
+        - return EITHER
+            - tell user that the app is currently syncing data
+            - time last synced, type count
+    - post
+        - will sync ALL data in the app if not synced within recent time
+        - ?force=true will cause all app data to be hard refresed
+- /types
+    - get
+        - /sync
+            - return EITHER
+                - tell user that the app is currently syncing data
+                - time last synced, type count
+    - post
+        - /sync
+            - sync types table/data with PokeAPI
+            - ?type={type_name} sync a specific type
+- /generation
+    - get
+        - /active
+            - get a list of active/enabled pokemon generations
+        - /sync
+            - return EITHER
+                - tell user that the app is currently syncing data
+                - time last synced, type count
+    - post
+        - /activate?id={id}
+            - activate ("sign off") on a generation for use in applications
+    - post
+        - /sync
+- /pokemon
+    - get
+        - /sync
+            - return EITHER
+                - tell user that the app is currently syncing data
+                - time last synced, pokemon count
+    - post
+        - /sync
+            - make api sync all pokemon (pokemon species, pokemon, images)
+            - ?id={id} make API sync information on a specific pokemon
+            - ?generation={generation-id} make api sync an entire generation
