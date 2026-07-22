@@ -1,4 +1,5 @@
 # PokeDataBuilder
+[C# Reminder Reference](https://vscode.dev/github/haren2312/CleanArchitecture_dotnet10)
 
 ## Goals
 - Build out the data and tables necessary for the Pokedex App Project applications to function.
