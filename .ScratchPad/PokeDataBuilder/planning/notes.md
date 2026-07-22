@@ -34,45 +34,49 @@
             - configurable
 
 ## Endpoints
-- /sync
+- /synchronize
     - get 
         - return EITHER
             - tell user that the app is currently syncing data
             - time last synced, type count
     - post
         - will sync ALL data in the app if not synced within recent time
-        - ?force=true will cause all app data to be hard refresed
+            - return error/warning if a sync is already happening
+        - ?force=true will cause all app data to be hard refreshed
+            - cancel current synchronization if occuring
 - /types
     - get
-        - /sync
+        - /
             - return EITHER
                 - tell user that the app is currently syncing data
                 - time last synced, type count
     - post
-        - /sync
+        - /
             - sync types table/data with PokeAPI
+                - return error/warning if a sync is already happening
             - ?type={type_name} sync a specific type
 - /generation
     - get
-        - /active
-            - get a list of active/enabled pokemon generations
-        - /sync
+        - /
             - return EITHER
                 - tell user that the app is currently syncing data
                 - time last synced, type count
+        - /active
+            - get a list of active/enabled pokemon generations
     - post
+        - /
+            - return error/warning if a sync is already happening
         - /activate?id={id}
             - activate ("sign off") on a generation for use in applications
-    - post
-        - /sync
 - /pokemon
     - get
-        - /sync
+        - /
             - return EITHER
                 - tell user that the app is currently syncing data
                 - time last synced, pokemon count
     - post
-        - /sync
+        - /
             - make api sync all pokemon (pokemon species, pokemon, images)
+                - return error/warning if a sync is already happening
             - ?id={id} make API sync information on a specific pokemon
             - ?generation={generation-id} make api sync an entire generation
