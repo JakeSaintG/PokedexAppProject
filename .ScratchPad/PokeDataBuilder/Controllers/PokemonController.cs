@@ -10,7 +10,15 @@ namespace PokeDataBuilder.Controllers;
 [Route("/api/v1/[controller]")]
 public class PokemonController : ControllerBase
 {
-    public PokemonController(){}
+    // TODO: Primary constructor?
+    // PokemonService _pokeSrv = pokeSrv;
+    
+    PokemonService _pokeSrv;
+    
+    public PokemonController(PokemonService pokeSrv)
+    {
+        _pokeSrv = pokeSrv;
+    }
 
     [HttpPost]
     [SwaggerOperation("Trigger synchronization of Pokemon data with PokeAPI")]
@@ -19,16 +27,7 @@ public class PokemonController : ControllerBase
     {
         string foo;
 
-        // TODO: Need to pull in to whole controller through dependency injection
-        PokemonService pokeSrv = new PokemonService();
-
-        if (id != 0)
-        {
-            foo = pokeSrv.TriggerPokeApiDownload(id);
-        } else
-        {
-            foo = pokeSrv.TriggerPokeApiDownload();
-        }
+        foo = _pokeSrv.TriggerPokeApiDownload(id);
 
         return Ok(foo);
     }
@@ -38,9 +37,7 @@ public class PokemonController : ControllerBase
     [SwaggerResponse(200, "Request successful", typeof(Task<IActionResult>))]
     public async Task<IActionResult> GetPokemon()
     {
-        // TODO: Need to pull in to whole controller through dependency injection
-        PokemonService pokeSrv = new PokemonService();
-        var resp = pokeSrv.handleSynchronizationInfoRequest();
+        var resp = _pokeSrv.HandleSynchronizationInfoRequest();
         return Ok(resp);
     }
 }

@@ -2,7 +2,7 @@ namespace PokeDataBuilder.Services;
 
 // TODO: Need to offload a lot of duplicate logic. Still whiteboarding.
 
-public class PokemonService
+public class PokemonService : IPokemonService
 {
     
     public string CurrentSynchronization { get; set; }
@@ -12,21 +12,20 @@ public class PokemonService
         CurrentSynchronization = "none";
     }
 
-    public string TriggerPokeApiDownload()
-    {
-        // TODO: Return error/warning if sync is already happening
-        Console.WriteLine("Triggering sync with PokeAPI");
-        return "syncing";
-    }
-
     public string TriggerPokeApiDownload(int id)
     {
+        if (id == 0)
+        {
+            Console.WriteLine("Triggering generation sync with PokeAPI");
+            return "syncing ";
+        }
+        
         // TODO: Return error/warning if sync is already happening
         Console.WriteLine($"Triggering generation {id} sync with PokeAPI");
         return $"syncing {id}";
     }
 
-    public string handleSynchronizationInfoRequest()
+    public string HandleSynchronizationInfoRequest()
     {
         if (CurrentSynchronization == "none")
         {
@@ -38,7 +37,7 @@ public class PokemonService
         }
     }
 
-    public string handleSynchronizationInfoRequest(int id)
+    public string HandleSynchronizationInfoRequest(int id)
     {
         if (CurrentSynchronization == "none")
         {

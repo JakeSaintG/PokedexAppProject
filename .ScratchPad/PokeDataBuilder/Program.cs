@@ -3,16 +3,17 @@
 using PokeDataBuilder.Services;
 using PokeDataBuilder.Controllers;
 
-// TODO: Work through dependency injection
-var fileSrv = new FileService();
-var jsonSrv = new JsonService();
-
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<IDataService, FileService>();
+builder.Services.AddSingleton<IPokemonService, PokemonService>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
 app.MapControllers();
 app.UseSwagger();
 app.UseStaticFiles();
