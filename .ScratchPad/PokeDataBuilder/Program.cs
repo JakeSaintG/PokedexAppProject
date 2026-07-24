@@ -5,8 +5,9 @@ using PokeDataBuilder.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<IDataService, FileService>();
-builder.Services.AddSingleton<IPokemonService, PokemonService>();
+builder.Services.AddSingleton<ILogService, LogService>();
+builder.Services.AddSingleton<IFileService, FileService>();
+// builder.Services.AddSingleton<IPokemonService, PokemonService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

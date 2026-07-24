@@ -11,13 +11,13 @@ namespace PokeDataBuilder.Controllers;
 public class PokemonController : ControllerBase
 {
     // TODO: Primary constructor?
-    // PokemonService _pokeSrv = pokeSrv;
+    // PokemonService _pokeService = pokeService;
     
-    PokemonService _pokeSrv;
+    PokemonService _pokeService;
     
-    public PokemonController(PokemonService pokeSrv)
+    public PokemonController(PokemonService pokeService)
     {
-        _pokeSrv = pokeSrv;
+        _pokeService = pokeService;
     }
 
     [HttpPost]
@@ -27,7 +27,7 @@ public class PokemonController : ControllerBase
     {
         string foo;
 
-        foo = _pokeSrv.TriggerPokeApiDownload(id);
+        foo = _pokeService.TriggerPokeApiDownload(id);
 
         return Ok(foo);
     }
@@ -37,7 +37,7 @@ public class PokemonController : ControllerBase
     [SwaggerResponse(200, "Request successful", typeof(Task<IActionResult>))]
     public async Task<IActionResult> GetPokemon()
     {
-        var resp = _pokeSrv.HandleSynchronizationInfoRequest();
+        var resp = _pokeService.HandleSynchronizationInfoRequest();
         return Ok(resp);
     }
 }
