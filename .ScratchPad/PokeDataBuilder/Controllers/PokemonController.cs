@@ -13,10 +13,12 @@ public class PokemonController : ControllerBase
     // TODO: Primary constructor?
     // PokemonService _pokeService = pokeService;
     
+    LogService _logService;
     PokemonService _pokeService;
     
-    public PokemonController(PokemonService pokeService)
+    public PokemonController(LogService logService, PokemonService pokeService)
     {
+        _logService = logService;
         _pokeService = pokeService;
     }
 
@@ -37,6 +39,7 @@ public class PokemonController : ControllerBase
     [SwaggerResponse(200, "Request successful", typeof(Task<IActionResult>))]
     public async Task<IActionResult> GetPokemon()
     {
+        _logService.LogToFile();
         var resp = _pokeService.HandleSynchronizationInfoRequest();
         return Ok(resp);
     }

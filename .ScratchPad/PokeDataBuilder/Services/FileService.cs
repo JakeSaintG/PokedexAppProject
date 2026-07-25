@@ -29,8 +29,8 @@ public class FileService : IFileService
         }
     }
 
-    public string CreateNewTextFile(string fileName, string directory)
+    public string CreateNewTextFile(string directory, string fileName)
     {
-        return $"directory/{fileName}.txt";
+        return $"{directory}/{fileName}.txt";
     }
 }
